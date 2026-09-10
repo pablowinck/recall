@@ -1,7 +1,8 @@
 import { IconButton, Tooltip } from '@radix-ui/themes';
 import { ConfirmAction } from '@/components/confirm-action';
-import { LogOut, Moon, Sun } from 'lucide-react';
+import { CircleHelp, LogOut, Moon, Sun } from 'lucide-react';
 import type { AppearanceActions, NavigationProps } from './navigation-types';
+import { supportChatUrl } from './support-link';
 
 /** Keep personal controls consistent across screen sizes. Example: <NavigationProfile {...navigation} />. */
 export function NavigationProfile(props: NavigationProps): React.JSX.Element {
@@ -10,6 +11,7 @@ export function NavigationProfile(props: NavigationProps): React.JSX.Element {
       <ProfileIdentity email={props.email} />
       <div className="profile-actions">
         <ThemeControl {...props} />
+        <HelpControl />
         <SignOutControl signOut={props.signOut} />
       </div>
     </div>
@@ -48,6 +50,19 @@ const signOutCopy = {
   confirmLabel: 'Sign out',
   cancelLabel: 'Stay signed in',
 };
+
+/** Reach a person on WhatsApp with the first message written. Example: <HelpControl />. */
+export function HelpControl(): React.JSX.Element {
+  return (
+    <Tooltip content="Get help on WhatsApp">
+      <IconButton asChild variant="ghost" aria-label="Get help on WhatsApp">
+        <a href={supportChatUrl()} target="_blank" rel="noopener noreferrer">
+          <CircleHelp size={18} />
+        </a>
+      </IconButton>
+    </Tooltip>
+  );
+}
 
 /** Expose the same explicit sign-out action on every device. Example: <SignOutControl signOut={signOut} />. */
 export function SignOutControl({ signOut }: Pick<AppearanceActions, 'signOut'>): React.JSX.Element {

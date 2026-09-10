@@ -391,3 +391,11 @@ Recall could create decks but never remove one, so a deck made by mistake stayed
 `DELETE /v1/decks/:id` now states what happens to them — `?cards=delete`, or `?cards=move&target=<deck>` — and runs inside the caller's transaction under RLS, so a deck that is not yours is simply not found. A tenant always keeps one deck, so the last one refuses to go. In the library, the deck being filtered carries a delete control: an empty deck goes at once, and a deck holding cards asks first, offering to move them to another deck or delete them along with it.
 
 Validation: format, typecheck, 104 unit tests and build pass. All 118 E2E journeys pass on desktop, tablet and mobile: an empty deck deleted from the filter, a deck whose cards move elsewhere, a deck whose cards go with it, and a stranger's attempt on someone else's deck answered 404 while that deck stays. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 28: help one tap away
+
+Nothing in the app pointed to a person. The owner asked for a question mark beside the theme and sign-out controls that opens WhatsApp with the first message already written.
+
+A help control now sits in the sidebar footer and in the phone header, on every screen: an anchor styled as an icon button that opens `wa.me` in a new tab with `noopener`, carrying a message that says the reader is using Recall and needs help. `support-link.ts` builds that URL in one place.
+
+Validation: format, typecheck, 106 unit tests and build pass. All 121 E2E journeys pass on desktop, tablet and mobile, including one that reads the link target, its `rel` and the written message. The UX tour reports no overflow or axe violations on three devices.

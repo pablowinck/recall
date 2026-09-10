@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { RecallBrand } from '@/components/brand';
 import { WorkspaceNavigation } from './navigation';
-import { ThemeControl, SignOutControl } from './navigation-profile';
+import { HelpControl, SignOutControl, ThemeControl } from './navigation-profile';
 import type { NavigationProps } from './navigation-types';
 
 interface WorkspaceShellProps {
@@ -36,6 +36,7 @@ function MobileHeader({ navigation }: { navigation: NavigationProps }): React.JS
       <RecallBrand />
       <div>
         <ThemeControl {...navigation} />
+        <HelpControl />
         <SignOutControl signOut={navigation.signOut} />
       </div>
     </div>

@@ -219,3 +219,18 @@ test('signing out asks first and can be called off', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('help reaches a person on WhatsApp with the message already written', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    const help = page.getByRole('link', { name: 'Get help on WhatsApp' }).filter({ visible: true });
+    await expect(help).toHaveAttribute('rel', /noopener/);
+    await expect(help).toHaveAttribute('target', '_blank');
+    const href = await help.getAttribute('href');
+    expect(href).toContain('https://wa.me/5551992116696');
+    expect(decodeURIComponent(href ?? '')).toContain('I need some help.');
+  } finally {
+    await account.cleanup();
+  }
+});
