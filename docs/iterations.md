@@ -205,3 +205,11 @@ Reviewers reproduced that Enter on a focused "Leave session" or sidebar item rev
 Study shortcuts now come from a pure `readStudyCommand` function: Space and Enter reveal only when no button, link or field has focus; 1–4 read physical digit and numpad codes; repeats and modifier shortcuts are ignored. One listener stays mounted and always reads the latest session. Focus moves to the card and then to its answer when the control that was used disappears, without taking focus from a control the person chose. The card is top-aligned, and a visually hidden "Review session" h1 introduces the card front, now an h2.
 
 Validation: new unit tests cover focused controls, typing targets, physical and numpad digits, repeats and modifiers; a new E2E journey reveals with Space, rates with 3, checks focus after each step, and leaves with Enter on the focused button on all three sizes.
+
+## 2026-09-10 — UX loop 6: card drafts survive dismissal
+
+Reviewers reproduced three ways to lose a typed card: Escape, a click outside the dialog, and Escape inside the inline "New deck name" field, which Radix handled first and closed the whole editor. Focus also dropped to `<body>` after closing, every new card defaulted to the first deck, and a plain Enter in Tags saved and closed the editor by surprise.
+
+The editor now asks before discarding typed text ("Discard this card?" or "Discard changes?", with "Keep editing" focused), and Escape closes the inline deck form before anything else. A pure `hasDraftChanges` decides what is worth confirming: choosing a deck for an empty new card is not. Closing returns focus to the control that opened the editor, new cards reuse the deck of the last card created, and Tags saves only with Cmd/Ctrl+Enter. The editor hook is split into card, inline-deck and dismissal responsibilities.
+
+Validation: unit tests cover new and edited drafts; a new E2E journey keeps the draft on Escape, closes only the inline deck field, confirms Cancel, and checks that focus returns to "New card" on all three sizes.

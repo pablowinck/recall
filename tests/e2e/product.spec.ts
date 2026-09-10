@@ -371,3 +371,29 @@ test('study keys leave focused controls alone and keep focus on the card', async
     await account.cleanup();
   }
 });
+
+test('the card editor keeps typed text until discarding is confirmed', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    const opener = page.getByRole('button', { name: 'New card', exact: true }).first();
+    await opener.click();
+    const front = page.getByRole('textbox', { name: /^Front/ });
+    await front.fill('A draft worth keeping');
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'Keep editing', exact: true }).click();
+    await expect(front).toHaveValue('A draft worth keeping');
+    await page.getByRole('dialog').getByRole('button', { name: 'New deck', exact: true }).click();
+    const deckName = page.getByPlaceholder('e.g. Spanish Vocabulary');
+    await deckName.press('Escape');
+    await expect(deckName).toHaveCount(0);
+    await expect(front).toHaveValue('A draft worth keeping');
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await page.getByRole('button', { name: 'Discard', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(opener).toBeFocused();
+    expect((await account.api.cards()).total).toBe(0);
+  } finally {
+    await account.cleanup();
+  }
+});

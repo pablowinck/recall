@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent, type RefObject } from 'react';
 import type { RecallClient } from '@recall/client';
 import type { CardDraft, Deck, Flashcard } from '@recall/contracts';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
-import { buildCardDraft } from './card-draft';
+import { buildCardDraft, hasDraftChanges } from './card-draft';
+import { readLastDeck, rememberLastDeck } from './last-deck';
 
 export interface CardEditorProps {
   client: RecallClient;
@@ -12,64 +13,80 @@ export interface CardEditorProps {
   saved: () => void;
   onDeckCreated?: (deck: Deck) => void;
 }
-export interface CardEditorState {
+interface InlineDeckState {
   decks: Deck[];
-  deck: string;
-  setDeck: (id: string) => void;
   creatingDeck: boolean;
   setCreatingDeck: (creating: boolean) => void;
   deckAction: AsyncAction;
   createInlineDeck: (name: string) => Promise<void>;
+}
+export interface CardEditorState extends InlineDeckState {
+  deck: string;
+  setDeck: (id: string) => void;
   action: AsyncAction;
+  form: RefObject<HTMLFormElement | null>;
+  hasChanges: () => boolean;
   submit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-/** Coordinate one save and inline deck creation without discarding fields. Example: useCardEditor(props). */
+/** Coordinate one save, inline deck creation and change detection. Example: useCardEditor(props). */
 export function useCardEditor(props: CardEditorProps): CardEditorState {
-  const [decks, setDecks] = useState<Deck[]>(props.decks);
-  const [deck, setDeck] = useState(props.card?.deck_id ?? props.decks[0]?.id ?? '');
-  const [creatingDeck, setCreatingDeck] = useState(false);
+  const [deck, setDeck] = useState(() => chooseInitialDeck(props));
+  const inline = useInlineDeck(props, setDeck);
   const action = useAsyncAction();
-  const deckAction = useAsyncAction();
-
-  const createInlineDeck = async (name: string): Promise<void> => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    let created: Deck | null = null;
-    const ok = await deckAction.run(async () => {
-      created = await props.client.createDeck(trimmed);
-    });
-    if (ok && created) {
-      const newDeck: Deck = created;
-      setDecks((current) => [...current, newDeck]);
-      setDeck(newDeck.id);
-      setCreatingDeck(false);
-      props.onDeckCreated?.(newDeck);
-    }
-  };
-
+  const form = useRef<HTMLFormElement>(null);
   const submit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const draft = buildCardDraft(new FormData(event.currentTarget), deck);
     void action.run(() => saveEditedCard(props, draft));
   };
-
-  return {
-    decks,
-    deck,
-    setDeck,
-    creatingDeck,
-    setCreatingDeck,
-    deckAction,
-    createInlineDeck,
-    action,
-    submit,
+  const hasChanges = (): boolean => {
+    if (!form.current) return false;
+    return hasDraftChanges(buildCardDraft(new FormData(form.current), deck), props.card);
   };
+  return { ...inline, deck, setDeck, action, form, hasChanges, submit };
+}
+
+function chooseInitialDeck(props: CardEditorProps): string {
+  return props.card?.deck_id ?? readLastDeck(props.decks) ?? props.decks[0]?.id ?? '';
+}
+
+function useInlineDeck(props: CardEditorProps, select: (id: string) => void): InlineDeckState {
+  const [decks, setDecks] = useState<Deck[]>(props.decks);
+  const [creatingDeck, setCreatingDeck] = useState(false);
+  const deckAction = useAsyncAction();
+  const createInlineDeck = async (name: string): Promise<void> => {
+    const created = await createDeckOnce(props.client, deckAction, name);
+    if (!created) return;
+    setDecks((current) => [...current, created]);
+    select(created.id);
+    setCreatingDeck(false);
+    props.onDeckCreated?.(created);
+  };
+  return { decks, creatingDeck, setCreatingDeck, deckAction, createInlineDeck };
+}
+
+async function createDeckOnce(
+  client: RecallClient,
+  action: AsyncAction,
+  name: string,
+): Promise<Deck | null> {
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+  let created: Deck | null = null;
+  await action.run(async () => {
+    created = await client.createDeck(trimmed);
+  });
+  return created;
 }
 
 async function saveEditedCard(props: CardEditorProps, draft: CardDraft): Promise<void> {
-  if (props.card) await props.client.updateCard(props.card.id, draft);
-  else await props.client.createCard(draft);
+  if (props.card) {
+    await props.client.updateCard(props.card.id, draft);
+  } else {
+    await props.client.createCard(draft);
+    rememberLastDeck(draft.deck_id);
+  }
   props.saved();
   props.close();
 }

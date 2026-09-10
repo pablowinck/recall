@@ -14,14 +14,16 @@ const deleteCopy = {
 export function CardEditorActions({
   editor,
   busy,
+  cancel,
 }: {
   editor: CardEditorProps;
   busy: boolean;
+  cancel: () => void;
 }): React.JSX.Element {
   return (
     <div className="dialog-actions">
       <DeleteCardButton editor={editor} busy={busy} />
-      <Button type="button" variant="soft" color="gray" onClick={editor.close} disabled={busy}>
+      <Button type="button" variant="soft" color="gray" onClick={cancel} disabled={busy}>
         Cancel
       </Button>
       <Button type="submit" loading={busy}>

@@ -89,14 +89,11 @@ function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Ele
     if (!name.trim() || state.deckAction.busy) return;
     await state.createInlineDeck(name);
   };
+  // Escape is handled by the editor dialog, which closes this inline form before the editor itself.
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      void submitInline();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      state.setCreatingDeck(false);
-    }
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    void submitInline();
   };
   return (
     <div className="inline-deck-box">
@@ -140,6 +137,13 @@ function handleEditorKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
     event.preventDefault();
     event.currentTarget.form?.requestSubmit();
   }
+}
+
+// A plain Enter in the last field used to save and close the editor by surprise; Cmd/Ctrl+Enter saves.
+function submitOnlyWithModifier(event: KeyboardEvent<HTMLInputElement>): void {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  if (event.metaKey || event.ctrlKey) event.currentTarget.form?.requestSubmit();
 }
 
 function FrontField({ value }: { value?: string }): React.JSX.Element {
@@ -187,6 +191,7 @@ function TagsField({ tags }: { tags: string[] }): React.JSX.Element {
         name="tags"
         defaultValue={tags.join(', ')}
         placeholder="learning, vocabulary"
+        onKeyDown={submitOnlyWithModifier}
       />
     </label>
   );
