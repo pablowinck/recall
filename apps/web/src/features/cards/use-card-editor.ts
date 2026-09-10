@@ -4,6 +4,7 @@ import type { CardDraft, Deck, Flashcard } from '@recall/contracts';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 import { buildCardDraft, hasDraftChanges } from './card-draft';
 import { chooseInitialDeck } from './initial-deck';
+import { explainDeckFailure } from './deck-errors';
 import { rememberLastDeck } from './last-deck';
 
 export interface CardEditorProps {
@@ -73,7 +74,7 @@ async function createDeckOnce(
   if (!trimmed) return null;
   let created: Deck | null = null;
   await action.run(async () => {
-    created = await client.createDeck(trimmed);
+    created = await client.createDeck(trimmed).catch(explainDeckFailure);
   });
   return created;
 }

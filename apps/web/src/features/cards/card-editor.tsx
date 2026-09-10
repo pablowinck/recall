@@ -6,6 +6,7 @@ import { CardEditorFields } from './card-editor-fields';
 import { CardEditorActions } from './card-editor-actions';
 import { DiscardDraftDialog } from './discard-draft-dialog';
 import { useCardEditor, type CardEditorProps, type CardEditorState } from './use-card-editor';
+import { useUnsavedDraftWarning } from './use-unsaved-draft-warning';
 
 interface EditorDismissal {
   confirming: boolean;
@@ -17,6 +18,7 @@ interface EditorDismissal {
 export function CardEditor(props: CardEditorProps): React.JSX.Element {
   const state = useCardEditor(props);
   const dismissal = useEditorDismissal(props, state);
+  useUnsavedDraftWarning(state.hasChanges);
   return (
     <Dialog.Root open>
       <CardEditorContent editor={props} state={state} dismissal={dismissal} />
@@ -67,6 +69,8 @@ function CardEditorContent({
   );
 }
 
+type OutsideEvent = Event & { detail: { originalEvent: MouseEvent } };
+
 function createDismissHandlers(
   state: CardEditorState,
   dismissal: EditorDismissal,
@@ -83,6 +87,8 @@ function createDismissHandlers(
     },
     onPointerDownOutside: (event) => {
       event.preventDefault();
+      // A right-click outside opens a context menu; it must not put a draft at risk.
+      if ((event as OutsideEvent).detail.originalEvent.button !== 0) return;
       dismissal.request();
     },
   };

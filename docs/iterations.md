@@ -335,3 +335,11 @@ In dark mode the canvas and the card surface sat 1.07:1 apart, so Today read as 
 Dark tokens now step: canvas `#0a0a09`, surface `#212120`, raised `#2a2a28`, with slightly stronger fills and separators, and neutral pills use `--fill-2`. The `--ink-3` token, unused since the rebrand, is gone. A session hides the app chrome at every size, so the card owns the window and "Leave session" is the way back.
 
 Validation: format, typecheck, 81 unit tests and build pass. All 88 E2E journeys pass on desktop, tablet and mobile, among them one that finds the navigation hidden during a session and back when it ends. The UX tour reports no overflow or axe violations on three devices, and its dark captures show cards standing off the canvas.
+
+## 2026-09-10 — UX loop 21: a draft the editor never loses, and a deck error that says what happened
+
+Cards written through MCP or an import can carry CRLF line endings, but a textarea always reports LF, so opening such a card and pressing Cancel asked to discard changes nobody had made, and saving rewrote the stored text. Tag spacing behaved the same way. A right-click anywhere outside the editor counted as a dismissal, and a reload or a closed tab took an unsaved draft with it. A duplicate deck name answered "This record already exists.", which reads like a database rather than a name someone already used.
+
+The draft comparison now normalizes line endings and tag spacing, so only real edits count. Dismissal ignores non-primary clicks, and the browser confirms a reload or a closed tab while the editor holds unsaved text. A duplicate name answers "You already have a deck with that name." through `deck-errors.ts`, for the deck dialog and the inline creator alike, and the inline field stops at the 80 characters the contract allows.
+
+Validation: format, typecheck, 85 unit tests and build pass, including CRLF and tag-spacing comparisons and the duplicate-name mapping. All 91 E2E journeys pass on desktop, tablet and mobile, among them one that closes a tab holding a typed draft and finds the browser asking first. The UX tour reports no overflow or axe violations on three devices.

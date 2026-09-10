@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import type { RecallClient } from '@recall/client';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
+import { explainDeckFailure } from './deck-errors';
 
 export interface DeckDialogState {
   open: boolean;
@@ -36,6 +37,6 @@ async function saveDeck(
   action: AsyncAction,
   complete: () => void,
 ): Promise<void> {
-  const saved = await action.run(() => client.createDeck(name));
+  const saved = await action.run(() => client.createDeck(name).catch(explainDeckFailure));
   if (saved) complete();
 }

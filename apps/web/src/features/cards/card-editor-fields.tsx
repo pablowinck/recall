@@ -113,6 +113,7 @@ function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Ele
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={onKeyDown}
+          maxLength={80}
           placeholder="e.g. Spanish Vocabulary"
           disabled={state.deckAction.busy}
           autoFocus

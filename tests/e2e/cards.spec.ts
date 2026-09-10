@@ -76,7 +76,7 @@ test('a duplicate deck name remains editable after the server rejects it', async
     await page.getByRole('button', { name: 'New deck', exact: true }).click();
     await page.getByRole('textbox', { name: 'Name', exact: true }).fill('My first deck');
     await page.getByRole('button', { name: 'Create deck', exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText('This record already exists.');
+    await expect(page.getByRole('alert')).toContainText('You already have a deck with that name.');
     await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(
       'My first deck',
     );
@@ -227,6 +227,20 @@ test('a new card from a filtered library starts in the filtered deck', async ({ 
     await expect(page.getByRole('heading', { name: 'Question in Spanish practice' })).toBeVisible();
     await page.getByRole('button', { name: 'New card', exact: true }).first().click();
     await expect(page.getByRole('combobox', { name: 'Deck' })).toContainText('Spanish practice');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('closing the tab cannot take an unsaved draft silently', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    await page.getByRole('textbox', { name: /^Front/ }).fill('A draft the browser must protect');
+    const prompt = page.waitForEvent('dialog');
+    await page.close({ runBeforeUnload: true });
+    expect((await prompt).type()).toBe('beforeunload');
   } finally {
     await account.cleanup();
   }

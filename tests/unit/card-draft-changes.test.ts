@@ -13,6 +13,15 @@ describe('card draft changes', () => {
     expect(hasDraftChanges({ deck_id: 'deck-a', front: '', back: '', tags: ['verbs'] })).toBe(true);
   });
 
+  it('ignores line endings written by another tool', () => {
+    const stored = { ...card, back: 'First line\r\nSecond line' };
+    expect(hasDraftChanges({ ...card, back: 'First line\nSecond line' }, stored)).toBe(false);
+  });
+
+  it('ignores spacing around tags', () => {
+    expect(hasDraftChanges({ ...card, tags: [' one', 'two '] }, card)).toBe(false);
+  });
+
   it('compares an existing card field by field', () => {
     expect(hasDraftChanges({ ...card }, card)).toBe(false);
     expect(hasDraftChanges({ ...card, back: 'Back.' }, card)).toBe(true);

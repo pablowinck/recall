@@ -21,6 +21,17 @@ export function buildCardDraft(fields: FormData, deckId: string): CardDraft {
  */
 export function hasDraftChanges(draft: CardDraft, original?: OriginalCard): boolean {
   if (!original) return Boolean(draft.front.trim() || draft.back.trim() || draft.tags.length);
-  if (draft.front !== original.front || draft.back !== original.back) return true;
-  return draft.deck_id !== original.deck_id || draft.tags.join('\n') !== original.tags.join('\n');
+  if (sameText(draft.front, original.front) && sameText(draft.back, original.back))
+    return draft.deck_id !== original.deck_id || !sameTags(draft.tags, original.tags);
+  return true;
+}
+
+// Cards written by other tools can carry CRLF, and a textarea always reports LF.
+function sameText(edited: string, stored: string): boolean {
+  return edited.replace(/\r\n?/g, '\n') === stored.replace(/\r\n?/g, '\n');
+}
+
+function sameTags(edited: string[], stored: string[]): boolean {
+  const clean = (tags: string[]): string => tags.map((tag) => tag.trim()).join('\n');
+  return clean(edited) === clean(stored);
 }
