@@ -303,3 +303,11 @@ On a 390 px phone the one-time connection panel kept its three actions in one ro
 Dialog action rows now wrap below 480 px, and the connection panel stacks its actions at that width with the primary copy on top, each full width. The setup command scrolls sideways instead of breaking a token across lines, and both the command and the token field use a shared `--font-mono` stack. A new editor starts in the deck the library is filtered by, then the deck of the previous new card, then the first deck; `initial-deck.ts` states that order once, and the workspace carries the filtered deck to the editor.
 
 Validation: format, typecheck, 74 unit tests and build pass, including the deck preference order against a fake deck memory. All 73 E2E journeys pass on desktop, tablet and mobile, among them a phone journey that measures every panel action inside the panel and a library journey that opens the editor from a filtered list. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 17: reading sizes for questions and a comfortable measure
+
+The study card treated every question as a headline: display size and tight tracking, whatever its length. A paragraph-long prompt then filled the card at 33 px and pushed the answer off the screen, and the answer itself ran to about 78 characters a line on a 1440 px display, wider than the 60–75 that keeps the eye on track for hours.
+
+Questions now step down by length: a few words keep display size, a sentence drops a step, and a paragraph reads at body size with looser tracking and `text-wrap: pretty`. `card-typography.ts` holds that decision as one pure function, so the rule is stated once. Question and answer both stop at 66 characters a line, the answer scale is fluid between phone and desktop instead of fixed, and prose wraps with `break-word` instead of `anywhere`, which used to split words for no reason.
+
+Validation: format, typecheck, 77 unit tests and build pass, including the three prompt lengths. All 76 E2E journeys pass on desktop, tablet and mobile, among them one that measures a paragraph question rendering smaller than a short one on the same screen. The UX tour reports no overflow or axe violations, and probe captures at 1440 px and 390 px show a short, a sentence-long and a paragraph-long card.

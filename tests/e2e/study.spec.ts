@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { createTestAccount } from './fixtures';
 import { signInToRecall } from './interaction-steps';
 
@@ -107,3 +107,49 @@ test('a failed check at the end of a batch never claims the session is done', as
     await account.cleanup();
   }
 });
+
+test('a paragraph-long question is set smaller than a short one', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const paragraph = `Explain, in your own words, ${'why spaced repetition works so well. '.repeat(8)}`;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Define “candid”',
+      back: 'Frank.',
+      tags: [],
+    });
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: paragraph,
+      back: 'It fights forgetting.',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    const first = await measureQuestion(page);
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.getByRole('button', { name: /Good/ }).click();
+    const second = await measureQuestion(page, first.text);
+    const [short, long] = first.text.startsWith('Define') ? [first, second] : [second, first];
+    expect(long.text.length).toBeGreaterThan(240);
+    expect(long.size).toBeLessThan(short.size);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+/** Read the current question and its rendered size, once it differs from the previous card. Example: await measureQuestion(page). */
+async function measureQuestion(
+  page: Page,
+  previous?: string,
+): Promise<{ text: string; size: number }> {
+  const heading = page.locator('.review-card h2');
+  await expect(heading).toBeVisible();
+  // Rating posts before the queue advances, so the old question is still on screen for a moment.
+  if (previous) await expect(heading).not.toHaveText(previous);
+  return heading.evaluate((node) => ({
+    text: node.textContent ?? '',
+    size: Number.parseFloat(getComputedStyle(node).fontSize),
+  }));
+}

@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import type { StudyCard } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingControls } from './rating-controls';
+import { frontSizeClass } from './card-typography';
 
 interface StudyProgressProps {
   session: StudySessionState;
@@ -76,7 +77,7 @@ export function ReviewContent({
         onClick={isClickable ? onReveal : undefined}
       >
         <span className="eyebrow">Front</span>
-        <h2>{current.card.front}</h2>
+        <h2 className={frontSizeClass(current.card.front)}>{current.card.front}</h2>
         {revealed && <ReviewAnswer answer={current.card.back} focusRef={focus.answer} />}
       </article>
     </>

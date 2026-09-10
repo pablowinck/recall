@@ -69,13 +69,29 @@
   box-shadow: var(--elev-2);
 }
 .review-card h2 {
-  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  /* Fluid from phone to desktop; long questions step down through the classes below. */
+  --question-size: clamp(1.5rem, 1.2vw + 1.1rem, 2.1rem);
+  font-size: var(--question-size);
   line-height: 1.45;
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  max-width: 66ch;
   font-weight: 600;
   letter-spacing: -0.025em;
   margin-top: 1.1rem;
+}
+/* A sentence and a paragraph are read, not glanced at, so they lose display size and tight tracking. */
+.review-card h2.is-long {
+  --question-size: clamp(1.15rem, 0.8vw + 0.95rem, 1.6rem);
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+}
+.review-card h2.is-paragraph {
+  --question-size: clamp(1.1rem, 0.5vw + 0.95rem, 1.3rem);
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
 }
 .review-card > .eyebrow {
   font-size: 0.75rem;
@@ -88,9 +104,12 @@
 }
 .review-answer > div {
   white-space: pre-wrap;
-  font-size: 1.15rem;
+  font-size: clamp(1.05rem, 0.55vw + 0.92rem, 1.2rem);
   line-height: 1.75;
-  overflow-wrap: anywhere;
+  /* Around 66 characters per line: the eye finds the next line without effort for hours. */
+  max-width: 66ch;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
   margin-top: 0.85rem;
 }
 .review-answer .eyebrow {
@@ -266,11 +285,7 @@
     min-height: 280px;
     border-radius: 20px;
   }
-  .review-card h2 {
-    font-size: 1.4rem;
-  }
   .review-answer > div {
-    font-size: 1rem;
     line-height: 1.7;
   }
   .rating-grid {
