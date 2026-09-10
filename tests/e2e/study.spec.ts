@@ -220,3 +220,24 @@ test('a session hides the app chrome until it is over', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('a rating says what it claims and which key presses it', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'A card to rate',
+      back: 'An answer to rate',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    const good = page.getByRole('button', { name: /Good/ });
+    await expect(good).toHaveAttribute('aria-keyshortcuts', '3');
+    await expect(good).toHaveAccessibleName(/You recalled it\./);
+  } finally {
+    await account.cleanup();
+  }
+});

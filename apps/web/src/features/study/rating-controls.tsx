@@ -1,6 +1,8 @@
+import { Tooltip } from '@radix-ui/themes';
 import type { ReviewOption } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingFailureNotice } from './rating-failure-notice';
+import { describeRating, ratingMeaning } from './rating-meanings';
 
 /** Show the scheduling consequence of each rating. Example: <RatingControls session={session} />. */
 export function RatingControls({ session }: { session: StudySessionState }): React.JSX.Element {
@@ -28,15 +30,20 @@ function RatingButton({
   session: StudySessionState;
 }): React.JSX.Element {
   return (
-    <button
-      className={`rating-button rating-${option.rating} ${session.savingRating === option.rating ? 'is-chosen' : ''}`}
-      disabled={session.saving}
-      onClick={() => void session.rate(option.rating)}
-    >
-      <RatingKeyCap rating={option.rating} />
-      <strong>{option.label}</strong>
-      <span>{option.interval}</span>
-    </button>
+    // The label says what the rating claims about the recall, which the four words alone never did.
+    <Tooltip content={ratingMeaning(option.rating)}>
+      <button
+        className={`rating-button rating-${option.rating} ${session.savingRating === option.rating ? 'is-chosen' : ''}`}
+        aria-label={describeRating(option)}
+        aria-keyshortcuts={String(option.rating)}
+        disabled={session.saving}
+        onClick={() => void session.rate(option.rating)}
+      >
+        <RatingKeyCap rating={option.rating} />
+        <strong>{option.label}</strong>
+        <span>{option.interval}</span>
+      </button>
+    </Tooltip>
   );
 }
 

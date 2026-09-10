@@ -367,3 +367,11 @@ On a phone the sign-out button sits beside the theme toggle, and a mis-tap ended
 Sign out now asks, with "Stay signed in" as the way out; the shared confirm component learned to carry a tooltip, because Radix passes tooltip props to its content rather than to the trigger. Auth failures pass through `describeAuthFailure`, which turns the service's wording into words a person can act on, and the password rule sits under the label as a hint that stays while typing.
 
 Validation: format, typecheck, 92 unit tests and build pass, including four failure mappings. All 103 E2E journeys pass on desktop, tablet and mobile, among them one that starts a sign-out and calls it off. The UX tour reports no overflow or axe violations, and its sign-up captures show the rule under the label.
+
+## 2026-09-10 — UX loop 25: ratings that say what they mean
+
+The four ratings showed a word and an interval — "Good, 10 min" — but never what the word claims about the recall, and nothing told assistive technology that the keys 1 to 4 press them.
+
+Each rating now carries `aria-keyshortcuts` and an accessible name that spells out the claim and the next interval ("Good, You recalled it. Next in 10 min"), with the same meaning in a tooltip for pointer users. "Reveal answer" declares Space and Enter the same way. `rating-meanings.ts` keeps the four claims in one place.
+
+Validation: format, typecheck, 95 unit tests and build pass. All 106 E2E journeys pass on desktop, tablet and mobile, including one that reads the shortcut and the meaning off the Good rating. The UX tour reports no overflow or axe violations on three devices.

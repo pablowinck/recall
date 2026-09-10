@@ -151,7 +151,7 @@ export function StudyActions({
   if (session.revealed) return <RatingControls session={session} />;
   return (
     <div className="reveal-action">
-      <Button size="4" onClick={session.reveal}>
+      <Button size="4" aria-keyshortcuts="Space Enter" onClick={session.reveal}>
         Reveal answer
       </Button>
       <span className="reveal-hint">
