@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import type { Request } from 'express';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { TenantDatabase } from './database';
-import { RecallError } from './errors';
+import type { TenantDatabase } from './database.js';
+import { RecallError } from './errors.js';
 
 export interface Authenticator {
   verify(request: Request): Promise<string>;

@@ -1,7 +1,7 @@
 import type { PoolClient } from 'pg';
 import type { Flashcard, ReviewInput, RecallRating, StudyCard } from '@recall/contracts';
 import { applyRating, previewSchedule } from '@recall/domain';
-import { RecallError } from '../errors';
+import { RecallError } from '../errors.js';
 
 /** Load only due cards, excluding paused cards. Example: studyQueue(connection, now). */
 export async function studyQueue(

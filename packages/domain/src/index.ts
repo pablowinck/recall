@@ -1,2 +1,2 @@
-export { initialSchedule, previewSchedule, applyRating } from './scheduler';
-export { formatInterval } from './interval';
+export { initialSchedule, previewSchedule, applyRating } from './scheduler.js';
+export { formatInterval } from './interval.js';

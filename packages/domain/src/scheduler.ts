@@ -1,6 +1,6 @@
 import { createEmptyCard, fsrs, type Card, type Grade } from 'ts-fsrs';
 import type { RecallRating, ReviewOption, StoredSchedule } from '@recall/contracts';
-import { formatInterval } from './interval';
+import { formatInterval } from './interval.js';
 
 const ratingLabels = ['Again', 'Hard', 'Good', 'Easy'] as const;
 

@@ -10,13 +10,13 @@ import {
   reviewInputSchema,
   tokenDraftSchema,
 } from '@recall/contracts';
-import type { Authenticator } from '../authentication';
-import type { TenantDatabase } from '../database';
-import { createDeck, readWorkspace } from '../cards/workspace-store';
-import { deleteCard, insertCard, listCards, updateCard } from '../cards/card-store';
-import { recordReview, studyQueue } from '../reviews/review-store';
-import { createToken, listTokens, revokeToken } from '../tokens/token-store';
-import type { ApiLogger } from './failures';
+import type { Authenticator } from '../authentication.js';
+import type { TenantDatabase } from '../database.js';
+import { createDeck, readWorkspace } from '../cards/workspace-store.js';
+import { deleteCard, insertCard, listCards, updateCard } from '../cards/card-store.js';
+import { recordReview, studyQueue } from '../reviews/review-store.js';
+import { createToken, listTokens, revokeToken } from '../tokens/token-store.js';
+import type { ApiLogger } from './failures.js';
 
 export interface ApiDependencies {
   database: TenantDatabase;

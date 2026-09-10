@@ -1,6 +1,6 @@
 import { ZodError } from 'zod';
 import type { ErrorRequestHandler } from 'express';
-import { RecallError } from '../errors';
+import { RecallError } from '../errors.js';
 
 export interface ApiLogger {
   error(record: { event: string; status: number; code: string }): void;

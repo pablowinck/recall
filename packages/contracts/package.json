@@ -4,13 +4,20 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
-    "build": "tsc --noEmit",
-    "typecheck": "tsc --noEmit"
+    "build": "tsup src/index.ts --format esm --out-dir dist",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsup src/index.ts --format esm --out-dir dist --watch"
   },
   "dependencies": {
     "zod": "^4.3.0"
+  },
+  "devDependencies": {
+    "tsup": "8.5.1"
   }
 }

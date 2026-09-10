@@ -1,7 +1,7 @@
 import express, { type Express, type Request, type Response } from 'express';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { RecallClient } from '@recall/client';
-import { createRecallMcp } from './tools';
+import { createRecallMcp } from './tools.js';
 
 /** Create a stateless transport suitable for serverless deployment. Example: createMcpApp(apiUrl). */
 export function createMcpApp(apiUrl: string): Express {

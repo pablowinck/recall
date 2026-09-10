@@ -1,12 +1,11 @@
-import { createErrorResponder } from './failures';
+import { createErrorResponder } from './failures.js';
 import express, { type Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { createRoutes, type ApiDependencies } from './routes';
+import { createRoutes, type ApiDependencies } from './routes.js';
 
 /** Compose the application without opening sockets or loading credentials. Example: createApi(fakeDependencies). */
-export function createApi(dependencies: ApiDependencies): Express {
-  const app = express();
+export function createApi(dependencies: ApiDependencies, app: Express = express()): Express {
   app.disable('x-powered-by');
   app.use(helmet());
   app.use(

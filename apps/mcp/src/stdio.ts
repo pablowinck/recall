@@ -1,6 +1,6 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { RecallClient } from '@recall/client';
-import { createRecallMcp } from './tools';
+import { createRecallMcp } from './tools.js';
 
 const token = process.env.RECALL_MCP_TOKEN;
 if (!token) throw new Error('Missing RECALL_MCP_TOKEN; expected a personal recall_ token.');

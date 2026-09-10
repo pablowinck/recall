@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import type { AccessToken, CreatedToken } from '@recall/contracts';
-import { RecallError } from '../errors';
+import { RecallError } from '../errors.js';
 
 /** Return connection metadata without hashes or secrets. Example: listTokens(connection). */
 export async function listTokens(connection: PoolClient): Promise<AccessToken[]> {

@@ -1,6 +1,6 @@
 import type { PoolClient } from 'pg';
 import type { CardDraft, CardPage, CardPatch, Flashcard } from '@recall/contracts';
-import { RecallError } from '../errors';
+import { RecallError } from '../errors.js';
 
 export interface CardSearch {
   search: string;

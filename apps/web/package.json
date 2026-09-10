@@ -14,7 +14,7 @@
     "react-dom": "^19.2.0",
     "@radix-ui/themes": "^3.2.0",
     "lucide-react": "^0.577.0",
-    "@supabase/supabase-js": "^2.99.0",
+    "@supabase/supabase-js": "2.116.0",
     "@recall/contracts": "workspace:*",
     "@recall/client": "workspace:*"
   },

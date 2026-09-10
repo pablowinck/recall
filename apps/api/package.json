@@ -15,7 +15,7 @@
     "helmet": "^8.1.0",
     "pg": "^8.16.0",
     "pino": "^10.0.0",
-    "@supabase/supabase-js": "^2.99.0",
+    "@supabase/supabase-js": "2.116.0",
     "@recall/contracts": "workspace:*",
     "@recall/domain": "workspace:*",
     "zod": "^4.3.0"

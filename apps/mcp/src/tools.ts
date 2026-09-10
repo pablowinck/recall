@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { RecallClient } from '@recall/client';
-import { recallToolDefinitions as definitions } from './tool-definitions';
+import { recallToolDefinitions as definitions } from './tool-definitions.js';
 
 type ToolTextResult = {
   content: { type: 'text'; text: string }[];

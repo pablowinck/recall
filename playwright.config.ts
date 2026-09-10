@@ -13,7 +13,10 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'api-mcp', testMatch: ['**/isolation.spec.ts', '**/seed-lifecycle.spec.ts'] },
+    {
+      name: 'api-mcp',
+      testMatch: ['**/isolation.spec.ts', '**/seed-lifecycle.spec.ts', '**/database-role.spec.ts'],
+    },
     {
       name: 'desktop',
       testMatch: '**/product.spec.ts',
