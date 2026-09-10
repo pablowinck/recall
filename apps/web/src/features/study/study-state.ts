@@ -1,12 +1,19 @@
 import type { Flashcard, RecallRating, ReviewInput, StudyCard } from '@recall/contracts';
 
+/** A card rated in this session that comes back soon, e.g. one minute after "Again". */
+export interface ReturningCard {
+  id: string;
+  dueAt: string;
+}
 export interface StudySnapshot {
   queue: StudyCard[];
   completed: number;
   revealed: boolean;
   loading: boolean;
   saving: boolean;
+  refilling: boolean;
   error: string;
+  returning: ReturningCard[];
 }
 export interface StudyAttempt {
   cardId: string;
@@ -29,6 +36,8 @@ export interface StudyActionContext {
   runtime: StudyRuntime;
   update: StudyUpdate;
   newRequestId: () => string;
+  now: () => Date;
+  deck?: string;
 }
 
 /** Start without fabricated cards or review counts. Example: initialStudySnapshot(). */
@@ -39,7 +48,9 @@ export function initialStudySnapshot(): StudySnapshot {
     revealed: false,
     loading: true,
     saving: false,
+    refilling: false,
     error: '',
+    returning: [],
   };
 }
 

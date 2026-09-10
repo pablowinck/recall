@@ -1,5 +1,6 @@
-import type { RecallRating, StudyCard } from '@recall/contracts';
+import type { Flashcard, RecallRating, StudyCard } from '@recall/contracts';
 import { describeFailure } from '../../lib/error-message';
+import { pruneReturningCards, trackReturningCard } from './returning-cards';
 import type {
   StudyActionContext,
   StudyAttempt,
@@ -7,6 +8,11 @@ import type {
   StudyRuntime,
   StudyUpdate,
 } from './study-state';
+
+type StudyRefillContext = Pick<
+  StudyActionContext,
+  'gateway' | 'runtime' | 'update' | 'now' | 'deck'
+>;
 
 /** Refresh the queue without accepting results from a disposed session. Example: reloadStudyQueue(gateway, runtime, update). */
 export async function reloadStudyQueue(
@@ -26,6 +32,36 @@ export async function reloadStudyQueue(
     if (generation === runtime.generation)
       update((current) => ({ ...current, loading: false, error: describeFailure(failure) }));
   }
+}
+
+/**
+ * Load the next due batch when a session runs out, without the full-screen loader. Silent checks
+ * (timers, "Check for more reviews") keep the completion screen in place. Example: refillStudyQueue(context).
+ */
+export async function refillStudyQueue(
+  context: StudyRefillContext,
+  { silent = false }: { silent?: boolean } = {},
+): Promise<void> {
+  const generation = context.runtime.generation;
+  if (!silent) context.update((current) => ({ ...current, refilling: true }));
+  try {
+    const queue = await context.gateway.study(context.deck);
+    if (generation === context.runtime.generation) acceptRefill(context, queue);
+  } catch {
+    // A failed refill falls back to the completion screen, which offers a manual check.
+    if (generation === context.runtime.generation)
+      context.update((current) => ({ ...current, refilling: false }));
+  }
+}
+
+function acceptRefill(context: StudyRefillContext, queue: StudyCard[]): void {
+  const now = context.now();
+  context.update((current) => ({
+    ...current,
+    queue: current.queue.length ? current.queue : queue,
+    returning: pruneReturningCards(current.returning, queue, now),
+    refilling: false,
+  }));
 }
 
 /** Rate only revealed cards and preserve the attempt across failures. Example: recordStudyRating(context, 3). */
@@ -60,9 +96,12 @@ async function commitStudyRating(
   attempt: StudyAttempt,
 ): Promise<void> {
   const generation = context.runtime.generation;
+  const lastCard = context.snapshot.queue.length === 1;
   try {
-    await sendStudyRating(context.gateway, current, attempt);
-    if (generation === context.runtime.generation) acceptStudyRating(context);
+    const updated = await sendStudyRating(context.gateway, current, attempt);
+    if (generation !== context.runtime.generation) return;
+    acceptStudyRating(context, updated);
+    if (lastCard) void refillStudyQueue(context);
   } catch (failure) {
     if (generation === context.runtime.generation)
       context.update((snapshot) => ({ ...snapshot, error: describeFailure(failure) }));
@@ -73,24 +112,26 @@ async function commitStudyRating(
   }
 }
 
-async function sendStudyRating(
+function sendStudyRating(
   gateway: StudyGateway,
   current: StudyCard,
   attempt: StudyAttempt,
-): Promise<void> {
-  await gateway.review(current.card.id, {
+): Promise<Flashcard> {
+  return gateway.review(current.card.id, {
     rating: attempt.rating,
     version: current.card.version,
     request_id: attempt.requestId,
   });
 }
 
-function acceptStudyRating(context: StudyActionContext): void {
+function acceptStudyRating(context: StudyActionContext, updated: Flashcard): void {
   context.runtime.attempt = null;
+  const now = context.now();
   context.update((snapshot) => ({
     ...snapshot,
     queue: snapshot.queue.slice(1),
     completed: snapshot.completed + 1,
     revealed: false,
+    returning: trackReturningCard(snapshot.returning, updated, now),
   }));
 }

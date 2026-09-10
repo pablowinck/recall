@@ -74,6 +74,7 @@ async function preparedStudy(failures = 0): Promise<{
       runtime: snapshot.runtime,
       update: snapshot.update,
       newRequestId: ids.next,
+      now: () => new Date('2026-09-10T12:00:00Z'),
     }),
   };
 }

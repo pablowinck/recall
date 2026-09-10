@@ -267,6 +267,11 @@
   line-height: 1.9;
   margin-bottom: 0.5rem;
 }
+/* Always mounted so screen readers announce the result of "Check for more reviews". */
+.check-status {
+  min-height: 1.5em;
+  font-size: 0.875rem;
+}
 @media (max-width: 768px) {
   .study-context {
     margin-top: 1.4rem;

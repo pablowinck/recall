@@ -15,7 +15,9 @@ interface StudyViewProps {
 export function StudyView({ client, deck, exit }: StudyViewProps): React.JSX.Element {
   const session = useStudySession(client, deck);
   useStudyKeyboard(session);
-  if (session.loading) return <LoadingState />;
+  if (session.loading) return <LoadingState label="Loading your cards…" />;
+  if (session.refilling && !session.queue.length)
+    return <LoadingState label="Checking for more cards…" />;
   if (!session.queue.length && !session.error)
     return <SessionComplete session={session} exit={exit} />;
   return (

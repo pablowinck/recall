@@ -1,12 +1,16 @@
 import { Button, Spinner } from '@radix-ui/themes';
 import { AlertCircle } from 'lucide-react';
 
-/** Announce an actual loading state accessibly. Example: <LoadingState />. */
-export function LoadingState(): React.JSX.Element {
+/** Announce what is loading, accessibly. Example: <LoadingState label="Loading your cards…" />. */
+export function LoadingState({
+  label = 'Getting your workspace ready…',
+}: {
+  label?: string;
+}): React.JSX.Element {
   return (
     <div className="loading-state" role="status">
       <Spinner size="3" />
-      <span>Getting your workspace ready…</span>
+      <span>{label}</span>
     </div>
   );
 }

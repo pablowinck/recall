@@ -221,3 +221,11 @@ Probes placed the rating grid about 170 px below the fold at 1440×900 and about
 The reveal and rating areas now stick to the bottom of the viewport over a soft canvas fade, including safe-area padding. Phones show all four ratings in one compact row, and each new card starts scrolled to its question.
 
 Validation: a new E2E journey reveals a 40-line answer and checks that "Again" and "Easy" are in the viewport on desktop, tablet and mobile.
+
+## 2026-09-10 — UX loop 8: sessions continue past each batch
+
+Every session stopped at the API's 20-card batch and said "Nicely done" while more cards were due. Cards rated Again (1 min), or new cards rated Good (10 min), silently left the session until the next visit, and "Check for more reviews" flashed a full-page loader before returning the same screen.
+
+When the last card of a batch is rated, the session now loads the next due batch in place ("Checking for more cards…"). Cards that FSRS brings back within the hour are remembered: completion reads, for example, "You reviewed 12 cards in this session. 3 cards come back in about 10 min.", and the session resumes on its own when they are due, giving up a minute after a card fails to return. "Check for more reviews" checks in place and answers "Nothing is due yet." in a live region. Loading states name what is loading.
+
+Validation: unit tests with a named fake gateway cover continuing into the next batch, remembering returning cards, pruning queued or stale entries, ignoring cards beyond the hour, and discarding refills for disposed sessions. 56 unit tests and 50 E2E tests passed; the three-size journey reported no overflow or axe violations.
