@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { createTestAccount, connectTestMcp } from './fixtures';
+import { FakeCardSaveOutage } from './fake-card-save-outage';
 
 test('login → create/edit → MCP → study → persist → sign out', async ({ page }, testInfo) => {
   const account = await createTestAccount();
@@ -91,6 +92,50 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       .click();
     await expect(page.getByRole('heading', { name: 'Welcome back.' })).toBeVisible();
   } finally {
+    await account.cleanup();
+  }
+});
+
+test('card save failure keeps the draft and permits one successful retry', async ({ page }) => {
+  const account = await createTestAccount();
+  const outage = new FakeCardSaveOutage();
+  try {
+    await page.goto('/');
+    await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
+    await page.getByLabel('Password', { exact: true }).fill(account.password);
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+    await expect(page.getByRole('heading', { name: /A good day/ })).toBeVisible();
+    const dashboardAccessibility = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze();
+    expect(dashboardAccessibility.violations).toEqual([]);
+    await page.getByRole('button', { name: 'New card', exact: true }).click();
+    await page.getByRole('textbox', { name: /^Front/ }).fill('A draft worth keeping');
+    await page
+      .getByRole('textbox', { name: /^Back/ })
+      .fill('This text must survive a failed save.');
+    const accessibility = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze();
+    expect(accessibility.violations).toEqual([]);
+    await outage.install(page);
+    await page.getByRole('button', { name: 'Create card', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: /^Front/ })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toBeDisabled();
+    outage.release();
+    await expect(page.getByRole('alert')).toContainText('Temporary outage. Please retry.');
+    await expect(page.getByRole('textbox', { name: /^Front/ })).toHaveValue(
+      'A draft worth keeping',
+    );
+    await expect(page.getByRole('textbox', { name: /^Back/ })).toHaveValue(
+      'This text must survive a failed save.',
+    );
+    await page.getByRole('button', { name: 'Create card', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect((await account.api.cards()).total).toBe(1);
+    expect(outage.attempts).toBe(2);
+  } finally {
+    outage.release();
     await account.cleanup();
   }
 });

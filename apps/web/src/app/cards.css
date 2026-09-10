@@ -123,6 +123,12 @@
   display: grid;
   gap: 1.1rem;
 }
+fieldset.form-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
 label {
   display: grid;
   gap: 0.5rem;

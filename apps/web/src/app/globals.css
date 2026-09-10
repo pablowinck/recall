@@ -40,6 +40,12 @@ select {
   --accent-9: #0066cc;
   --accent-10: #005bb8;
   --accent-contrast: #fff;
+  --accent-11: #005bb8;
+  --accent-a11: #005bb8;
+}
+.radix-themes.dark[data-accent-color='blue'] {
+  --accent-11: #70b7ff;
+  --accent-a11: #70b7ff;
 }
 .recall-root {
   --canvas: #f5f5f7;
