@@ -1,0 +1,386 @@
+[
+  {
+    "front": "O que naive significa aqui?\nIt was naive of me to trust that stranger.",
+    "back": "Ingênuo / ingênua.\nFoi ingenuidade minha confiar naquele desconhecido. Uma pessoa naive acredita nas coisas com facilidade por falta de experiência.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-001"
+  },
+  {
+    "front": "Complete com a palavra estudada para ingênuo:\nI was too ___ to notice the trick.",
+    "back": "naive\nI was too naive to notice the trick.\nEu era ingênuo demais para perceber o truque.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-002"
+  },
+  {
+    "front": "O que desperate significa aqui?\nShe was desperate for help.",
+    "back": "Desesperada; precisando muito.\nEla estava desesperada por ajuda.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-003"
+  },
+  {
+    "front": "Complete com a palavra estudada para desesperado:\nAfter losing my keys, I became ___ to find them.",
+    "back": "desperate\nAfter losing my keys, I became desperate to find them.\nDepois de perder minhas chaves, fiquei desesperado para encontrá-las.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-004"
+  },
+  {
+    "front": "O que stumped significa aqui?\nI'm stumped by this question.",
+    "back": "Sem saber a resposta; sem conseguir resolver.\nNão sei como responder a esta pergunta.\nCostuma indicar uma dificuldade mental diante de uma pergunta ou problema.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-005"
+  },
+  {
+    "front": "Complete com a palavra estudada para sem saber a resposta:\nThat's a difficult question. I'm ___!",
+    "back": "stumped\nThat's a difficult question. I'm stumped!\nEssa pergunta é difícil. Não sei a resposta!",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-006"
+  },
+  {
+    "front": "O que offset significa aqui?\nThe discount will offset the delivery cost.",
+    "back": "Compensar.\nO desconto vai compensar o custo da entrega.\nEste cartão pratica o verbo offset nesse contexto; ele também tem outros sentidos.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-007"
+  },
+  {
+    "front": "Complete com a palavra estudada para compensar:\nThe savings will ___ the extra cost.",
+    "back": "offset\nThe savings will offset the extra cost.\nA economia vai compensar o custo extra.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-008"
+  },
+  {
+    "front": "O que fault significa aqui?\nIt wasn't your fault.",
+    "back": "Culpa.\nNão foi culpa sua.\nEm outros contextos, fault também pode ser falha ou defeito.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-009"
+  },
+  {
+    "front": "Complete com a palavra estudada para culpa:\nI'm sorry. It was my ___.",
+    "back": "fault\nI'm sorry. It was my fault.\nDesculpe. Foi culpa minha.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-010"
+  },
+  {
+    "front": "O que stuck significa aqui?\nWe're stuck in traffic.",
+    "back": "Presos; sem conseguir avançar.\nEstamos presos no trânsito.\nTambém pode indicar estar travado em uma tarefa: I'm stuck on this exercise.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-011"
+  },
+  {
+    "front": "Complete com a palavra estudada para preso:\nI can't open the door. It's ___.",
+    "back": "stuck\nI can't open the door. It's stuck.\nNão consigo abrir a porta. Ela está emperrada.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-012"
+  },
+  {
+    "front": "O que those indica aqui?\nLook at those birds over there.",
+    "back": "Aqueles / aquelas: plural usado para coisas mais distantes neste contexto.\nOlhe aqueles pássaros ali.\nSingular correspondente: that.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-013"
+  },
+  {
+    "front": "Complete com these ou those:\nLook at ___ mountains far away.",
+    "back": "those\nLook at those mountains far away.\nOlhe aquelas montanhas ao longe.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-014"
+  },
+  {
+    "front": "O que these indica aqui?\nThese keys in my hand are yours.",
+    "back": "Estes / estas: plural usado para coisas próximas neste contexto.\nEstas chaves na minha mão são suas.\nSingular correspondente: this.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-015"
+  },
+  {
+    "front": "Complete com these ou those:\n___ apples here in my hand are fresh.",
+    "back": "These\nThese apples here in my hand are fresh.\nEstas maçãs aqui na minha mão estão frescas.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-016"
+  },
+  {
+    "front": "O que throw significa aqui?\nThrow the ball to me.",
+    "back": "Jogar / arremessar.\nJogue a bola para mim.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-017"
+  },
+  {
+    "front": "Complete com a palavra estudada para arremessar:\nCan you ___ the ball to me?",
+    "back": "throw\nCan you throw the ball to me?\nVocê pode jogar a bola para mim?",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-018"
+  },
+  {
+    "front": "O que overlap significa aqui?\nThese two meetings overlap by ten minutes.",
+    "back": "Coincidir parcialmente; sobrepor-se.\nEssas duas reuniões têm dez minutos de sobreposição de horário.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-019"
+  },
+  {
+    "front": "Complete com a palavra estudada para coincidir parcialmente:\nMy classes ___, so I can't attend both in full.",
+    "back": "overlap\nMy classes overlap, so I can't attend both in full.\nOs horários das minhas aulas coincidem parcialmente, então não consigo assistir às duas por inteiro.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-020"
+  },
+  {
+    "front": "O que hinting significa aqui?\nAre you hinting that I should leave?",
+    "back": "Insinuando; dando a entender.\nVocê está insinuando que eu deveria ir embora?\nForma com -ing de hint.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-021"
+  },
+  {
+    "front": "Complete com a forma em -ing de hint:\nShe is ___ that she wants a new phone.",
+    "back": "hinting\nShe is hinting that she wants a new phone.\nEla está dando a entender que quer um celular novo.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-022"
+  },
+  {
+    "front": "O que spread significa aqui?\nNews can spread quickly.",
+    "back": "Espalhar-se.\nNotícias podem se espalhar rapidamente.\nAs formas base, passado e particípio são iguais: spread → spread → spread.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-023"
+  },
+  {
+    "front": "Complete com a palavra estudada para espalhar:\nDon't ___ that rumor.",
+    "back": "spread\nDon't spread that rumor.\nNão espalhe esse boato.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-024"
+  },
+  {
+    "front": "O que taught significa aqui?\nShe taught me English.",
+    "back": "Ensinou.\nEla me ensinou inglês.\nTaught é o passado e também o particípio de teach.",
+    "tags": ["ingles", "vocabulario", "reconhecimento"],
+    "source_key": "english-starter-025"
+  },
+  {
+    "front": "Complete com o passado simples de teach:\nMy father ___ me how to swim.",
+    "back": "taught\nMy father taught me how to swim.\nMeu pai me ensinou a nadar.",
+    "tags": ["ingles", "vocabulario", "producao"],
+    "source_key": "english-starter-026"
+  },
+  {
+    "front": "Complete com o passado simples de know:\nI ___ the answer yesterday.",
+    "back": "knew\nI knew the answer yesterday.\nEu sabia a resposta ontem.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-027"
+  },
+  {
+    "front": "Complete com o passado simples de ask:\nShe ___ a question during class yesterday.",
+    "back": "asked\nShe asked a question during class yesterday.\nEla fez uma pergunta durante a aula ontem.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-028"
+  },
+  {
+    "front": "Complete com o passado simples de do:\nI ___ my homework last night.",
+    "back": "did\nI did my homework last night.\nEu fiz minha lição de casa ontem à noite.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-029"
+  },
+  {
+    "front": "Complete com o passado de be:\nI ___ tired yesterday.",
+    "back": "was\nI was tired yesterday.\nEu estava cansado ontem.\nNo passado simples: I/he/she/it was.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-030"
+  },
+  {
+    "front": "Complete com o passado de be:\nThey ___ at home last night.",
+    "back": "were\nThey were at home last night.\nEles estavam em casa ontem à noite.\nNo passado simples: you/we/they were.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-031"
+  },
+  {
+    "front": "Complete com o passado simples de go:\nWe ___ to the park last Sunday.",
+    "back": "went\nWe went to the park last Sunday.\nNós fomos ao parque no domingo passado.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-032"
+  },
+  {
+    "front": "Complete com o passado simples de teach:\nHe ___ math last year.",
+    "back": "taught\nHe taught math last year.\nEle ensinou matemática no ano passado.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-033"
+  },
+  {
+    "front": "Complete com o passado simples de throw:\nShe ___ the ball to me a minute ago.",
+    "back": "threw\nShe threw the ball to me a minute ago.\nEla jogou a bola para mim um minuto atrás.\nO particípio é thrown; neste cartão, o passado simples é threw.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-034"
+  },
+  {
+    "front": "Complete com o passado simples de feel:\nI ___ better after resting yesterday.",
+    "back": "felt\nI felt better after resting yesterday.\nEu me senti melhor depois de descansar ontem.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-035"
+  },
+  {
+    "front": "Complete com o passado simples de buy:\nWe ___ a book yesterday.",
+    "back": "bought\nWe bought a book yesterday.\nNós compramos um livro ontem.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-036"
+  },
+  {
+    "front": "Complete com o passado simples de think:\nI ___ about your suggestion last night.",
+    "back": "thought\nI thought about your suggestion last night.\nEu pensei na sua sugestão ontem à noite.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-037"
+  },
+  {
+    "front": "Complete com o passado simples de get:\nHe ___ home late yesterday.",
+    "back": "got\nHe got home late yesterday.\nEle chegou em casa tarde ontem.",
+    "tags": ["ingles", "passado"],
+    "source_key": "english-starter-038"
+  },
+  {
+    "front": "Complete com go ou went:\nDid you ___ to class yesterday?",
+    "back": "go\nDid you go to class yesterday?\nVocê foi à aula ontem?\nDepois do auxiliar did, use o verbo na forma base.",
+    "tags": ["ingles", "passado", "perguntas"],
+    "source_key": "english-starter-039"
+  },
+  {
+    "front": "Complete com know ou knew:\nI didn't ___ the answer.",
+    "back": "know\nI didn't know the answer.\nEu não sabia a resposta.\nDepois de didn't, use o verbo na forma base.",
+    "tags": ["ingles", "passado", "negativas"],
+    "source_key": "english-starter-040"
+  },
+  {
+    "front": "Passe para a negativa usando didn't:\nShe asked a question.",
+    "back": "She didn't ask a question.\nEla não fez uma pergunta.\nAsked volta para a forma base ask depois de didn't.",
+    "tags": ["ingles", "passado", "negativas"],
+    "source_key": "english-starter-041"
+  },
+  {
+    "front": "Transforme em pergunta no passado simples:\nYou did your homework.",
+    "back": "Did you do your homework?\nVocê fez sua lição de casa?\nO primeiro did é auxiliar; do é o verbo principal na forma base.",
+    "tags": ["ingles", "passado", "perguntas"],
+    "source_key": "english-starter-042"
+  },
+  {
+    "front": "Transforme em pergunta no passado simples:\nShe was tired.",
+    "back": "Was she tired?\nEla estava cansada?\nCom be, inverta was/were e o sujeito; não acrescente did.",
+    "tags": ["ingles", "passado", "perguntas"],
+    "source_key": "english-starter-043"
+  },
+  {
+    "front": "Passe para a negativa contraída:\nThey were at home.",
+    "back": "They weren't at home.\nEles não estavam em casa.\nWeren't = were not.",
+    "tags": ["ingles", "passado", "negativas"],
+    "source_key": "english-starter-044"
+  },
+  {
+    "front": "Complete usando will + know:\nWhen the results arrive tomorrow, I ___ the answer.",
+    "back": "will know\nWhen the results arrive tomorrow, I will know the answer.\nQuando os resultados chegarem amanhã, eu saberei a resposta.\nDepois de will, use a forma base know.",
+    "tags": ["ingles", "futuro"],
+    "source_key": "english-starter-045"
+  },
+  {
+    "front": "Complete usando will + ask:\nI ___ the teacher tomorrow.",
+    "back": "will ask\nI will ask the teacher tomorrow.\nEu vou perguntar ao professor amanhã.",
+    "tags": ["ingles", "futuro"],
+    "source_key": "english-starter-046"
+  },
+  {
+    "front": "Complete usando will + do:\nI promise I ___ my homework tonight.",
+    "back": "will do\nI promise I will do my homework tonight.\nPrometo que farei minha lição de casa hoje à noite.",
+    "tags": ["ingles", "futuro"],
+    "source_key": "english-starter-047"
+  },
+  {
+    "front": "Complete usando will + be:\nShe ___ here soon.",
+    "back": "will be\nShe will be here soon.\nEla estará aqui em breve.\nA forma é will be para todos os sujeitos.",
+    "tags": ["ingles", "futuro"],
+    "source_key": "english-starter-048"
+  },
+  {
+    "front": "Complete usando will + go:\nI think we ___ to the beach tomorrow.",
+    "back": "will go\nI think we will go to the beach tomorrow.\nAcho que iremos à praia amanhã.",
+    "tags": ["ingles", "futuro"],
+    "source_key": "english-starter-049"
+  },
+  {
+    "front": "Complete o plano com am/is/are going to:\nI ___ study English tonight.",
+    "back": "am going to\nI am going to study English tonight.\nEu vou estudar inglês hoje à noite.\nGoing to pode apresentar um plano já decidido.",
+    "tags": ["ingles", "futuro", "going_to"],
+    "source_key": "english-starter-050"
+  },
+  {
+    "front": "Complete o plano com am/is/are going to:\nShe ___ visit her sister tomorrow.",
+    "back": "is going to\nShe is going to visit her sister tomorrow.\nEla vai visitar a irmã amanhã.",
+    "tags": ["ingles", "futuro", "going_to"],
+    "source_key": "english-starter-051"
+  },
+  {
+    "front": "Complete o plano com am/is/are going to:\nThey ___ travel next month.",
+    "back": "are going to\nThey are going to travel next month.\nEles vão viajar no mês que vem.",
+    "tags": ["ingles", "futuro", "going_to"],
+    "source_key": "english-starter-052"
+  },
+  {
+    "front": "Passe para a negativa usando a contração de will not:\nI will go tomorrow.",
+    "back": "I won't go tomorrow.\nEu não vou amanhã.\nWon't = will not; go continua na forma base.",
+    "tags": ["ingles", "futuro", "negativas"],
+    "source_key": "english-starter-053"
+  },
+  {
+    "front": "Transforme em pergunta usando will:\nYou will be here tomorrow.",
+    "back": "Will you be here tomorrow?\nVocê estará aqui amanhã?\nOrdem: will + sujeito + verbo na forma base.",
+    "tags": ["ingles", "futuro", "perguntas"],
+    "source_key": "english-starter-054"
+  },
+  {
+    "front": "Expanda I'd nesta frase:\nI'd like a cup of tea.",
+    "back": "I would\nI would like a cup of tea.\nEu gostaria de uma xícara de chá.\nWould like é uma maneira educada de dizer o que você quer.",
+    "tags": ["ingles", "contracoes", "would"],
+    "source_key": "english-starter-055"
+  },
+  {
+    "front": "Expanda I'd nesta frase:\nI'd already eaten when she arrived.",
+    "back": "I had\nI had already eaten when she arrived.\nEu já tinha comido quando ela chegou.\nHad + particípio (eaten) marca algo anterior a outro momento no passado.",
+    "tags": ["ingles", "contracoes", "had"],
+    "source_key": "english-starter-056"
+  },
+  {
+    "front": "Expanda I'd nesta frase:\nI'd go with you if I had time.",
+    "back": "I would\nI would go with you if I had time.\nEu iria com você se tivesse tempo.\nAqui, would + go apresenta uma situação hipotética.",
+    "tags": ["ingles", "contracoes", "would"],
+    "source_key": "english-starter-057"
+  },
+  {
+    "front": "Expanda I'd nesta frase:\nI'd known her for years before we worked together.",
+    "back": "I had\nI had known her for years before we worked together.\nEu já a conhecia havia anos antes de trabalharmos juntos.\nKnown é o particípio de know; knew é o passado simples.",
+    "tags": ["ingles", "contracoes", "had"],
+    "source_key": "english-starter-058"
+  },
+  {
+    "front": "Expanda I'd nesta frase:\nI'd have helped, but I was away.",
+    "back": "I would\nI would have helped, but I was away.\nEu teria ajudado, mas estava fora.\nWould + have + particípio: o have depois de I'd está na forma base.",
+    "tags": ["ingles", "contracoes", "would", "avancado"],
+    "source_key": "english-starter-059"
+  },
+  {
+    "front": "Expanda I'd nesta expressão:\nI'd better leave now.",
+    "back": "I had\nI had better leave now.\nÉ melhor eu sair agora.\nHad better + verbo na forma base é uma expressão de conselho ou aviso sobre o presente/futuro, apesar de conter had.",
+    "tags": ["ingles", "contracoes", "had", "avancado"],
+    "source_key": "english-starter-060"
+  },
+  {
+    "front": "Expanda I'll nesta frase:\nI'll call you tomorrow.",
+    "back": "I will\nI will call you tomorrow.\nEu vou ligar para você amanhã.\n'll = will; compare com 'd = would ou had em I'd.",
+    "tags": ["ingles", "contracoes", "futuro"],
+    "source_key": "english-starter-061"
+  },
+  {
+    "front": "Expanda won't nesta frase:\nHe won't be late.",
+    "back": "will not\nHe will not be late.\nEle não vai se atrasar.",
+    "tags": ["ingles", "contracoes", "futuro"],
+    "source_key": "english-starter-062"
+  },
+  {
+    "front": "Expanda didn't nesta frase:\nI didn't understand the question.",
+    "back": "did not\nI did not understand the question.\nEu não entendi a pergunta.\nUnderstand fica na forma base depois de did not.",
+    "tags": ["ingles", "contracoes", "passado"],
+    "source_key": "english-starter-063"
+  },
+  {
+    "front": "Expanda I've nesta frase:\nI've lost my keys.",
+    "back": "I have\nI have lost my keys.\nPerdi minhas chaves.\nHave + particípio (lost) forma o present perfect; aqui, a perda tem um resultado no presente.",
+    "tags": ["ingles", "contracoes", "present_perfect"],
+    "source_key": "english-starter-064"
+  }
+]

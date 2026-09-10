@@ -1,0 +1,24 @@
+{
+  "name": "@recall/mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/local.ts",
+    "build": "tsup src/server.ts src/local.ts src/stdio.ts --format esm --out-dir dist --no-splitting",
+    "start": "node dist/local.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@recall/client": "workspace:*",
+    "@recall/contracts": "workspace:*",
+    "zod": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.0"
+  }
+}

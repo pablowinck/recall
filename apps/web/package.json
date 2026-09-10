@@ -1,0 +1,26 @@
+{
+  "name": "@recall/web",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 3210",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 3210",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@radix-ui/themes": "^3.2.0",
+    "lucide-react": "^0.577.0",
+    "@supabase/supabase-js": "^2.99.0",
+    "@recall/contracts": "workspace:*",
+    "@recall/client": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.0"
+  }
+}

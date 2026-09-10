@@ -1,0 +1,74 @@
+name: recall
+x-build: &build
+  context: .
+  args:
+    NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    NEXT_PUBLIC_MCP_URL: ${NEXT_PUBLIC_MCP_URL}
+x-common: &common
+  restart: unless-stopped
+  extra_hosts:
+    - host.docker.internal:host-gateway
+services:
+  web:
+    <<: *common
+    build:
+      <<: *build
+      target: web
+    ports: [127.0.0.1:3210:3210]
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3210').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  api:
+    <<: *common
+    build:
+      <<: *build
+      target: api
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:56322/postgres
+      SUPABASE_URL: http://host.docker.internal:56321
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      WEB_ORIGIN: ${WEB_ORIGIN}
+    ports: [127.0.0.1:3211:3211]
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3211/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  mcp:
+    <<: *common
+    build:
+      <<: *build
+      target: mcp
+    environment:
+      API_URL: http://api:3211
+    ports: [127.0.0.1:3212:3212]
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3212/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20

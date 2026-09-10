@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "DATABASE_URL",
+    "SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
+    "API_URL",
+    "WEB_ORIGIN",
+    "PORT",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_MCP_URL"
+  ],
+  "tasks": {
+    "@recall/contracts#build": { "outputs": [] },
+    "@recall/client#build": { "dependsOn": ["^build"], "outputs": [] },
+    "@recall/domain#build": { "dependsOn": ["^build"], "outputs": [] },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", ".next/**", "!.next/cache/**"] },
+    "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] },
+    "dev": { "cache": false, "persistent": true }
+  }
+}

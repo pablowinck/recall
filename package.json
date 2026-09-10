@@ -1,0 +1,41 @@
+{
+  "name": "recall",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@10.26.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "typecheck": "turbo typecheck && tsc -p tsconfig.tools.json",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "verify": "pnpm check && pnpm test:e2e",
+    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "local:up": "bash scripts/local-up.sh",
+    "local:down": "docker compose down && supabase stop",
+    "local:seed": "tsx scripts/seed-local.ts",
+    "db:migrate": "tsx scripts/migrate.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@playwright/test": "^1.58.2",
+    "@supabase/supabase-js": "^2.99.0",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.0",
+    "dotenv": "^17.2.0",
+    "pg": "^8.16.0",
+    "prettier": "^3.6.0",
+    "supabase": "2.117.0",
+    "tsx": "^4.20.0",
+    "turbo": "^2.8.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.0.0"
+  }
+}
