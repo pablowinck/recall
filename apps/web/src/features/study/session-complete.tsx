@@ -31,7 +31,7 @@ export function SessionComplete({
 
 function CompletionMessage({ completed }: { completed: number }): React.JSX.Element {
   const message = completed
-    ? `You reviewed ${completed} cards in this session.`
+    ? `You reviewed ${completed} ${completed === 1 ? 'card' : 'cards'} in this session.`
     : 'No cards are due for review right now.';
   return (
     <p>
