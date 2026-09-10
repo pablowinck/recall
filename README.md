@@ -85,7 +85,7 @@ Start with [the architecture map](docs/architecture.md), [API/MCP contracts](doc
 
 ## Connect your agent
 
-Create a personal connection in the web app's **Connections** view. Use the shown MCP URL with its Bearer token. For Codex and the local development setup, see [docs/mcp.md](docs/mcp.md).
+Open **Connections** in the web app, pick your assistant (Claude Code, Codex, Cursor, VS Code, Claude Desktop, Gemini CLI or another MCP client) and paste the setup it shows. [docs/mcp.md](docs/mcp.md) covers every client and the local development launcher.
 
 ## Deploy
 

@@ -205,10 +205,15 @@ test('creates and revokes a personal MCP connection through the web', async ({ p
   try {
     await signInToRecall(page, account);
     await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Assistant' }).click();
+    await page.getByRole('option', { name: 'Cursor', exact: true }).click();
     await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
     const tokenField = page.getByRole('textbox', { name: 'New personal token' });
     await expect(tokenField).toHaveValue(/^recall_/);
     const token = await tokenField.inputValue();
+    await expect(page.locator('.setup-snippet')).toContainText(
+      `"Authorization": "Bearer ${token}"`,
+    );
     const mcp = await connectTestMcp(token);
     try {
       expect((await mcp.listTools()).tools).toHaveLength(9);
@@ -217,7 +222,7 @@ test('creates and revokes a personal MCP connection through the web', async ({ p
     }
     await page.getByRole('button', { name: 'I saved it', exact: true }).click();
     await expect(tokenField).toHaveCount(0);
-    await page.getByRole('button', { name: 'Revoke connection Codex', exact: true }).click();
+    await page.getByRole('button', { name: 'Revoke connection Cursor', exact: true }).click();
     await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();
     await expect(
       page.getByText('You have not created a connection yet.', { exact: true }),

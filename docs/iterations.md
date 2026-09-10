@@ -229,3 +229,13 @@ Every session stopped at the API's 20-card batch and said "Nicely done" while mo
 When the last card of a batch is rated, the session now loads the next due batch in place ("Checking for more cards…"). Cards that FSRS brings back within the hour are remembered: completion reads, for example, "You reviewed 12 cards in this session. 3 cards come back in about 10 min.", and the session resumes on its own when they are due, giving up a minute after a card fails to return. "Check for more reviews" checks in place and answers "Nothing is due yet." in a live region. Loading states name what is loading.
 
 Validation: unit tests with a named fake gateway cover continuing into the next batch, remembering returning cards, pruning queued or stale entries, ignoring cards beyond the hour, and discarding refills for disposed sessions. 56 unit tests and 50 E2E tests passed; the three-size journey reported no overflow or axe violations.
+
+## 2026-09-10 — UX loop 9: connections for any MCP assistant
+
+The owner asked for Connections to be tool-agnostic and easy for ChatGPT, Codex, Claude and similar assistants. The view was written for Codex: every token was named "Codex", setup help was one Codex TOML snippet, and a second click on "Create personal connection" silently replaced a token that had not been saved.
+
+People now pick their assistant (Claude Code, Codex, Cursor, VS Code, Claude Desktop, Gemini CLI or another MCP client) before creating a connection. The one-time panel shows that assistant's setup already filled in with the endpoint and new token, with "Copy setup", "Copy token" and "I saved it"; tokens are named after the assistant; creation is disabled while a token is on screen; connection dates read "Created Sep 10, 2026 · Expires Dec 9, 2026". `docs/mcp.md` and the README cover every client and the local stdio launcher.
+
+Research note: ChatGPT developer-mode connectors accept only OAuth or no authentication, and claude.ai custom connectors expose OAuth (static headers are an organization-admin beta). Supabase Auth offers an OAuth 2.1 server with dynamic client registration for MCP; adopting it is proposed to the owner and not implemented.
+
+Validation: unit tests check that every setup targets the endpoint, embeds the token except where VS Code prompts for it, and produces valid JSON; the E2E connection journey picks Cursor, finds the bearer token in the setup, verifies the MCP tools with that token, and revokes "Cursor".

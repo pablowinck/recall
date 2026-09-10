@@ -72,27 +72,34 @@
   font-size: 0.8125rem;
   color: var(--ink-2);
 }
-.connection-help {
-  margin-top: 2rem;
-  font-size: 0.875rem;
-}
-.connection-help summary {
-  cursor: pointer;
-  color: var(--accent-text);
-}
-.connection-help p {
-  margin-top: 1rem;
-}
-.connection-help pre {
-  background: var(--surface);
-  padding: 1rem;
-  border-radius: 10px;
-  overflow-x: auto;
-  font-size: 0.8rem;
-}
 @media (max-width: 768px) {
   .connection-intro,
   .new-secret {
     padding: 1.4rem;
   }
+}
+.assistant-picker {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.assistant-picker .rt-SelectTrigger {
+  width: 100%;
+  max-width: 320px;
+}
+.setup-snippet {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border-radius: var(--r-md);
+  background: var(--fill-1);
+  font:
+    500 0.8125rem/1.6 ui-monospace,
+    'SF Mono',
+    Menlo,
+    Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

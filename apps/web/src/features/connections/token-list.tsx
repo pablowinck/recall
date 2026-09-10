@@ -53,12 +53,16 @@ function TokenRow({
   );
 }
 
+const tokenDate: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+
 function TokenMetadata({ token }: { token: AccessToken }): React.JSX.Element {
+  const created = new Date(token.created_at).toLocaleDateString('en-US', tokenDate);
+  const expires = new Date(token.expires_at).toLocaleDateString('en-US', tokenDate);
   return (
     <div>
       <strong>{token.name}</strong>
       <span>
-        {token.prefix}… · expires {new Date(token.expires_at).toLocaleDateString('en-US')}
+        {token.prefix}… · Created {created} · Expires {expires}
       </span>
     </div>
   );

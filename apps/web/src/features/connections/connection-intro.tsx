@@ -1,17 +1,22 @@
-import { Button } from '@radix-ui/themes';
-import { Cable, Plus, ShieldCheck } from 'lucide-react';
+import { Button, Select } from '@radix-ui/themes';
+import { Link2, Plus, ShieldCheck } from 'lucide-react';
+import { connectionClients, findConnectionClient } from './connection-clients';
 import type { ConnectionsModel } from './use-connections';
 
-/** Explain what an agent connection can access before creating it. Example: <ConnectionIntro model={model} />. */
+/** Explain what a connection can reach and let people pick their assistant first. Example: <ConnectionIntro model={model} />. */
 export function ConnectionIntro({ model }: { model: ConnectionsModel }): React.JSX.Element {
   return (
     <section className="connection-intro">
       <span className="connection-icon">
-        <Cable size={28} strokeWidth={1.5} />
+        <Link2 size={26} strokeWidth={1.75} />
       </span>
-      <ConnectionDescription />
-      <ConnectionEndpoint />
-      <Button size="3" onClick={model.create} loading={model.busy}>
+      <h2>Connect an AI assistant</h2>
+      <p>
+        Create, organize and find cards from a conversation. Works with assistants that support MCP.
+        A connection reaches only your cards.
+      </p>
+      <AssistantPicker model={model} />
+      <Button size="3" onClick={model.create} loading={model.busy} disabled={Boolean(model.secret)}>
         <Plus size={17} />
         Create personal connection
       </Button>
@@ -23,39 +28,24 @@ export function ConnectionIntro({ model }: { model: ConnectionsModel }): React.J
   );
 }
 
-function ConnectionDescription(): React.JSX.Element {
+function AssistantPicker({ model }: { model: ConnectionsModel }): React.JSX.Element {
   return (
-    <>
-      <h2>Recall in Codex and other agents</h2>
-      <p>
-        Create, organize, and find cards during a conversation. Each connection can access only your
-        workspace.
-      </p>
-    </>
-  );
-}
-
-function ConnectionEndpoint(): React.JSX.Element {
-  return (
-    <div className="endpoint-box">
-      <span>MCP endpoint</span>
-      <code>{process.env.NEXT_PUBLIC_MCP_URL}</code>
+    <div className="assistant-picker">
+      <span id="assistant-picker-label">Assistant</span>
+      <Select.Root
+        value={model.clientId}
+        onValueChange={(id) => model.chooseClient(findConnectionClient(id).id)}
+        disabled={Boolean(model.secret)}
+      >
+        <Select.Trigger aria-labelledby="assistant-picker-label" />
+        <Select.Content>
+          {connectionClients.map((client) => (
+            <Select.Item key={client.id} value={client.id}>
+              {client.name}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Root>
     </div>
-  );
-}
-
-/** Provide copyable configuration without embedding a secret. Example: <ConnectionHelp />. */
-export function ConnectionHelp(): React.JSX.Element {
-  const example = `[mcp_servers.recall]\nurl = "${process.env.NEXT_PUBLIC_MCP_URL}"\nbearer_token_env_var = "RECALL_MCP_TOKEN"`;
-  return (
-    <details className="connection-help">
-      <summary>How to connect to Codex</summary>
-      <p>
-        Configure an HTTP MCP server with the endpoint above and use your token as a Bearer token.
-        Store the secret in an environment variable, never in a repository.
-      </p>
-      <pre>{example}</pre>
-      <p>Then ask: “List my Recall decks” or “Create a flashcard about a topic I want to learn”.</p>
-    </details>
   );
 }
