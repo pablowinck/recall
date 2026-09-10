@@ -16,7 +16,8 @@
   max-width: min(100%, 260px);
 }
 .card-editor .rt-SelectTrigger {
-  max-width: 100%;
+  width: 100%;
+  contain: inline-size;
 }
 .result-label {
   color: var(--ink-2);

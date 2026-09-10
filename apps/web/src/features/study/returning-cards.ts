@@ -28,9 +28,11 @@ export function pruneReturningCards(
   now: Date,
 ): ReturningCard[] {
   const queued = new Set(queue.map((item) => item.card.id));
-  return returning.filter(
+  const kept = returning.filter(
     (entry) => !queued.has(entry.id) && Date.parse(entry.dueAt) > now.getTime() - STALE_AFTER_MS,
   );
+  // The same array when nothing changed keeps the resume timer from re-arming on every check.
+  return kept.length === returning.length ? returning : kept;
 }
 
 /** Milliseconds until the next returning card is due, or null. Example: nextReturnDelay(returning, now). */
@@ -41,8 +43,8 @@ export function nextReturnDelay(returning: ReturningCard[], now: Date): number |
 }
 
 /**
- * Close a session honestly, including cards that come back soon.
- * Example: describeCompletion(12, returning, now) === 'You reviewed 12 cards. 3 come back in about 5 min.'.
+ * Close a session honestly, grouping cards by when they come back.
+ * Example: describeCompletion(3, returning, now) === 'You reviewed 3 cards in this session. 1 card comes back in about 1 min, 2 more in about 10 min.'.
  */
 export function describeCompletion(
   completed: number,
@@ -52,9 +54,31 @@ export function describeCompletion(
   const reviewed = completed
     ? `You reviewed ${completed} ${completed === 1 ? 'card' : 'cards'} in this session.`
     : 'No cards are due for review right now.';
-  const delay = nextReturnDelay(returning, now);
-  if (delay === null) return reviewed;
-  const minutes = Math.max(1, Math.round(delay / 60000));
-  const subject = returning.length === 1 ? '1 card comes' : `${returning.length} cards come`;
-  return `${reviewed} ${subject} back in about ${minutes} min.`;
+  const groups = groupReturningByMinutes(returning, now);
+  if (!groups.length) return reviewed;
+  return `${reviewed} ${describeReturnGroups(groups)}.`;
+}
+
+interface ReturnGroup {
+  minutes: number;
+  count: number;
+}
+
+function groupReturningByMinutes(returning: ReturningCard[], now: Date): ReturnGroup[] {
+  const counts = new Map<number, number>();
+  for (const entry of returning) {
+    const minutes = Math.max(1, Math.round((Date.parse(entry.dueAt) - now.getTime()) / 60000));
+    counts.set(minutes, (counts.get(minutes) ?? 0) + 1);
+  }
+  return [...counts].sort(([a], [b]) => a - b).map(([minutes, count]) => ({ minutes, count }));
+}
+
+// Pairing the earliest time with the total count was misleading ("3 cards in 1 min" when two
+// return in 10), so the first group is exact and later ones are summarized.
+function describeReturnGroups([first, ...rest]: ReturnGroup[]): string {
+  const lead = `${first!.count === 1 ? '1 card comes' : `${first!.count} cards come`} back in about ${first!.minutes} min`;
+  if (!rest.length) return lead;
+  const more = rest.reduce((sum, group) => sum + group.count, 0);
+  const latest = rest[rest.length - 1]!.minutes;
+  return `${lead}, ${more} more ${rest.length === 1 ? 'in about' : 'within'} ${latest} min`;
 }

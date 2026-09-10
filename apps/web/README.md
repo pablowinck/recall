@@ -21,3 +21,4 @@ Features: `auth` (sign in and sign up), `workspace` (shell, navigation, Today), 
 - Use tokens from `styles/tokens.css` instead of hard-coded colors, and add new stylesheets to `app/globals.css`.
 - Keep pure logic in `.ts` files with unit tests in `tests/unit`; keep hooks for state and `.tsx` for presentation.
 - E2E tests locate elements by accessible names. Update `tests/e2e` in the same change when you rename a button or heading.
+- Browser journeys are grouped by feature: `cards.spec.ts`, `study.spec.ts`, `connections.spec.ts`, `touch-layout.spec.ts`, and `product.spec.ts` for the cross-feature journey. A new spec file runs on desktop, tablet and mobile once it is listed in `browserJourneys` in `playwright.config.ts`.

@@ -7,13 +7,18 @@ import {
   type StudyRuntime,
   type StudySnapshot,
 } from './study-state';
-import { recordStudyRating, refillStudyQueue, reloadStudyQueue } from './study-actions';
+import {
+  recordStudyRating,
+  refillStudyQueue,
+  reloadStudyQueue,
+  type RefillResult,
+} from './study-actions';
 
 export interface StudySessionState extends StudySnapshot {
   reveal: () => void;
   rate: (rating: RecallRating) => Promise<void>;
   reload: () => Promise<void>;
-  refill: (options?: { silent?: boolean }) => Promise<void>;
+  refill: (options?: { silent?: boolean }) => Promise<RefillResult>;
   retryRating: () => Promise<void>;
 }
 function newRequestId(): string {

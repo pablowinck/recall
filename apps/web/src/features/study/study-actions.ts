@@ -33,6 +33,7 @@ export async function reloadStudyQueue(
       revealed: false,
       loading: false,
       error: '',
+      saving: false,
       ratingFailure: null,
     }));
   } catch (failure) {
@@ -41,24 +42,37 @@ export async function reloadStudyQueue(
   }
 }
 
+/** The outcome of loading the next due batch. */
+export type RefillResult = 'loaded' | 'empty' | 'failed';
+
 /**
  * Load the next due batch when a session runs out, without the full-screen loader. Silent checks
- * (timers, "Check for more reviews") keep the completion screen in place. Example: refillStudyQueue(context).
+ * (timers, "Check for more reviews") keep the completion screen in place. Example: await refillStudyQueue(context).
  */
 export async function refillStudyQueue(
   context: StudyRefillContext,
   { silent = false }: { silent?: boolean } = {},
-): Promise<void> {
+): Promise<RefillResult> {
   const generation = context.runtime.generation;
   if (!silent) context.update((current) => ({ ...current, refilling: true }));
   try {
     const queue = await context.gateway.study(context.deck);
-    if (generation === context.runtime.generation) acceptRefill(context, queue);
-  } catch {
-    // A failed refill falls back to the completion screen, which offers a manual check.
-    if (generation === context.runtime.generation)
-      context.update((current) => ({ ...current, refilling: false }));
+    if (generation !== context.runtime.generation) return 'failed';
+    acceptRefill(context, queue);
+    return queue.length ? 'loaded' : 'empty';
+  } catch (failure) {
+    if (generation === context.runtime.generation) rejectRefill(context, failure, silent);
+    return 'failed';
   }
+}
+
+// A refill at the end of a batch must never end in "Nicely done"; silent checks keep the completion screen.
+function rejectRefill(context: StudyRefillContext, failure: unknown, silent: boolean): void {
+  context.update((current) => ({
+    ...current,
+    refilling: false,
+    error: silent ? current.error : describeFailure(failure),
+  }));
 }
 
 function acceptRefill(context: StudyRefillContext, queue: StudyCard[]): void {

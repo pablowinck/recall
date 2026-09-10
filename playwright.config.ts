@@ -1,6 +1,15 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 
+// Browser journeys run on every device project; the API and MCP specs run once.
+const browserJourneys = [
+  '**/product.spec.ts',
+  '**/cards.spec.ts',
+  '**/study.spec.ts',
+  '**/connections.spec.ts',
+  '**/touch-layout.spec.ts',
+];
+
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
@@ -25,17 +34,17 @@ export default defineConfig({
     },
     {
       name: 'desktop',
-      testMatch: ['**/product.spec.ts', '**/touch-layout.spec.ts'],
+      testMatch: browserJourneys,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } },
     },
     {
       name: 'tablet',
-      testMatch: ['**/product.spec.ts', '**/touch-layout.spec.ts'],
+      testMatch: browserJourneys,
       use: { ...devices['iPad Mini'], defaultBrowserType: 'chromium' },
     },
     {
       name: 'mobile',
-      testMatch: ['**/product.spec.ts', '**/touch-layout.spec.ts'],
+      testMatch: browserJourneys,
       use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
     },
   ],
