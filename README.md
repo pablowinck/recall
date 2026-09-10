@@ -37,6 +37,8 @@ The setup starts the official Supabase local stack, applies migrations, builds t
 
 The generated local login is in `.local/account.json`. This file, all tokens and environment files are ignored by Git. These credentials are **only for local development**. Never copy local Supabase keys into production.
 
+The starter pack is imported once per local account. Later restarts preserve your additions, edits, deletions and review history. The local MCP connectivity check accepts your current library size instead of assuming it remains exactly 64 cards.
+
 Stop application containers and Supabase while preserving data:
 
 ```bash

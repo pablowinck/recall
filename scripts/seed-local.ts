@@ -11,6 +11,7 @@ interface LocalAccount {
   email: string;
   password: string;
   mcp_token?: string;
+  starter_imported?: boolean;
 }
 interface StarterCard {
   front: string;
@@ -25,10 +26,10 @@ if (!['localhost', '127.0.0.1'].includes(new URL(supabaseUrl).hostname))
     `Invalid seed host ${new URL(supabaseUrl).hostname}; expected localhost or 127.0.0.1`,
   );
 mkdirSync('.local', { recursive: true });
-const accountPath = '.local/account.json';
+const accountPath = process.env.RECALL_LOCAL_ACCOUNT_PATH ?? '.local/account.json';
 const account: LocalAccount = existsSync(accountPath)
   ? (JSON.parse(readFileSync(accountPath, 'utf8')) as LocalAccount)
-  : { email: 'estudante@recall.local', password: randomBytes(18).toString('base64url') };
+  : { email: 'learner@recall.local', password: randomBytes(18).toString('base64url') };
 const admin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
   auth: { persistSession: false },
 });
@@ -44,9 +45,18 @@ if (!existsSync(accountPath)) {
 const auth = createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY!, {
   auth: { persistSession: false },
 });
-const signed = await auth.auth.signInWithPassword(account);
+const signed = await auth.auth.signInWithPassword({
+  email: account.email,
+  password: account.password,
+});
 if (signed.error || !signed.data.session)
   throw signed.error ?? new Error('Local login failed; expected a session');
+if (account.starter_imported) {
+  process.stdout.write(
+    'Local account is ready. Existing cards and review history are unchanged.\n',
+  );
+  process.exit(0);
+}
 const api = new RecallClient({
   baseUrl: 'http://localhost:3211',
   token: async () => signed.data.session!.access_token,
@@ -74,6 +84,8 @@ try {
     card.source_key?.startsWith('english-starter-'),
   ).length;
   if (starterCount !== 64) throw new Error(`Imported ${starterCount} starter cards; expected 64`);
+  account.starter_imported = true;
+  writeFileSync(accountPath, JSON.stringify(account, null, 2), { mode: 0o600 });
   process.stdout.write('64 starter flashcards imported and verified through authenticated MCP.\n');
 } finally {
   await mcp.close();

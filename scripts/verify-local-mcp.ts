@@ -16,9 +16,12 @@ try {
   const content = listed.content as Array<{ type: string; text?: string }>;
   const payload = JSON.parse(content.find((item) => item.type === 'text')!.text!) as {
     total: number;
+    cards: unknown[];
   };
-  if (payload.total !== 64)
-    throw new Error(`Local MCP returned ${payload.total} cards; expected 64`);
+  if (!Number.isInteger(payload.total) || payload.total < 0 || !Array.isArray(payload.cards))
+    throw new Error(
+      `Local MCP returned invalid total ${payload.total}; expected a nonnegative integer and a card array`,
+    );
   process.stdout.write(
     JSON.stringify({
       transport: 'stdio',
