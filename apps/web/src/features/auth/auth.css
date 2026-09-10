@@ -18,9 +18,6 @@
   margin: auto 0;
   padding: 4rem 0;
 }
-.auth-form .eyebrow {
-  margin-bottom: -0.5rem;
-}
 .auth-form h1 {
   font-size: 2.5rem;
 }
@@ -32,10 +29,6 @@
 }
 .auth-form > .text-button {
   justify-content: center;
-}
-.auth-left footer {
-  font-size: 0.8125rem;
-  color: var(--ink-2);
 }
 .auth-preview {
   display: flex;

@@ -43,18 +43,18 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
   return (
     <div className="empty-state">
       <BookOpen size={32} strokeWidth={1.4} />
-      <h2>{filtered ? 'No cards found.' : 'Your next discovery belongs here.'}</h2>
+      <h2>{filtered ? 'No cards found' : 'No cards yet'}</h2>
       <p>
         {filtered
           ? 'Try another search or choose a different deck.'
-          : 'Create your first card and start building your memory.'}
+          : 'Write a question and its answer. Recall schedules every review for you.'}
       </p>
       {filtered ? (
         <Button variant="soft" onClick={() => clearLibraryFilters(state)}>
           Clear filters
         </Button>
       ) : (
-        <Button onClick={library.create}>Create card</Button>
+        <Button onClick={library.create}>Create your first card</Button>
       )}
     </div>
   );

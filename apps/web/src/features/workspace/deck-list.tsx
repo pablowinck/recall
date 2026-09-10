@@ -32,9 +32,14 @@ export function DeckList(props: DeckListProps): React.JSX.Element {
 function EmptyDeckList(): React.JSX.Element {
   return (
     <div className="empty-deck-list">
-      <p>No decks created yet. Decks keep your topics organized.</p>
+      <p>No decks yet. Decks keep your topics organized.</p>
     </div>
   );
+}
+
+function describeDeckStatus(deck: Deck): string {
+  if (deck.due_count) return `${deck.due_count} due`;
+  return deck.card_count ? 'Up to date' : 'No cards yet';
 }
 
 function DeckListHeading({ browse }: { browse: () => void }): React.JSX.Element {
@@ -61,7 +66,7 @@ function DeckRow({ deck, open }: { deck: Deck; open: () => void }): React.JSX.El
         </span>
       </span>
       <span className={`due-badge ${deck.due_count ? '' : 'neutral'}`}>
-        {deck.due_count ? `${deck.due_count} due for review` : 'Up to date'}
+        {describeDeckStatus(deck)}
       </span>
       <ArrowRight className="deck-arrow" size={18} />
     </button>

@@ -3,9 +3,9 @@ import { Button } from '@radix-ui/themes';
 import { Plus } from 'lucide-react';
 
 interface PageHeadingProps {
-  eyebrow: string;
+  eyebrow?: string;
   title: ReactNode;
-  description: string;
+  description?: string;
   action?: ReactNode;
 }
 
@@ -19,9 +19,9 @@ export function PageHeading({
   return (
     <header className="page-header">
       <div>
-        <span className="eyebrow">{eyebrow}</span>
+        {eyebrow && <span className="eyebrow">{eyebrow}</span>}
         <h1>{title}</h1>
-        <p>{description}</p>
+        {description && <p>{description}</p>}
       </div>
       {action}
     </header>

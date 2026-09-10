@@ -13,9 +13,8 @@ export function ConnectionsView({ client }: { client: RecallClient }): React.JSX
   return (
     <div className="view-enter connections-view">
       <PageHeading
-        eyebrow="LEARN WITH YOUR TOOLS"
-        title="Connections."
-        description="Turn a conversation into new flashcards."
+        title="Connections"
+        description="Let AI assistants that support MCP create and find your cards."
       />
       <ConnectionIntro model={model} />
       {model.error && <ErrorNotice message={model.error} />}

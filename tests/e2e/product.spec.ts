@@ -1,8 +1,11 @@
 import { expect, test } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
 import { createTestAccount, connectTestMcp } from './fixtures';
 import { FakeCardSaveOutage } from './fake-card-save-outage';
-import { signInToRecall, fillSignInForm } from './interaction-steps';
+import {
+  expectNoAccessibilityViolations,
+  fillSignInForm,
+  signInToRecall,
+} from './interaction-steps';
 
 test('login → create/edit → MCP → study → persist → sign out', async ({ page }, testInfo) => {
   const account = await createTestAccount();
@@ -12,7 +15,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
     await page.getByLabel('Password', { exact: true }).fill(account.password);
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-    await expect(page.getByRole('heading', { name: /A good day/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'New card', exact: true }).click();
     await page.getByRole('textbox', { name: /^Front/ }).fill('What does stumped mean?');
     await page.getByRole('textbox', { name: /^Back/ }).fill('Unable to work out the answer.');
@@ -60,10 +63,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       fullPage: true,
       animations: 'disabled',
     });
-    const accessibility = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
-      .analyze();
-    expect(accessibility.violations).toEqual([]);
+    await expectNoAccessibilityViolations(page);
     if (testInfo.project.name === 'desktop')
       await page.getByRole('button', { name: /Good/ }).press('3');
     else await page.getByRole('button', { name: /Good/ }).click();
@@ -71,21 +71,18 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     expect((await account.api.workspace()).stats.reviewed_today).toBe(1);
     await page.getByRole('button', { name: /Reveal answer/ }).click();
     await page.getByRole('button', { name: /Good/ }).click();
-    await expect(page.getByRole('heading', { name: 'Nicely done.', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
     expect((await account.api.workspace()).stats.reviewed_today).toBe(2);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth,
     );
     expect(overflow).toBe(false);
-    await page.getByRole('button', { name: 'Back to today' }).click();
+    await page.getByRole('button', { name: 'Back to Today' }).click();
     await page
       .getByRole('button', { name: 'Use dark theme', exact: true })
       .filter({ visible: true })
       .click();
-    const darkAccessibility = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
-      .analyze();
-    expect(darkAccessibility.violations).toEqual([]);
+    await expectNoAccessibilityViolations(page);
     await page.screenshot({
       path: `test-results/${testInfo.project.name}-dashboard-dark.png`,
       fullPage: true,
@@ -95,7 +92,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       .getByRole('button', { name: 'Sign out', exact: true })
       .filter({ visible: true })
       .click();
-    await expect(page.getByRole('heading', { name: 'Welcome back.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
   } finally {
     await account.cleanup();
   }
@@ -109,20 +106,14 @@ test('card save failure keeps the draft and permits one successful retry', async
     await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
     await page.getByLabel('Password', { exact: true }).fill(account.password);
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-    await expect(page.getByRole('heading', { name: /A good day/ })).toBeVisible();
-    const dashboardAccessibility = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
-      .analyze();
-    expect(dashboardAccessibility.violations).toEqual([]);
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await expectNoAccessibilityViolations(page);
     await page.getByRole('button', { name: 'New card', exact: true }).click();
     await page.getByRole('textbox', { name: /^Front/ }).fill('A draft worth keeping');
     await page
       .getByRole('textbox', { name: /^Back/ })
       .fill('This text must survive a failed save.');
-    const accessibility = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
-      .analyze();
-    expect(accessibility.violations).toEqual([]);
+    await expectNoAccessibilityViolations(page);
     await outage.install(page);
     await page.getByRole('button', { name: 'Create card', exact: true }).click();
     await expect(page.getByRole('textbox', { name: /^Front/ })).toBeDisabled();

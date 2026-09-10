@@ -6,7 +6,6 @@ import type { AppearanceActions, NavigationProps } from './navigation-types';
 export function NavigationProfile(props: NavigationProps): React.JSX.Element {
   return (
     <div className="sidebar-bottom">
-      <StudyNote />
       <ProfileIdentity email={props.email} />
       <div className="profile-actions">
         <ThemeControl {...props} />
@@ -16,25 +15,12 @@ export function NavigationProfile(props: NavigationProps): React.JSX.Element {
   );
 }
 
-function StudyNote(): React.JSX.Element {
-  return (
-    <div className="study-note">
-      <span>AT YOUR OWN PACE</span>
-      <p>
-        Consistency matters
-        <br />
-        more than speed.
-      </p>
-    </div>
-  );
-}
-
 function ProfileIdentity({ email }: { email: string }): React.JSX.Element {
   return (
     <div className="profile">
       <span className="avatar">{email[0]?.toUpperCase()}</span>
-      <span className="profile-name">
-        My workspace<small>{email}</small>
+      <span className="profile-name" title={email}>
+        {email}
       </span>
     </div>
   );

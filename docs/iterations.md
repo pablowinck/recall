@@ -187,3 +187,13 @@ The brand was a stock layers icon in a black tile with a lowercase "recall." wor
 The new mark is a card whose corner folds to reveal its back, drawn as an inline SVG with flat fills that scale with the "Recall" wordmark. `app/icon.svg` and a generated `apple-icon` reuse the same paths. Apple devices keep SF Pro; other platforms load Inter through `next/font`. Body tracking is lighter, Inter-only glyph alternates are gone, and keycaps use the interface font with tabular digits.
 
 Validation: 40 unit tests and 41 E2E tests passed, including a new check that the SVG favicon and PNG home-screen icon are served. Formatting, TypeScript and builds passed; the three-size journey reported no overflow or axe violations.
+
+## 2026-09-10 — UX loop 4: quieter copy, view titles and settled accessibility checks
+
+Reviewers counted eleven ALL-CAPS eyebrow labels, titles ending in periods, and slogans on every screen competing with real status ("A good day to remember.", "One step forward", a permanent sidebar note).
+
+Views are now titled by name (Today, Library, Connections), and Today shows the date. The invitation reads "26 cards to review" with a "14 reviews · 12 new" split from the existing `fresh` count; deck badges read "14 due", "Up to date" or "No cards yet". Remaining labels use sentence case, duplicate taglines and the sidebar note are gone, the profile shows the email with a tooltip, and verbs are consistent ("Create your first card", "Back to Today").
+
+CI run 34521774379 for the previous release failed only on tablet: axe measured the card editor's primary button mid-fade at 4.41:1. Accessibility checks now wait for finite animations before analyzing. Production served the previous release's tokens and icons, confirmed by fetching its CSS and `icon.svg`.
+
+Validation: 43 unit tests (including the new session summary) and 41 E2E tests with updated accessible names passed, along with formatting, TypeScript and builds; the three-size journey reported no overflow or axe violations.

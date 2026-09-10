@@ -9,7 +9,6 @@ export function AuthLayout({ children }: { children: ReactNode }): React.JSX.Ele
       <div className="auth-left">
         <RecallBrand />
         {children}
-        <footer>A little today. Remembered tomorrow.</footer>
       </div>
       <AuthPreview />
     </main>
@@ -33,7 +32,7 @@ function ExampleCard(): React.JSX.Element {
   return (
     <div className="sample-card">
       <span className="eyebrow">
-        <Sparkles size={15} /> AN EXAMPLE CARD
+        <Sparkles size={15} /> Example card
       </span>
       <h2>
         I’d like

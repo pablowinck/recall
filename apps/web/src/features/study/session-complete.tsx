@@ -15,8 +15,7 @@ export function SessionComplete({
       <span className="complete-mark">
         <Check size={35} strokeWidth={1.7} />
       </span>
-      <span className="eyebrow">ONE STEP FORWARD</span>
-      <h1>{session.completed ? 'Nicely done.' : 'All caught up.'}</h1>
+      <h1>{session.completed ? 'Nicely done' : 'All caught up'}</h1>
       <CompletionMessage completed={session.completed} />
       <SessionCompleteActions session={session} exit={exit} />
     </div>
@@ -33,7 +32,7 @@ function SessionCompleteActions({
   return (
     <>
       <Button size="3" onClick={exit}>
-        Back to today
+        Back to Today
       </Button>
       <button className="text-button" onClick={() => void session.reload()}>
         Check for more reviews <ArrowRight size={16} />
@@ -46,11 +45,5 @@ function CompletionMessage({ completed }: { completed: number }): React.JSX.Elem
   const message = completed
     ? `You reviewed ${completed} ${completed === 1 ? 'card' : 'cards'} in this session.`
     : 'No cards are due for review right now.';
-  return (
-    <p>
-      {message}
-      <br />
-      Every review makes the memory a little stronger.
-    </p>
-  );
+  return <p>{message}</p>;
 }

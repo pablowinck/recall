@@ -28,18 +28,15 @@ export function TodayView(props: TodayProps): React.JSX.Element {
 }
 
 function TodayHeading({ create }: { create: () => void }): React.JSX.Element {
-  const title = (
-    <>
-      A good day
-      <br className="mobile-break" /> to remember.
-    </>
-  );
   return (
     <PageHeading
-      eyebrow="A LITTLE, EVERY DAY"
-      title={title}
-      description="Your next discovery starts here."
+      eyebrow={formatToday(new Date())}
+      title="Today"
       action={<NewCardButton variant="soft" onClick={create} />}
     />
   );
+}
+
+function formatToday(now: Date): string {
+  return now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 }

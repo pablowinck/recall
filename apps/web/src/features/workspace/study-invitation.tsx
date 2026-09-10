@@ -1,6 +1,7 @@
 import { Button } from '@radix-ui/themes';
 import { ArrowRight, Layers2 } from 'lucide-react';
 import type { WorkspaceStats } from '@recall/contracts';
+import { describeDueMix } from './session-summary';
 
 interface StudyInvitationProps {
   stats: WorkspaceStats;
@@ -13,7 +14,6 @@ export function StudyInvitation(props: StudyInvitationProps): React.JSX.Element 
   return (
     <section className="study-invitation">
       <div>
-        <span className="eyebrow">YOUR NEXT SESSION</span>
         <InvitationHeadline stats={props.stats} />
         <p>{describeNextSession(props.stats)}</p>
         <InvitationAction {...props} />
@@ -24,28 +24,27 @@ export function StudyInvitation(props: StudyInvitationProps): React.JSX.Element 
 }
 
 function InvitationHeadline({ stats }: { stats: WorkspaceStats }): React.JSX.Element {
-  if (!stats.total) return <h2>{'Every memory starts\nwith a card.'}</h2>;
-  if (!stats.due) return <h2>{'All caught up.\nNicely done.'}</h2>;
+  if (!stats.total) return <h2>Every memory starts with a card</h2>;
+  if (!stats.due) return <h2>All caught up</h2>;
   return (
     <h2>
-      <strong>{stats.due}</strong> {stats.due === 1 ? 'card waiting' : 'cards waiting'}
-      <br />
-      for you.
+      <strong>{stats.due}</strong> {stats.due === 1 ? 'card' : 'cards'} to review
     </h2>
   );
 }
 
 function describeNextSession(stats: WorkspaceStats): string {
-  if (!stats.total) return 'Save a word, an idea, or that question that keeps coming back.';
-  if (stats.due) return 'Try to recall it, reveal the answer, and tell us how it went.';
-  return 'Your next reviews will appear here when they are due.';
+  if (!stats.total)
+    return 'Write a question and its answer. Recall schedules every review for you.';
+  if (!stats.due) return 'New reviews appear here when they’re due.';
+  return describeDueMix(stats);
 }
 
 function InvitationAction({ stats, study, create }: StudyInvitationProps): React.JSX.Element {
   const ready = stats.total > 0 && stats.due > 0;
   return (
     <Button size="3" onClick={ready ? study : create}>
-      {ready ? 'Start reviewing' : 'Create a card'}
+      {ready ? 'Start reviewing' : stats.total ? 'Add a card' : 'Create your first card'}
       <ArrowRight size={18} />
     </Button>
   );

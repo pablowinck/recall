@@ -51,19 +51,6 @@
 .sidebar-bottom {
   margin-top: auto;
 }
-.study-note {
-  padding: 1rem 1rem 2rem;
-}
-.study-note span {
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  color: var(--ink-2);
-}
-.study-note p {
-  margin-top: 0.7rem;
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
 .profile {
   border-top: 1px solid var(--separator);
   padding: 1.4rem 0.4rem 0.75rem;
@@ -82,18 +69,11 @@
 }
 .profile-name {
   min-width: 0;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-.profile-name small {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
   white-space: nowrap;
-  display: block;
-  max-width: 145px;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 400;
-  font-size: 0.75rem;
-  color: var(--ink-2);
 }
 .profile-actions {
   display: flex;
@@ -123,7 +103,6 @@
 .page-header > button {
   flex-shrink: 0;
 }
-.mobile-break,
 .mobile-top {
   display: none;
 }
@@ -420,9 +399,6 @@
   }
   .page-header h1 {
     font-size: 2rem;
-  }
-  .mobile-break {
-    display: block;
   }
   .study-invitation {
     padding: 1.6rem;

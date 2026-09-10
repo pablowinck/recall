@@ -7,8 +7,7 @@ import type { AuthFormState } from './use-auth-form';
 export function AuthHeading({ signup }: { signup: boolean }): React.JSX.Element {
   return (
     <>
-      <span className="eyebrow">YOUR LEARNING SPACE</span>
-      <h1>{signup ? 'Start remembering.' : 'Welcome back.'}</h1>
+      <h1>{signup ? 'Start remembering' : 'Welcome back'}</h1>
       <p>
         {signup
           ? 'Create an account and save what you want to learn.'
