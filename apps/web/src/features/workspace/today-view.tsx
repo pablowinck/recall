@@ -13,20 +13,9 @@ interface TodayProps {
 
 /** Prioritize the next useful study action. Example: <TodayView {...props} />. */
 export function TodayView(props: TodayProps): React.JSX.Element {
-  const title = (
-    <>
-      A good day
-      <br className="mobile-break" /> to remember.
-    </>
-  );
   return (
     <div className="view-enter">
-      <PageHeading
-        eyebrow="A LITTLE, EVERY DAY"
-        title={title}
-        description="Your next discovery starts here."
-        action={<NewCardButton variant="soft" onClick={props.create} />}
-      />
+      <TodayHeading create={props.create} />
       <StudyInvitation
         stats={props.workspace.stats}
         study={() => props.study()}
@@ -35,5 +24,22 @@ export function TodayView(props: TodayProps): React.JSX.Element {
       <StudyStats stats={props.workspace.stats} />
       <DeckList decks={props.workspace.decks} study={props.study} browse={props.browse} />
     </div>
+  );
+}
+
+function TodayHeading({ create }: { create: () => void }): React.JSX.Element {
+  const title = (
+    <>
+      A good day
+      <br className="mobile-break" /> to remember.
+    </>
+  );
+  return (
+    <PageHeading
+      eyebrow="A LITTLE, EVERY DAY"
+      title={title}
+      description="Your next discovery starts here."
+      action={<NewCardButton variant="soft" onClick={create} />}
+    />
   );
 }

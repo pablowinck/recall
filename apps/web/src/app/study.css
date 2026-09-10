@@ -20,6 +20,9 @@
   margin: 2rem 0.25rem 1rem;
 }
 .study-context > span:last-child {
+  max-width: 45%;
+  overflow-wrap: anywhere;
+  text-align: right;
   color: var(--muted);
   font-size: 0.8125rem;
 }

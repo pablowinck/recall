@@ -16,10 +16,7 @@ export function StudyProgress({
   return (
     <>
       <header className="study-header">
-        <button className="text-button" onClick={exit}>
-          <ArrowLeft size={17} />
-          Leave session
-        </button>
+        <ExitStudyButton exit={exit} />
         <span>
           {session.completed} of {total} reviewed
         </span>
@@ -44,10 +41,7 @@ export function ReviewContent({
   if (!current) return null;
   return (
     <>
-      <div className="study-context">
-        <span className="eyebrow">RECALL BEFORE REVEALING</span>
-        <span>{current.card.tags[1] ?? 'Your learning'}</span>
-      </div>
+      <StudyCardContext category={current.card.tags[0] ?? 'Your learning'} />
       <article className={`review-card ${revealed ? 'is-revealed' : ''}`}>
         <span className="eyebrow">FRONT</span>
         <h1>{current.card.front}</h1>
@@ -63,7 +57,12 @@ export function ReviewContent({
 }
 
 /** Allow a rating only after revealing the answer. Example: <StudyActions session={session} />. */
-export function StudyActions({ session }: { session: StudySessionState }): React.JSX.Element {
+export function StudyActions({
+  session,
+}: {
+  session: StudySessionState;
+}): React.JSX.Element | null {
+  if (!session.queue.length) return null;
   if (session.revealed) return <RatingControls session={session} />;
   return (
     <div className="reveal-action">
@@ -71,6 +70,24 @@ export function StudyActions({ session }: { session: StudySessionState }): React
         Reveal answer <CornerDownLeft size={19} />
       </Button>
       <span>Press Space to reveal</span>
+    </div>
+  );
+}
+
+function ExitStudyButton({ exit }: { exit: () => void }): React.JSX.Element {
+  return (
+    <button className="text-button" onClick={exit}>
+      <ArrowLeft size={17} />
+      Leave session
+    </button>
+  );
+}
+
+function StudyCardContext({ category }: { category: string }): React.JSX.Element {
+  return (
+    <div className="study-context">
+      <span className="eyebrow">RECALL BEFORE REVEALING</span>
+      <span>{category}</span>
     </div>
   );
 }

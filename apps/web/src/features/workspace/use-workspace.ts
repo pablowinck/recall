@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import type { RecallClient } from '@recall/client';
 import type { Workspace } from '@recall/contracts';
-import { describeFailure } from '@/components/feedback';
+import { useRemoteResource } from '@/lib/use-remote-resource';
 
 /** Load workspace statistics without fabricated values. Example: useWorkspace(client). */
 export function useWorkspace(client: RecallClient): {
@@ -9,18 +9,7 @@ export function useWorkspace(client: RecallClient): {
   error: string;
   refresh: () => Promise<void>;
 } {
-  const [workspace, setWorkspace] = useState<Workspace | null>(null);
-  const [error, setError] = useState('');
-  const refresh = useCallback(async (): Promise<void> => {
-    try {
-      setWorkspace(await client.workspace());
-      setError('');
-    } catch (failure) {
-      setError(describeFailure(failure));
-    }
-  }, [client]);
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
-  return { workspace, error, refresh };
+  const read = useCallback(() => client.workspace(), [client]);
+  const resource = useRemoteResource(read);
+  return { workspace: resource.value, error: resource.error, refresh: resource.refresh };
 }

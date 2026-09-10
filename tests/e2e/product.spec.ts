@@ -208,3 +208,60 @@ test('switching accounts in the same tab does not reuse the previous library', a
     await second.cleanup();
   }
 });
+
+test('creates and revokes a personal MCP connection through the web', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
+    const tokenField = page.getByRole('textbox', { name: 'New personal token' });
+    await expect(tokenField).toHaveValue(/^recall_/);
+    const token = await tokenField.inputValue();
+    const mcp = await connectTestMcp(token);
+    try {
+      expect((await mcp.listTools()).tools).toHaveLength(9);
+    } finally {
+      await mcp.close();
+    }
+    await page.getByRole('button', { name: 'I saved it', exact: true }).click();
+    await expect(tokenField).toHaveCount(0);
+    await page.getByRole('button', { name: 'Revoke connection Codex', exact: true }).click();
+    await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();
+    await expect(
+      page.getByText('You have not created a connection yet.', { exact: true }),
+    ).toBeVisible();
+    expect(
+      (
+        await fetch('http://localhost:3211/v1/workspace', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      ).status,
+    ).toBe(401);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a duplicate deck name remains editable after the server rejects it', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('button', { name: 'New deck', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Name', exact: true }).fill('My first deck');
+    await page.getByRole('button', { name: 'Create deck', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('This record already exists.');
+    await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(
+      'My first deck',
+    );
+    await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Italian practice');
+    await page.getByRole('button', { name: 'Create deck', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect((await account.api.workspace()).decks.map((deck) => deck.name)).toContain(
+      'Italian practice',
+    );
+  } finally {
+    await account.cleanup();
+  }
+});

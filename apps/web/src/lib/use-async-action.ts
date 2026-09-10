@@ -1,10 +1,10 @@
 import { useRef, useState, type Dispatch, type SetStateAction, type RefObject } from 'react';
-import { describeFailure } from '@/components/feedback';
+import { describeFailure } from './error-message';
 
 export interface AsyncAction {
   busy: boolean;
   error: string;
-  run: (operation: () => Promise<void>) => Promise<boolean>;
+  run: (operation: () => Promise<unknown>) => Promise<boolean>;
   clear: () => void;
 }
 interface ActionContext {
@@ -29,7 +29,7 @@ export function useAsyncAction(): AsyncAction {
 
 async function executeAction(
   context: ActionContext,
-  operation: () => Promise<void>,
+  operation: () => Promise<unknown>,
 ): Promise<boolean> {
   if (context.pending.current) return false;
   context.pending.current = true;

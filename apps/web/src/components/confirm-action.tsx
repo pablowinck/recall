@@ -22,10 +22,7 @@ export function ConfirmAction(props: ConfirmActionProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const action = useAsyncAction();
   const confirm = (): void => {
-    void action.run(async () => {
-      await props.onConfirm();
-      setOpen(false);
-    });
+    void finishConfirmation(action, props.onConfirm, () => setOpen(false));
   };
   return (
     <AlertDialog.Root
@@ -38,6 +35,15 @@ export function ConfirmAction(props: ConfirmActionProps): React.JSX.Element {
       <ConfirmationContent copy={props} action={action} confirm={confirm} />
     </AlertDialog.Root>
   );
+}
+
+async function finishConfirmation(
+  action: AsyncAction,
+  operation: () => Promise<void>,
+  close: () => void,
+): Promise<void> {
+  const succeeded = await action.run(operation);
+  if (succeeded) close();
 }
 
 function ConfirmationContent(props: ConfirmationViewProps): React.JSX.Element {
