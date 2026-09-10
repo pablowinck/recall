@@ -4,7 +4,9 @@ export type CardBlock =
   | { kind: 'list'; ordered: boolean; items: InlineNode[][] };
 
 // Card text is untrusted content: it is parsed into these nodes and rendered as elements, never as markup.
-const INLINE_PATTERN = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\n]+\*|_[^_\n]+_)/g;
+// The word-boundary guards keep snake_case names and arithmetic like 2*3*4 out of italics.
+const INLINE_PATTERN =
+  /(`[^`\n]+`|\*\*[^*\n]+\*\*|(?<!\w)\*[^*\n]+\*(?!\w)|(?<!\w)_[^_\n]+_(?!\w))/g;
 const BULLET_PATTERN = /^\s*[-*]\s+(.*)$/;
 const ORDERED_PATTERN = /^\s*\d+[.)]\s+(.*)$/;
 

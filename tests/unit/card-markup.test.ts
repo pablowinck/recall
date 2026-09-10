@@ -21,6 +21,21 @@ describe('emphasis in a line of card text', () => {
     expect(parseInline('`**not bold**`')).toEqual([{ kind: 'code', text: '**not bold**' }]);
   });
 
+  it('leaves identifiers and arithmetic alone', () => {
+    expect(parseInline('use snake_case_name here')).toEqual([
+      { kind: 'text', text: 'use snake_case_name here' },
+    ]);
+    expect(parseInline('2*3*4')).toEqual([{ kind: 'text', text: '2*3*4' }]);
+  });
+
+  it('keeps phonetics and quotes as written', () => {
+    expect(parseInline('Passado: **threw** (/θruː/ soa igual a “through”)')).toEqual([
+      { kind: 'text', text: 'Passado: ' },
+      { kind: 'bold', text: 'threw' },
+      { kind: 'text', text: ' (/θruː/ soa igual a “through”)' },
+    ]);
+  });
+
   it('strips markers for a plain summary', () => {
     expect(plainCardText('**Compensar**, *contrabalançar*')).toBe('Compensar, contrabalançar');
   });
