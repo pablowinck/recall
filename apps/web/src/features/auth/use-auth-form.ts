@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { useAsyncAction } from '@/lib/use-async-action';
+import { describeAuthFailure } from './auth-errors';
 
 export interface AuthFormState {
   signup: boolean;
@@ -44,8 +45,6 @@ async function authenticate(
   const result = signup
     ? await auth.auth.signUp(credentials)
     : await auth.auth.signInWithPassword(credentials);
-  if (result.error?.message.includes('Invalid login'))
-    throw new Error('Incorrect email or password. Check your details and try again.');
-  if (result.error) throw new Error(result.error.message);
+  if (result.error) throw new Error(describeAuthFailure(result.error.message));
   return signup && !result.data.session ? 'Check your email to confirm your account.' : '';
 }

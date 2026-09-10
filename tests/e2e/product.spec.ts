@@ -91,6 +91,10 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       .getByRole('button', { name: 'Sign out', exact: true })
       .filter({ visible: true })
       .click();
+    await page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .click();
     await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
   } finally {
     await account.cleanup();
@@ -122,6 +126,10 @@ test('switching accounts in the same tab does not reuse the previous library', a
     await page
       .getByRole('button', { name: 'Sign out', exact: true })
       .filter({ visible: true })
+      .click();
+    await page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: 'Sign out', exact: true })
       .click();
     await fillSignInForm(page, second);
     await page.getByRole('button', { name: 'Library', exact: true }).click();
@@ -192,6 +200,21 @@ test('an open Today catches up when the tab comes back', async ({ page }) => {
     });
     await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
     await expect(page.getByRole('button', { name: /Start reviewing/ })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('signing out asks first and can be called off', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .filter({ visible: true })
+      .click();
+    await page.getByRole('button', { name: 'Stay signed in', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
   } finally {
     await account.cleanup();
   }

@@ -1,4 +1,5 @@
 import { IconButton, Tooltip } from '@radix-ui/themes';
+import { ConfirmAction } from '@/components/confirm-action';
 import { LogOut, Moon, Sun } from 'lucide-react';
 import type { AppearanceActions, NavigationProps } from './navigation-types';
 
@@ -41,13 +42,25 @@ export function ThemeControl({
   );
 }
 
+const signOutCopy = {
+  title: 'Sign out?',
+  description: 'Your cards and their schedule stay in your account. You can sign back in any time.',
+  confirmLabel: 'Sign out',
+  cancelLabel: 'Stay signed in',
+};
+
 /** Expose the same explicit sign-out action on every device. Example: <SignOutControl signOut={signOut} />. */
 export function SignOutControl({ signOut }: Pick<AppearanceActions, 'signOut'>): React.JSX.Element {
   return (
-    <Tooltip content="Sign out">
-      <IconButton variant="ghost" aria-label="Sign out" onClick={signOut}>
-        <LogOut size={18} />
-      </IconButton>
-    </Tooltip>
+    <ConfirmAction
+      {...signOutCopy}
+      tooltip="Sign out"
+      trigger={
+        <IconButton variant="ghost" aria-label="Sign out">
+          <LogOut size={18} />
+        </IconButton>
+      }
+      onConfirm={async () => signOut()}
+    />
   );
 }

@@ -37,12 +37,12 @@ function PasswordField({ signup, busy }: { signup: boolean; busy: boolean }): Re
     name: 'password',
     type: 'password',
     autoComplete: signup ? 'new-password' : 'current-password',
-    placeholder: signup ? 'At least 10 characters' : 'Your password',
+    placeholder: signup ? 'Create a password' : 'Your password',
     minLength: signup ? 10 : undefined,
   };
   return (
     <label>
-      Password
+      Password {signup && <span className="field-hint">At least 10 characters</span>}
       <TextField.Root {...attributes} required size="3" disabled={busy} />
     </label>
   );

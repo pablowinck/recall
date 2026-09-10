@@ -1,5 +1,5 @@
 import { useState, type ReactElement } from 'react';
-import { AlertDialog, Button } from '@radix-ui/themes';
+import { AlertDialog, Button, Tooltip } from '@radix-ui/themes';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 import { ErrorNotice } from './feedback';
 
@@ -9,6 +9,7 @@ interface ConfirmActionProps {
   confirmLabel: string;
   cancelLabel: string;
   trigger: ReactElement;
+  tooltip?: string;
   onConfirm: () => Promise<void>;
 }
 interface ConfirmationViewProps {
@@ -31,10 +32,22 @@ export function ConfirmAction(props: ConfirmActionProps): React.JSX.Element {
         if (!action.busy) setOpen(next);
       }}
     >
-      <AlertDialog.Trigger>{props.trigger}</AlertDialog.Trigger>
+      <ConfirmTrigger tooltip={props.tooltip}>{props.trigger}</ConfirmTrigger>
       <ConfirmationContent copy={props} action={action} confirm={confirm} />
     </AlertDialog.Root>
   );
+}
+
+// Radix passes tooltip props to its content, so the tooltip has to sit outside the trigger.
+function ConfirmTrigger({
+  tooltip,
+  children,
+}: {
+  tooltip?: string;
+  children: ReactElement;
+}): React.JSX.Element {
+  const trigger = <AlertDialog.Trigger>{children}</AlertDialog.Trigger>;
+  return tooltip ? <Tooltip content={tooltip}>{trigger}</Tooltip> : trigger;
 }
 
 async function finishConfirmation(

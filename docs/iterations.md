@@ -359,3 +359,11 @@ Every library card was a single button wrapping a heading, a paragraph, tags and
 A card is now an `<article>` whose question is a heading, and that heading holds one button which covers the card through a stretched pseudo-element. Its accessible name is the question alone, collapsed to a single line and capped at 80 characters by `summarizeFront`. The press and the focus ring belong to the whole card, and the "Edit card" hint is decorative.
 
 Validation: format, typecheck, 88 unit tests and build pass, including three cases of the question summary. All 100 E2E journeys pass on desktop, tablet and mobile, among them one that opens a card with a long question and a long answer and finds its name within 80 characters. The UX tour reports no overflow or axe violations, and its captures show the library unchanged.
+
+## 2026-09-10 — UX loop 24: signing out asks first, and errors speak plainly
+
+On a phone the sign-out button sits beside the theme toggle, and a mis-tap ended the session with nothing to undo it. Sign-up and sign-in showed whatever the auth service said — "Invalid login credentials", "Password should be at least 6 characters", "For security purposes…" — and the one rule that matters, ten characters, lived only in a placeholder that disappeared as soon as someone typed.
+
+Sign out now asks, with "Stay signed in" as the way out; the shared confirm component learned to carry a tooltip, because Radix passes tooltip props to its content rather than to the trigger. Auth failures pass through `describeAuthFailure`, which turns the service's wording into words a person can act on, and the password rule sits under the label as a hint that stays while typing.
+
+Validation: format, typecheck, 92 unit tests and build pass, including four failure mappings. All 103 E2E journeys pass on desktop, tablet and mobile, among them one that starts a sign-out and calls it off. The UX tour reports no overflow or axe violations, and its sign-up captures show the rule under the label.
