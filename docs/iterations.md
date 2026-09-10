@@ -351,3 +351,11 @@ The library kept its search, deck filter and page inside the view, so a trip to 
 The query now lives in the workspace state, next to the current view, so leaving and returning keeps the search text, the deck and the page. A "Clear filters" button sits with the filters whenever one is active, and clearing is a single update instead of two that could race. A deck row with nothing due opens the library already filtered to that deck.
 
 Validation: format, typecheck, 85 unit tests and build pass. All 97 E2E journeys pass on desktop, tablet and mobile, among them one that filters, leaves for Today, returns to the same filter and clears it, and one that opens an empty deck straight into a filtered library. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 23: a library card that names itself
+
+Every library card was a single button wrapping a heading, a paragraph, tags and a hint. A button holds phrasing content, so that markup was invalid, and a screen reader announced the whole card as one name — status, deck, question, answer and tags, several hundred characters — with no heading to navigate by.
+
+A card is now an `<article>` whose question is a heading, and that heading holds one button which covers the card through a stretched pseudo-element. Its accessible name is the question alone, collapsed to a single line and capped at 80 characters by `summarizeFront`. The press and the focus ring belong to the whole card, and the "Edit card" hint is decorative.
+
+Validation: format, typecheck, 88 unit tests and build pass, including three cases of the question summary. All 100 E2E journeys pass on desktop, tablet and mobile, among them one that opens a card with a long question and a long answer and finds its name within 80 characters. The UX tour reports no overflow or axe violations, and its captures show the library unchanged.

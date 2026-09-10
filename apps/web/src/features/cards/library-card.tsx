@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import type { Flashcard } from '@recall/contracts';
-import { describeCardStatus } from './card-presentation';
+import { describeCardStatus, summarizeFront } from './card-presentation';
 
 /** Present one editable card without executing its content. Example: <LibraryCard card={card} edit={edit} />. */
 export function LibraryCard({
@@ -14,18 +14,23 @@ export function LibraryCard({
 }): React.JSX.Element {
   const status = describeCardStatus(card, new Date());
   return (
-    <button className="library-card" onClick={edit}>
+    <article className="library-card">
       <div className="card-top-row">
         <span className={`card-status ${status.tone}`}>{status.label}</span>
         {deckName && <span className="card-deck-badge">{deckName}</span>}
       </div>
-      <h2>{card.front}</h2>
+      <h2>
+        {/* The button covers the whole card, but its name is only the question, not every word on it. */}
+        <button className="card-open" onClick={edit} aria-label={summarizeFront(card.front)}>
+          {card.front}
+        </button>
+      </h2>
       <p>{card.back}</p>
       <LibraryTags tags={card.tags} />
-      <span className="card-edit-hint">
+      <span className="card-edit-hint" aria-hidden="true">
         Edit card <ArrowRight size={14} />
       </span>
-    </button>
+    </article>
   );
 }
 

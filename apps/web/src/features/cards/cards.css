@@ -34,6 +34,7 @@
   transition: opacity 0.15s ease;
 }
 .library-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -100,6 +101,35 @@
   overflow: hidden;
   margin-bottom: 0.75rem;
   overflow-wrap: anywhere;
+}
+/* One button covers the card: the question names it, and the press and focus ring belong to the card. */
+.card-open {
+  display: inline;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+.card-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.card-open:not(:disabled):active {
+  transform: none;
+}
+.library-card:has(.card-open:active) {
+  transform: scale(0.99);
+}
+.card-open:focus-visible {
+  outline: none;
+}
+.card-open:focus-visible::after {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 .library-card > p {
   font-size: 0.875rem;

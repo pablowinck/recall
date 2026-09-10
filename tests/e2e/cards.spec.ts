@@ -290,3 +290,25 @@ test('a deck with nothing to review opens the library filtered to it', async ({ 
     await account.cleanup();
   }
 });
+
+test('a library card announces its question, not everything printed on it', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: `A question with plenty to say. ${'It keeps going. '.repeat(12)}`,
+      back: `An answer with just as much to say. ${'It also keeps going. '.repeat(12)}`,
+      tags: ['first', 'second'],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const opener = page.locator('.library-card h2 button');
+    const name = await opener.getAttribute('aria-label');
+    expect(name?.length).toBeLessThanOrEqual(80);
+    await opener.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

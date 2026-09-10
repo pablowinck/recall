@@ -2,6 +2,12 @@ import type { Flashcard } from '@recall/contracts';
 
 export type CardStatusSource = Pick<Flashcard, 'suspended' | 'schedule' | 'due_at'>;
 
+/** Keep a question short enough to announce as a name. Example: summarizeFront(card.front). */
+export function summarizeFront(front: string, limit = 80): string {
+  const line = front.replace(/\s+/g, ' ').trim();
+  return line.length <= limit ? line : `${line.slice(0, limit - 1).trimEnd()}…`;
+}
+
 /** Give paused and new cards the correct visible status. Example: describeCardStatus(card, now). */
 export function describeCardStatus(
   card: CardStatusSource,
