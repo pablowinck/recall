@@ -177,3 +177,22 @@ test('a workspace that cannot load offers a calm retry', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('an open Today catches up when the tab comes back', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await expect(page.getByRole('button', { name: /Start reviewing/ })).toHaveCount(0);
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Added while the tab was in the background',
+      back: 'Answer',
+      tags: [],
+    });
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await expect(page.getByRole('button', { name: /Start reviewing/ })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

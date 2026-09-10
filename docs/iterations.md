@@ -311,3 +311,11 @@ The study card treated every question as a headline: display size and tight trac
 Questions now step down by length: a few words keep display size, a sentence drops a step, and a paragraph reads at body size with looser tracking and `text-wrap: pretty`. `card-typography.ts` holds that decision as one pure function, so the rule is stated once. Question and answer both stop at 66 characters a line, the answer scale is fluid between phone and desktop instead of fixed, and prose wraps with `break-word` instead of `anywhere`, which used to split words for no reason.
 
 Validation: format, typecheck, 77 unit tests and build pass, including the three prompt lengths. All 76 E2E journeys pass on desktop, tablet and mobile, among them one that measures a paragraph question rendering smaller than a short one on the same screen. The UX tour reports no overflow or axe violations, and probe captures at 1440 px and 390 px show a short, a sentence-long and a paragraph-long card.
+
+## 2026-09-10 — UX loop 18: revealing brings the answer to the reader, and Today stops going stale
+
+Reviewing on a phone showed that revealing a long card looked like nothing had happened: the question filled the screen and the answer started below the fold, behind the rating bar. Separately, a Today left open in a tab kept an old date and an old due count until someone reloaded, because the workspace was read once per visit.
+
+Revealing now scrolls the answer into view when it starts below two thirds of the screen, keeping the tail of the question above it, and it honours `prefers-reduced-motion`. `reveal-scroll.ts` decides that offset as a pure function. Today refreshes when the tab comes back, when the network returns and once a minute while it stays visible, which also keeps the date in its heading current.
+
+Validation: format, typecheck, 81 unit tests and build pass, including four cases of the scroll decision. All 82 E2E journeys pass on desktop, tablet and mobile, among them one that reveals a twenty-sentence question and finds the answer in the viewport, and one where a card created elsewhere shows up on Today when the tab returns. A probe at 390 px captures the answer on screen right after the reveal.

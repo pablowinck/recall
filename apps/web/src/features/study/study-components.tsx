@@ -5,6 +5,7 @@ import type { StudyCard } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingControls } from './rating-controls';
 import { frontSizeClass } from './card-typography';
+import { revealScrollTop } from './reveal-scroll';
 
 interface StudyProgressProps {
   session: StudySessionState;
@@ -114,7 +115,23 @@ function useStudyFocus(cardId: string | undefined, revealed: boolean): StudyFocu
     if (active && active !== document.body && active !== card.current) return;
     (revealed ? answer.current : card.current)?.focus({ preventScroll: true });
   }, [cardId, revealed]);
+  useEffect(() => {
+    if (revealed) scrollAnswerIntoView(answer.current);
+  }, [cardId, revealed]);
   return { card, answer };
+}
+
+// A long question can push its answer below the fold, so revealing has to bring the answer to the reader.
+function scrollAnswerIntoView(answer: HTMLElement | null): void {
+  if (!answer) return;
+  const top = revealScrollTop({
+    answerTop: answer.getBoundingClientRect().top,
+    viewportHeight: window.innerHeight,
+    scrollY: window.scrollY,
+  });
+  if (top === null) return;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top, behavior: reduced ? 'instant' : 'smooth' });
 }
 
 // A long answer can leave the page scrolled; every new card should start at its question.

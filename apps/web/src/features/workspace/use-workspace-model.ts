@@ -1,5 +1,6 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useWorkspace } from './use-workspace';
+import { useWorkspaceFreshness } from './use-workspace-freshness';
 import type {
   RecallAccount,
   WorkspaceActions,
@@ -17,6 +18,7 @@ export function useWorkspaceModel(account: RecallAccount): WorkspaceModel {
     revision: 0,
   });
   const remote = useWorkspace(account.client);
+  useWorkspaceFreshness(state.view === 'today', () => void remote.refresh());
   const actions = {
     ...createViewActions(update, remote.refresh),
     ...createAccountActions(account, update, remote.refresh),

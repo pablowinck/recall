@@ -153,3 +153,22 @@ async function measureQuestion(
     size: Number.parseFloat(getComputedStyle(node).fontSize),
   }));
 }
+
+test('revealing a long question brings the answer into view', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: `Read this carefully. ${'Every sentence adds another line to the question. '.repeat(20)}`,
+      back: 'The answer waits below a very long question.',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await expect(page.getByText('The answer waits below a very long question.')).toBeInViewport();
+  } finally {
+    await account.cleanup();
+  }
+});
