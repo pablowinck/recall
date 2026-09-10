@@ -147,3 +147,11 @@ Discovery: authoring a card in `CardEditor` required selecting from pre-existing
 Changes: added seamless inline deck creation to `CardEditorFields` with auto-selection and zero dialog-stacking or draft loss. The front question field now auto-focuses on open, and `Cmd+Enter` / `Ctrl+Enter` triggers form submission directly from textareas. Rebuilt the web Docker container and added an E2E regression verifying inline deck creation retains draft text and attaches the created card to the new deck.
 
 Validation: 40 unit tests, 32 E2E tests (including the new desktop, tablet, and mobile journeys), TypeScript checks, Prettier formatting, and all production builds passed locally.
+
+## 2026-09-10 — tactile Apple keycaps, study progress momentum, and library deck context, validated locally
+
+Discovery: the study Reveal action displayed an Enter icon alongside a Space helper, creating conflicting affordances; rating keycaps lacked tactile visual depth for rapid review recognition; study progress was a static 2px hairline; and library cards in "All decks" omitted deck names, requiring cards to be opened to determine topic membership.
+
+Changes: unified study reveal with chiclet `<kbd>` hints for Space and Enter; upgraded progress bar height to 4px with smooth width transitions; styled Apple HIG tactile keycaps with subtle physical borders; added deck badges to library cards; and added a single-click "Clear filters" action to empty library states.
+
+Validation: 40 unit tests, 32 E2E tests across all three device sizes, TypeScript checks, and production builds passed locally on rebuilt containers.

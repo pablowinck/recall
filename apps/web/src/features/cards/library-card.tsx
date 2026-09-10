@@ -5,15 +5,20 @@ import { describeCardStatus } from './card-presentation';
 /** Present one editable card without executing its content. Example: <LibraryCard card={card} edit={edit} />. */
 export function LibraryCard({
   card,
+  deckName,
   edit,
 }: {
   card: Flashcard;
+  deckName?: string;
   edit: () => void;
 }): React.JSX.Element {
   const status = describeCardStatus(card, new Date());
   return (
     <button className="library-card" onClick={edit}>
-      <span className={`card-status ${status.tone}`}>{status.label}</span>
+      <div className="card-top-row">
+        <span className={`card-status ${status.tone}`}>{status.label}</span>
+        {deckName && <span className="card-deck-badge">{deckName}</span>}
+      </div>
       <h2>{card.front}</h2>
       <p>{card.back}</p>
       <LibraryTags tags={card.tags} />

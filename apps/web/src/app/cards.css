@@ -45,6 +45,30 @@
   border-color: var(--blue);
   box-shadow: var(--card-shadow-hover);
 }
+.card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+.card-top-row .card-status {
+  margin-bottom: 0;
+}
+.card-deck-badge {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .card-status {
   font-size: 0.75rem;
   color: var(--muted);

@@ -24,7 +24,12 @@ export function LibraryResults({ library, state }: LibraryResultsProps): React.J
       </div>
       <div className="card-grid">
         {result.cards.map((card) => (
-          <LibraryCard key={card.id} card={card} edit={() => library.edit(card)} />
+          <LibraryCard
+            key={card.id}
+            card={card}
+            deckName={library.decks.find((d) => d.id === card.deck_id)?.name}
+            edit={() => library.edit(card)}
+          />
         ))}
       </div>
       {!result.cards.length && <EmptyLibrary library={library} state={state} />}
@@ -44,9 +49,20 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
           ? 'Try another search or choose a different deck.'
           : 'Create your first card and start building your memory.'}
       </p>
-      {!state.query.search && <Button onClick={library.create}>Create card</Button>}
+      {filtered ? (
+        <Button variant="soft" onClick={() => clearLibraryFilters(state)}>
+          Clear filters
+        </Button>
+      ) : (
+        <Button onClick={library.create}>Create card</Button>
+      )}
     </div>
   );
+}
+
+function clearLibraryFilters(state: LibraryViewState): void {
+  state.search('');
+  state.selectDeck('');
 }
 
 function LibraryPagination({ state }: { state: LibraryViewState }): React.JSX.Element {

@@ -16,7 +16,7 @@ export function StudyProgress({ session, exit }: StudyProgressProps): React.JSX.
   return (
     <>
       <StudyProgressHeader completed={session.completed} total={total} exit={exit} />
-      <Progress aria-label="Session progress" value={pct} size="1" />
+      <Progress aria-label="Session progress" value={pct} size="2" />
     </>
   );
 }
@@ -54,9 +54,10 @@ export function ReviewContent({
 }: ReviewContentProps): React.JSX.Element | null {
   if (!current) return null;
   const isClickable = !revealed && Boolean(onReveal);
+  const tagLabel = current.card.tags.length ? current.card.tags.join(' · ') : 'Recall';
   return (
     <>
-      <StudyCardContext category={current.card.tags[0] ?? 'Your learning'} />
+      <StudyCardContext category={tagLabel} />
       <article
         className={`review-card ${revealed ? 'is-revealed' : ''} ${isClickable ? 'is-clickable' : ''}`}
         onClick={isClickable ? onReveal : undefined}
@@ -89,9 +90,11 @@ export function StudyActions({
   return (
     <div className="reveal-action">
       <Button size="4" onClick={session.reveal}>
-        Reveal answer <CornerDownLeft size={19} />
+        Reveal answer
       </Button>
-      <span>Press Space to reveal</span>
+      <span className="reveal-hint">
+        Press <kbd className="keycap">Space</kbd> or <kbd className="keycap">↵</kbd> to reveal
+      </span>
     </div>
   );
 }
