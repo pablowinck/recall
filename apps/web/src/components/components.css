@@ -16,7 +16,7 @@
   border-radius: 12px;
 }
 .brand-dot {
-  color: var(--blue);
+  color: var(--accent-text);
 }
 .loading-state {
   min-height: 45vh;
@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .error-notice {
   display: flex;
@@ -50,7 +50,7 @@
   justify-content: center;
   gap: 0.4rem;
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .dialog-actions {
   display: flex;

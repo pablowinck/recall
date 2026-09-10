@@ -11,23 +11,23 @@
 }
 .study-header .text-button {
   padding: 0.35rem 0.85rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--separator);
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--muted);
+  color: var(--ink-2);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .study-header .text-button:hover {
   color: var(--ink);
-  border-color: var(--line-subtle);
-  background: var(--tint);
+  border-color: var(--fill-2);
+  background: var(--accent-soft);
 }
 .study-header > span {
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--ink-2);
   font-variant-numeric: tabular-nums;
 }
 .study-context {
@@ -40,20 +40,20 @@
   max-width: 45%;
   overflow-wrap: anywhere;
   text-align: right;
-  color: var(--muted);
+  color: var(--ink-2);
   font-size: 0.8125rem;
 }
 .review-card {
   padding: 2.5rem 3rem;
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
+  border: 1px solid var(--separator);
+  border-radius: var(--r-xl);
   min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   box-shadow:
-    var(--card-shadow),
+    var(--shadow-1),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
   transition:
     border-color 0.18s ease,
@@ -63,8 +63,8 @@
   cursor: pointer;
 }
 .review-card.is-clickable:hover {
-  border-color: var(--blue);
-  box-shadow: var(--card-shadow-hover);
+  border-color: var(--accent-text);
+  box-shadow: var(--shadow-2);
 }
 .review-card h1 {
   font-size: clamp(1.6rem, 2.5vw, 2.1rem);
@@ -79,7 +79,7 @@
   font-size: 0.75rem;
 }
 .review-answer {
-  border-top: 1px solid var(--line-subtle);
+  border-top: 1px solid var(--fill-2);
   padding-top: 1.6rem;
   margin-top: 1.7rem;
   animation: appear 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -92,7 +92,7 @@
   margin-top: 0.85rem;
 }
 .review-answer .eyebrow {
-  color: var(--blue);
+  color: var(--accent-text);
   font-size: 0.75rem;
 }
 .reveal-action {
@@ -110,15 +110,15 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .reveal-action > span {
   font-size: 0.75rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .study-header + .rt-ProgressRoot {
   margin-top: 0.35rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
 }
 .rt-ProgressIndicator {
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -142,13 +142,13 @@
   align-items: center;
   gap: 0.25rem;
   position: relative;
-  border: 1px solid var(--line);
+  border: 1px solid var(--separator);
   background: var(--surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   min-height: 88px;
   padding: 1.2rem 0.5rem 0.8rem;
   color: var(--ink);
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-1);
   transition:
     border-color 0.15s,
     background 0.15s,
@@ -163,36 +163,36 @@
 }
 .rating-button > span:last-child {
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--ink-2);
   font-variant-numeric: tabular-nums;
 }
 .rating-1 strong {
   color: var(--red-11);
 }
 .rating-1:hover:not(:disabled) {
-  border-color: rgba(255, 69, 58, 0.45);
-  background: rgba(255, 69, 58, 0.08);
+  border-color: var(--red-a7);
+  background: var(--red-a3);
 }
 .rating-2 strong {
-  color: var(--orange-11);
+  color: var(--amber-11);
 }
 .rating-2:hover:not(:disabled) {
-  border-color: rgba(255, 159, 10, 0.45);
-  background: rgba(255, 159, 10, 0.08);
+  border-color: var(--amber-a7);
+  background: var(--amber-a3);
 }
 .rating-3 strong {
-  color: var(--blue);
+  color: var(--accent-text);
 }
 .rating-3:hover:not(:disabled) {
-  border-color: rgba(0, 102, 204, 0.45);
-  background: var(--tint);
+  border-color: var(--accent-a7);
+  background: var(--accent-soft);
 }
 .rating-4 strong {
   color: var(--green-11);
 }
 .rating-4:hover:not(:disabled) {
-  border-color: rgba(48, 209, 88, 0.45);
-  background: rgba(48, 209, 88, 0.08);
+  border-color: var(--green-a7);
+  background: var(--green-a3);
 }
 .keycap {
   display: inline-flex;
@@ -204,10 +204,10 @@
   font-size: 0.72rem;
   font-weight: 600;
   font-family: -apple-system-ui-serif, ui-monospace, 'SF Mono', Menlo, monospace;
-  color: var(--muted);
-  background: var(--surface-elevated);
-  border: 1px solid var(--line);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.16);
+  color: var(--ink-2);
+  background: var(--surface-raised);
+  border: 1px solid var(--separator);
+  border-bottom: 2px solid var(--gray-a6);
   border-radius: 6px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   line-height: 1;
@@ -217,14 +217,13 @@
   top: 0.45rem;
   left: 0.5rem;
 }
-.recall-root.dark .keycap {
-  border-bottom-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.07);
+.dark .keycap {
+  background: var(--fill-2);
 }
 .keyboard-hint {
   display: block;
   font-size: 0.75rem;
-  color: var(--muted);
+  color: var(--ink-2);
   margin-top: 1rem;
 }
 .session-complete {
@@ -245,7 +244,7 @@
   background: var(--green-a3);
   color: var(--green-11);
   margin-bottom: 0.5rem;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-1);
 }
 .session-complete p {
   line-height: 1.9;

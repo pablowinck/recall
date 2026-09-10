@@ -307,3 +307,37 @@ test('creates a new deck inline from the card editor without discarding entered 
     await account.cleanup();
   }
 });
+
+test('appearance follows a saved choice or the system before the app hydrates', async ({
+  page,
+}) => {
+  const isDark = (): Promise<boolean> =>
+    page.evaluate(() => document.documentElement.classList.contains('dark'));
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  expect(await isDark()).toBe(true);
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.evaluate(() => localStorage.setItem('recall-appearance', 'dark'));
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  expect(await isDark()).toBe(true);
+  await page.evaluate(() => localStorage.removeItem('recall-appearance'));
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  expect(await isDark()).toBe(false);
+});
+
+test('keyboard focus stays visible inside the card editor dialog', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    await expect(page.getByRole('textbox', { name: /^Front/ })).toBeFocused();
+    for (let step = 0; step < 3; step += 1) await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toBeFocused();
+    const outline = await page.evaluate(
+      () => getComputedStyle(document.activeElement as Element).outlineStyle,
+    );
+    expect(outline).not.toBe('none');
+  } finally {
+    await account.cleanup();
+  }
+});

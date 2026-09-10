@@ -7,7 +7,7 @@
   background: var(--sidebar);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--separator);
   padding: 2.4rem 1.25rem 1.5rem;
   position: sticky;
   top: 0;
@@ -32,20 +32,20 @@
   gap: 0.8rem;
   border: 0;
   background: transparent;
-  color: var(--muted);
+  color: var(--ink-2);
   padding: 0.8rem 1rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   text-align: left;
   font-size: 0.9375rem;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-item.active {
-  color: var(--blue);
-  background: var(--tint);
+  color: var(--accent-text);
+  background: var(--accent-soft);
   font-weight: 600;
 }
 .nav-item:hover {
-  background: var(--tint);
+  background: var(--accent-soft);
   color: var(--ink);
 }
 .sidebar-bottom {
@@ -57,7 +57,7 @@
 .study-note span {
   font-size: 0.75rem;
   letter-spacing: 0.14em;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .study-note p {
   margin-top: 0.7rem;
@@ -65,14 +65,14 @@
   line-height: 1.7;
 }
 .profile {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--separator);
   padding: 1.4rem 0.4rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.65rem;
 }
 .avatar {
-  background: var(--line);
+  background: var(--separator);
   width: 35px;
   height: 35px;
   display: grid;
@@ -93,7 +93,7 @@
   text-overflow: ellipsis;
   font-weight: 400;
   font-size: 0.75rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .profile-actions {
   display: flex;
@@ -129,14 +129,14 @@
 }
 .study-invitation {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
+  border: 1px solid var(--separator);
+  border-radius: var(--r-xl);
   padding: 2.4rem 2.8rem;
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   overflow: hidden;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-1);
 }
 .study-invitation h2 {
   white-space: pre-line;
@@ -148,7 +148,7 @@
 }
 .study-invitation h2 strong {
   font-weight: 650;
-  color: var(--blue);
+  color: var(--accent-text);
 }
 .study-invitation p {
   font-size: 0.9375rem;
@@ -166,24 +166,24 @@
   position: absolute;
   width: 130px;
   height: 160px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--separator);
   border-radius: 17px;
 }
 .mini-card.back {
-  background: var(--tint);
+  background: var(--accent-soft);
   transform: rotate(-13deg);
   left: 10px;
   top: 0;
 }
 .mini-card.front {
-  background: var(--surface-elevated);
+  background: var(--surface-raised);
   transform: rotate(9deg);
   left: 40px;
   top: 12px;
-  box-shadow: var(--card-shadow-hover);
+  box-shadow: var(--shadow-2);
   padding: 1.3rem;
-  color: var(--blue);
-  border: 1px solid var(--line);
+  color: var(--accent-text);
+  border: 1px solid var(--separator);
 }
 .mini-card span {
   display: block;
@@ -201,10 +201,10 @@
 }
 .stat-card {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--separator);
+  border-radius: var(--r-lg);
   padding: 1.25rem 1.5rem;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-1);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -213,8 +213,8 @@
     border-color 0.15s ease;
 }
 .stat-card:hover {
-  box-shadow: var(--card-shadow-hover);
-  border-color: var(--line-subtle);
+  box-shadow: var(--shadow-2);
+  border-color: var(--fill-2);
 }
 .stat-card-header {
   display: flex;
@@ -227,12 +227,12 @@
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  background: var(--tint);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 .stat-icon.streak {
-  background: rgba(255, 149, 0, 0.12);
-  color: #ff9500;
+  background: var(--amber-a3);
+  color: var(--amber-11);
 }
 .stat-card strong {
   font-size: 1.9rem;
@@ -253,15 +253,15 @@
 }
 .deck-list {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--separator);
+  border-radius: var(--r-lg);
   overflow: hidden;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-1);
 }
 .empty-deck-list {
   padding: 2.5rem 1.5rem;
   text-align: center;
-  color: var(--muted);
+  color: var(--ink-2);
   font-size: 0.875rem;
 }
 .deck-row {
@@ -277,16 +277,16 @@
   transition: background-color 0.15s ease;
 }
 .deck-row + .deck-row {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--separator);
 }
 .deck-row:hover {
-  background: var(--tint);
+  background: var(--accent-soft);
 }
 .deck-icon {
   display: grid;
   place-items: center;
-  background: var(--tint);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent-text);
   border-radius: 13px;
   width: 48px;
   height: 52px;
@@ -303,11 +303,11 @@
 }
 .deck-description > span {
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .due-badge {
-  background: var(--tint);
-  color: var(--blue);
+  background: var(--accent-soft);
+  color: var(--accent-text);
   border-radius: 30px;
   padding: 0.35rem 0.7rem;
   font-size: 0.75rem;
@@ -316,11 +316,11 @@
 }
 .due-badge.neutral {
   background: var(--canvas);
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .deck-arrow {
   margin-left: 0.75rem;
-  color: var(--muted);
+  color: var(--ink-2);
   transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .deck-row:hover .deck-arrow {
@@ -366,7 +366,7 @@
     height: auto;
     padding: 0.55rem 1rem max(0.55rem, env(safe-area-inset-bottom));
     border-right: 0;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--separator);
     background: var(--sidebar);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px);

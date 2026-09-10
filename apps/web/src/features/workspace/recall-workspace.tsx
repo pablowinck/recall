@@ -14,7 +14,7 @@ export function RecallWorkspace(): React.JSX.Element {
   const account = useRecallSession();
   const [appearance, toggleTheme] = useAppearance();
   return (
-    <RecallTheme appearance={appearance}>
+    <RecallTheme>
       <SessionGate account={account} dark={appearance === 'dark'} toggleTheme={toggleTheme} />
     </RecallTheme>
   );

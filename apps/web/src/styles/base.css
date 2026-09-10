@@ -28,11 +28,31 @@ textarea,
 select {
   -webkit-tap-highlight-color: transparent;
 }
-:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 3px rgba(0, 113, 227, 0.35),
-    0 0 0 1px var(--blue);
+html {
+  background: var(--canvas);
+}
+.recall-root {
+  min-height: 100dvh;
+  color: var(--ink);
+  background: var(--canvas);
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+/* Custom controls get an outline ring, which survives forced-colors mode; Radix controls keep their own. */
+:where(
+  .nav-item,
+  .deck-row,
+  .library-card,
+  .rating-button,
+  .text-button,
+  .inline-deck-btn,
+  .skip-link,
+  summary
+):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 h1,
 h2,
@@ -51,7 +71,7 @@ h2 {
   font-weight: 600;
 }
 p {
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .eyebrow {
   display: inline-flex;
@@ -60,13 +80,13 @@ p {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .text-button {
   border: 0;
   background: transparent;
   padding: 0.5rem 0;
-  color: var(--blue);
+  color: var(--accent-text);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -74,7 +94,7 @@ p {
   font-weight: 500;
 }
 .muted {
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .skip-link {
   position: absolute;
@@ -82,8 +102,8 @@ p {
   left: 1rem;
   padding: 0.6rem 1rem;
   background: var(--surface);
-  color: var(--blue);
-  border: 1px solid var(--blue);
+  color: var(--accent-text);
+  border: 1px solid var(--accent-text);
   border-radius: 8px;
   z-index: 100;
   font-weight: 500;

@@ -17,6 +17,8 @@ Use English for all interface copy, API messages, comments, ADRs, documentation 
 
 Keep every app simple, documented and feature-first so people and LLM agents can contribute quickly: a feature folder owns its components, state and styles; shared code stays small and obvious; update the change map in `docs/architecture.md` when structure moves.
 
+Radix Themes renders dialogs, selects and tooltips in portals outside `.recall-root`. Define product tokens on `:root`/`:root.dark` and accent aliases on `.radix-themes` (`apps/web/src/styles/tokens.css`). Appearance is the `dark` class on `<html>`, set before paint by the head script in `app/layout.tsx`.
+
 Use explicit types, specific names, early returns and one responsibility per module. Target functions of 4–20 lines and files below 500 lines. Split feature state, actions and presentation instead of growing component bodies. Public functions need intent and a usage example in their documentation. Preserve comments explaining why a choice exists.
 
 Use `pnpm format`. Verify with `pnpm verify` while the local stack runs. Every behavior change needs appropriate coverage; bug fixes need regression evidence. Use named fake classes for external I/O in unit tests. E2E tests deliberately use real local Auth, Postgres, API and MCP.

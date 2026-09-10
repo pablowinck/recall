@@ -1,61 +1,47 @@
+/* Product tokens live on :root, not on an app wrapper, so Radix portals such as dialogs inherit them. */
+:root {
+  --canvas: #f1f0ef;
+  --surface: #fdfdfc;
+  --surface-raised: #ffffff;
+  --fill-1: rgba(33, 32, 28, 0.04);
+  --fill-2: rgba(33, 32, 28, 0.07);
+  --separator: rgba(33, 32, 28, 0.12);
+  --ink: #21201c;
+  --ink-2: #63635e;
+  --ink-3: #8d8d86;
+  --sidebar: rgba(241, 240, 239, 0.85);
+  --shadow-1: 0 1px 3px rgba(33, 32, 28, 0.05), 0 8px 24px -6px rgba(33, 32, 28, 0.08);
+  --shadow-2: 0 3px 8px rgba(33, 32, 28, 0.06), 0 16px 36px -8px rgba(33, 32, 28, 0.14);
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+  --r-pill: 9999px;
+}
+:root.dark {
+  /* Radix lightens solid indigo on hover in dark mode (4.3:1 with white text); keep hover at WCAG AA. */
+  --indigo-10: #3358d4;
+  --canvas: #111110;
+  --surface: #191918;
+  --surface-raised: #222221;
+  --fill-1: rgba(238, 238, 236, 0.05);
+  --fill-2: rgba(238, 238, 236, 0.08);
+  --separator: rgba(238, 238, 236, 0.1);
+  --ink: #eeeeec;
+  --ink-2: #b5b3ad;
+  --ink-3: #7c7b74;
+  --sidebar: rgba(17, 17, 16, 0.85);
+  --shadow-1: 0 0 0 0.5px rgba(238, 238, 236, 0.08), 0 12px 36px -6px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 0 0 0.5px rgba(238, 238, 236, 0.1), 0 20px 44px -8px rgba(0, 0, 0, 0.65);
+}
+/* Radix defines accent scales on each Theme element (app root and portals), so accent aliases must live there too. */
 .radix-themes {
-  --default-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --default-font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
   --heading-font-family: var(--default-font-family);
   --cursor-button: pointer;
-}
-.radix-themes[data-accent-color='blue'] {
-  --accent-9: #0066cc;
-  --accent-10: #005bb8;
-  --accent-contrast: #fff;
-  --accent-11: #005bb8;
-  --accent-a11: #005bb8;
-}
-.radix-themes.dark[data-accent-color='blue'] {
-  --accent-11: #70b7ff;
-  --accent-a11: #70b7ff;
-}
-.recall-root {
-  --canvas: #f6f6f8;
-  --surface: #ffffff;
-  --surface-elevated: #ffffff;
-  --ink: #1c1c1e;
-  --muted: #6e6e73;
-  --muted-faint: #8e8e93;
-  --line: rgba(0, 0, 0, 0.08);
-  --line-subtle: rgba(0, 0, 0, 0.05);
-  --tint: rgba(0, 102, 204, 0.08);
-  --blue: #0066cc;
-  --sidebar: rgba(246, 246, 248, 0.85);
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px -4px rgba(0, 0, 0, 0.06);
-  --card-shadow-hover: 0 3px 8px rgba(0, 0, 0, 0.06), 0 16px 36px -6px rgba(0, 0, 0, 0.09);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 22px;
-  --radius-full: 9999px;
-  min-height: 100dvh;
-  color: var(--ink);
-  background: var(--canvas);
-  font-size: 16px;
-  line-height: 1.5;
-  letter-spacing: -0.015em;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  transition:
-    background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.recall-root.dark {
-  --canvas: #09090b;
-  --surface: #18181b;
-  --surface-elevated: #27272a;
-  --ink: #f4f4f5;
-  --muted: #a1a1aa;
-  --muted-faint: #71717a;
-  --line: rgba(255, 255, 255, 0.09);
-  --line-subtle: rgba(255, 255, 255, 0.05);
-  --tint: rgba(112, 183, 255, 0.12);
-  --blue: #70b7ff;
-  --sidebar: rgba(14, 14, 18, 0.85);
-  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 36px -4px rgba(0, 0, 0, 0.6);
-  --card-shadow-hover: 0 2px 6px rgba(0, 0, 0, 0.5), 0 20px 44px -6px rgba(0, 0, 0, 0.75);
+  --accent-text: var(--accent-11);
+  --accent-soft: var(--accent-a3);
+  --focus-ring: var(--focus-8);
 }

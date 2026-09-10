@@ -35,7 +35,7 @@
 }
 .auth-left footer {
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .auth-preview {
   display: flex;
@@ -48,15 +48,15 @@
 }
 .sample-card {
   background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: 0 15px 60px #00000005;
+  border: 1px solid var(--separator);
+  box-shadow: var(--shadow-2);
   border-radius: 28px;
   padding: 2.5rem;
   width: min(100%, 380px);
 }
 .sample-card .eyebrow {
   font-size: 0.75rem;
-  color: var(--blue);
+  color: var(--accent-text);
 }
 .sample-card h2 {
   font-size: 2.65rem;
@@ -66,7 +66,7 @@
   letter-spacing: -0.045em;
 }
 .sample-divider {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--separator);
   margin-bottom: 1.4rem;
 }
 .sample-card p {

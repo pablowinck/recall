@@ -4,7 +4,7 @@
 .connection-intro,
 .new-secret {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--separator);
   border-radius: 22px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -12,8 +12,8 @@
 .connection-icon {
   display: grid;
   place-items: center;
-  color: var(--blue);
-  background: var(--tint);
+  color: var(--accent-text);
+  background: var(--accent-soft);
   width: 60px;
   height: 60px;
   border-radius: 17px;
@@ -40,7 +40,7 @@
 }
 .endpoint-box > span {
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .endpoint-box code {
   font-size: 0.875rem;
@@ -55,7 +55,7 @@
 }
 .token-row {
   padding: 1.1rem 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--separator);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,7 +70,7 @@
 }
 .token-row span {
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 .connection-help {
   margin-top: 2rem;
@@ -78,7 +78,7 @@
 }
 .connection-help summary {
   cursor: pointer;
-  color: var(--blue);
+  color: var(--accent-text);
 }
 .connection-help p {
   margin-top: 1rem;
