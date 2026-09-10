@@ -401,12 +401,7 @@
     padding-right: 0.4rem;
   }
   .mobile-top .brand {
-    font-size: 1.5rem;
-  }
-  .mobile-top .brand-mark {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
+    font-size: 1.125rem;
   }
   .page-content {
     padding: 1.8rem 1.25rem calc(var(--mobile-nav-height) + 1.5rem);

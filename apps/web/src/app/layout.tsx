@@ -1,12 +1,16 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { Inter } from 'next/font/google';
 import '@radix-ui/themes/styles.css';
 import './globals.css';
 import { appearanceBootstrapScript } from '@/lib/appearance';
 
+// Apple devices keep SF Pro through -apple-system; Inter gives every other platform the same calm geometry.
+const inter = Inter({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-inter' });
+
 export const metadata: Metadata = {
-  title: 'Recall — a little today, remembered tomorrow',
-  description: 'Your space to learn anything with flashcards and spaced repetition.',
+  title: 'Recall',
+  description: 'Learn anything with flashcards and spaced repetition.',
 };
 
 export const viewport: Viewport = {
@@ -22,7 +26,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }): React.JSX.Element {
   return (
     // The head script sets the appearance class before hydration, so React must not reconcile it.
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: appearanceBootstrapScript }} />
       </head>

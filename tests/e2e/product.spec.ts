@@ -325,6 +325,15 @@ test('appearance follows a saved choice or the system before the app hydrates', 
   expect(await isDark()).toBe(false);
 });
 
+test('serves the brand icons used by browsers and home screens', async ({ request }) => {
+  const favicon = await request.get('/icon.svg');
+  expect(favicon.ok()).toBe(true);
+  expect(favicon.headers()['content-type']).toContain('image/svg+xml');
+  const homeScreen = await request.get('/apple-icon');
+  expect(homeScreen.ok()).toBe(true);
+  expect(homeScreen.headers()['content-type']).toContain('image/png');
+});
+
 test('keyboard focus stays visible inside the card editor dialog', async ({ page }) => {
   const account = await createTestAccount();
   try {

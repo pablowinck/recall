@@ -203,7 +203,8 @@
   padding: 0 5px;
   font-size: 0.72rem;
   font-weight: 600;
-  font-family: -apple-system-ui-serif, ui-monospace, 'SF Mono', Menlo, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   color: var(--ink-2);
   background: var(--surface-raised);
   border: 1px solid var(--separator);

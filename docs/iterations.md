@@ -179,3 +179,11 @@ Discovery: dark-mode users saw a light first paint; product tokens did not reach
 A head script now applies the saved choice, or the system appearance when there is none, before the first paint, and Radix inherits it from `<html class="dark">`. Product tokens moved to `:root` with semantic names (ink, surface, separator, fill); accent aliases live on `.radix-themes`; custom controls draw an outline focus ring. The theme uses Radix indigo with warm sand neutrals, rating tints come from Radix alpha scales, and the viewport declares theme colors and safe-area coverage.
 
 Validation: new E2E regressions cover saved/system appearance before hydration and a visible focus ring inside the card editor. axe caught the "Hard" label at 4.43:1 and the dark solid-button hover at 4.28:1; both now pass (amber label, darker indigo hover). 40 unit tests and 38 E2E tests passed with formatting, TypeScript and builds; the three-size journey reported no overflow or axe violations.
+
+## 2026-09-10 — UX loop 3: brand mark, platform type and app icons
+
+The brand was a stock layers icon in a black tile with a lowercase "recall." wordmark, and the mark was reused as UI iconography. Non-Apple platforms fell back to Segoe UI, Roboto or DejaVu, so the interface looked different everywhere, and there was no favicon or home-screen icon.
+
+The new mark is a card whose corner folds to reveal its back, drawn as an inline SVG with flat fills that scale with the "Recall" wordmark. `app/icon.svg` and a generated `apple-icon` reuse the same paths. Apple devices keep SF Pro; other platforms load Inter through `next/font`. Body tracking is lighter, Inter-only glyph alternates are gone, and keycaps use the interface font with tabular digits.
+
+Validation: 40 unit tests and 41 E2E tests passed, including a new check that the SVG favicon and PNG home-screen icon are served. Formatting, TypeScript and builds passed; the three-size journey reported no overflow or axe violations.
