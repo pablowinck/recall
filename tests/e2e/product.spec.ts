@@ -397,3 +397,25 @@ test('the card editor keeps typed text until discarding is confirmed', async ({ 
     await account.cleanup();
   }
 });
+
+test('rating buttons stay within reach on a long card', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const back = Array.from({ length: 40 }, (_, line) => `Line ${line + 1} of a long answer.`);
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'A card with a long answer',
+      back: back.join('\n'),
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await expect(page.getByText('Line 40 of a long answer.')).toBeAttached();
+    await expect(page.getByRole('button', { name: /Again/ })).toBeInViewport();
+    await expect(page.getByRole('button', { name: /Easy/ })).toBeInViewport();
+  } finally {
+    await account.cleanup();
+  }
+});

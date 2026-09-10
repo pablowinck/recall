@@ -213,3 +213,11 @@ Reviewers reproduced three ways to lose a typed card: Escape, a click outside th
 The editor now asks before discarding typed text ("Discard this card?" or "Discard changes?", with "Keep editing" focused), and Escape closes the inline deck form before anything else. A pure `hasDraftChanges` decides what is worth confirming: choosing a deck for an empty new card is not. Closing returns focus to the control that opened the editor, new cards reuse the deck of the last card created, and Tags saves only with Cmd/Ctrl+Enter. The editor hook is split into card, inline-deck and dismissal responsibilities.
 
 Validation: unit tests cover new and edited drafts; a new E2E journey keeps the draft on Escape, closes only the inline deck field, confirms Cancel, and checks that focus returns to "New card" on all three sizes.
+
+## 2026-09-10 — UX loop 7: ratings within reach on long cards
+
+Probes placed the rating grid about 170 px below the fold at 1440×900 and about 580 px below it on an iPhone-sized viewport when an answer was long. Each rating meant scrolling, and the next card inherited the scroll position. Phones also stacked the four ratings in a 2×2 grid that pushed "Good" and "Easy" to the bottom edge.
+
+The reveal and rating areas now stick to the bottom of the viewport over a soft canvas fade, including safe-area padding. Phones show all four ratings in one compact row, and each new card starts scrolled to its question.
+
+Validation: a new E2E journey reveals a 40-line answer and checks that "Again" and "Easy" are in the viewport on desktop, tablet and mobile.

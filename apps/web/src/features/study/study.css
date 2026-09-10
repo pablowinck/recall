@@ -106,7 +106,17 @@
   flex-direction: column;
   align-items: center;
   gap: 0.9rem;
-  margin-top: 1.8rem;
+  margin-top: 0.8rem;
+}
+/* Long cards scroll; revealing and rating must stay within reach at the bottom of the viewport. */
+.reveal-action,
+.rating-section {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  padding-top: 1rem;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--canvas) 72%, transparent);
 }
 .reveal-action button {
   min-width: 250px;
@@ -130,7 +140,7 @@
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .rating-section {
-  margin-top: 1.6rem;
+  margin-top: 0.6rem;
   text-align: center;
 }
 .rating-section > p {
@@ -277,10 +287,12 @@
     line-height: 1.7;
   }
   .rating-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
   }
+  /* One row of four keeps every rating under the thumb and leaves the card more room. */
   .rating-button {
-    min-height: 75px;
+    min-height: 64px;
+    padding: 0.7rem 0.25rem 0.6rem;
   }
   .keyboard-hint,
   .keycap,

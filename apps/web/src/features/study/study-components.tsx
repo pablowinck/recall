@@ -55,6 +55,7 @@ export function ReviewContent({
   onReveal,
 }: ReviewContentProps): React.JSX.Element | null {
   const focus = useStudyFocus(current?.card.id, revealed);
+  useScrollToTopOnCardChange(current?.card.id);
   if (!current) return null;
   const isClickable = !revealed && Boolean(onReveal);
   return (
@@ -105,6 +106,13 @@ function useStudyFocus(cardId: string | undefined, revealed: boolean): StudyFocu
     (revealed ? answer.current : card.current)?.focus({ preventScroll: true });
   }, [cardId, revealed]);
   return { card, answer };
+}
+
+// A long answer can leave the page scrolled; every new card should start at its question.
+function useScrollToTopOnCardChange(cardId: string | undefined): void {
+  useEffect(() => {
+    if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [cardId]);
 }
 
 /** Allow a rating only after revealing the answer. Example: <StudyActions session={session} />. */
