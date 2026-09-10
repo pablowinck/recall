@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { createTestAccount, connectTestMcp } from './fixtures';
 import { FakeCardSaveOutage } from './fake-card-save-outage';
-import { signInToRecall } from './interaction-steps';
+import { signInToRecall, fillSignInForm } from './interaction-steps';
 
 test('login → create/edit → MCP → study → persist → sign out', async ({ page }, testInfo) => {
   const account = await createTestAccount();
@@ -69,11 +69,15 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     else await page.getByRole('button', { name: /Good/ }).click();
     await expect(page.getByRole('heading', { name: 'MCP card: knew' })).toBeVisible();
     expect((await account.api.workspace()).stats.reviewed_today).toBe(1);
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(page.getByRole('heading', { name: 'Nicely done.', exact: true })).toBeVisible();
+    expect((await account.api.workspace()).stats.reviewed_today).toBe(2);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth,
     );
     expect(overflow).toBe(false);
-    await page.getByRole('button', { name: 'Leave session' }).click();
+    await page.getByRole('button', { name: 'Back to today' }).click();
     await page
       .getByRole('button', { name: 'Use dark theme', exact: true })
       .filter({ visible: true })
@@ -165,5 +169,42 @@ test('deleting the last card on a page returns to a valid page', async ({ page }
     await expect(page.locator('.library-card')).toHaveCount(24);
   } finally {
     await account.cleanup();
+  }
+});
+
+test('switching accounts in the same tab does not reuse the previous library', async ({ page }) => {
+  const first = await createTestAccount();
+  const second = await createTestAccount();
+  try {
+    const firstDeck = (await first.api.workspace()).decks[0]!;
+    const secondDeck = (await second.api.workspace()).decks[0]!;
+    await first.api.createCard({
+      deck_id: firstDeck.id,
+      front: 'First account private card',
+      back: 'Private answer',
+      tags: [],
+    });
+    await second.api.createCard({
+      deck_id: secondDeck.id,
+      front: 'Second account private card',
+      back: 'Another private answer',
+      tags: [],
+    });
+    await signInToRecall(page, first);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Search cards' }).fill('First account');
+    await expect(page.getByRole('heading', { name: 'First account private card' })).toBeVisible();
+    await page
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .filter({ visible: true })
+      .click();
+    await fillSignInForm(page, second);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'Search cards' })).toHaveValue('');
+    await expect(page.getByRole('heading', { name: 'Second account private card' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'First account private card' })).toHaveCount(0);
+  } finally {
+    await first.cleanup();
+    await second.cleanup();
   }
 });

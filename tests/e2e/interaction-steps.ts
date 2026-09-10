@@ -5,6 +5,11 @@ import type { TestAccount } from './fixtures';
 export async function signInToRecall(page: Page, account: TestAccount): Promise<void> {
   await page.goto('/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await fillSignInForm(page, account);
+}
+
+/** Change accounts through the form without forcing a page reload. Example: await fillSignInForm(page, account). */
+export async function fillSignInForm(page: Page, account: TestAccount): Promise<void> {
   await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
   await page.getByLabel('Password', { exact: true }).fill(account.password);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
