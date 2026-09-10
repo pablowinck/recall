@@ -178,7 +178,7 @@ function BackField({ value }: { value?: string }): React.JSX.Element {
   };
   return (
     <label>
-      Back <span className="field-hint">The answer, with an example</span>
+      Back <span className="field-hint">The answer · **bold**, *italic*, `code`, - lists</span>
       <TextArea {...attributes} />
     </label>
   );

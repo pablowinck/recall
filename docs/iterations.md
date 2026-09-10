@@ -375,3 +375,11 @@ The four ratings showed a word and an interval — "Good, 10 min" — but never 
 Each rating now carries `aria-keyshortcuts` and an accessible name that spells out the claim and the next interval ("Good, You recalled it. Next in 10 min"), with the same meaning in a tooltip for pointer users. "Reveal answer" declares Space and Enter the same way. `rating-meanings.ts` keeps the four claims in one place.
 
 Validation: format, typecheck, 95 unit tests and build pass. All 106 E2E journeys pass on desktop, tablet and mobile, including one that reads the shortcut and the meaning off the Good rating. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 26: card text with its own emphasis
+
+Cards written by an assistant arrive in Markdown, and Recall printed the markers: "O que significa **offset**?" kept its asterisks, lists kept their dashes, code kept its backticks. The owner asked for the formatting to render.
+
+Card text is now parsed into a small tree of paragraphs, lists and inline emphasis — bold, italic and code — and rendered as elements. Nothing from a card is ever treated as markup: there is no HTML path, no links and no images, so an untrusted card still cannot reach the page as anything but text. The library preview and a card's accessible name drop the markers too, and the editor's Back hint names the four things that work while storing exactly what was typed.
+
+Validation: format, typecheck, 102 unit tests and build pass, including unmatched markers left literal and markers inside code left alone. All 109 E2E journeys pass on desktop, tablet and mobile, among them one that studies a card with bold, a list and code and finds no markers on screen. Unit tests now resolve the web `@/` alias, so a shared module can move without its imports being rewritten.

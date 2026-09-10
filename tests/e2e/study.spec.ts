@@ -241,3 +241,26 @@ test('a rating says what it claims and which key presses it', async ({ page }) =
     await account.cleanup();
   }
 });
+
+test('card text shows its emphasis instead of the markers', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'O que significa **offset**?',
+      back: '**Compensar**, contrabalançar.\n\n- Usado em `negócios`\n- E em finanças',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.locator('.review-card h2 strong')).toHaveText('offset');
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await expect(page.locator('.review-answer strong')).toHaveText('Compensar');
+    await expect(page.locator('.review-answer li')).toHaveCount(2);
+    await expect(page.locator('.review-answer code')).toHaveText('negócios');
+    await expect(page.locator('.review-card')).not.toContainText('**');
+  } finally {
+    await account.cleanup();
+  }
+});

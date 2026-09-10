@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import type { StudyCard } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingControls } from './rating-controls';
+import { CardBody, CardInline } from '@/components/card-text';
 import { frontSizeClass } from './card-typography';
 import { revealScrollTop } from './reveal-scroll';
 
@@ -78,7 +79,9 @@ export function ReviewContent({
         onClick={isClickable ? onReveal : undefined}
       >
         <span className="eyebrow">Front</span>
-        <h2 className={frontSizeClass(current.card.front)}>{current.card.front}</h2>
+        <h2 className={frontSizeClass(current.card.front)}>
+          <CardInline text={current.card.front} />
+        </h2>
         {revealed && <ReviewAnswer answer={current.card.back} focusRef={focus.answer} />}
       </article>
     </>
@@ -95,7 +98,7 @@ function ReviewAnswer({
   return (
     <div className="review-answer" aria-live="polite" ref={focusRef} tabIndex={-1}>
       <span className="eyebrow">Answer</span>
-      <div>{answer}</div>
+      <CardBody text={answer} />
     </div>
   );
 }

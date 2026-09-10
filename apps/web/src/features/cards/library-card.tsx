@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import type { Flashcard } from '@recall/contracts';
+import { CardInline } from '@/components/card-text';
 import { describeCardStatus, summarizeFront } from './card-presentation';
 
 /** Present one editable card without executing its content. Example: <LibraryCard card={card} edit={edit} />. */
@@ -22,10 +23,12 @@ export function LibraryCard({
       <h2>
         {/* The button covers the whole card, but its name is only the question, not every word on it. */}
         <button className="card-open" onClick={edit} aria-label={summarizeFront(card.front)}>
-          {card.front}
+          <CardInline text={card.front} />
         </button>
       </h2>
-      <p>{card.back}</p>
+      <p>
+        <CardInline text={card.back} />
+      </p>
       <LibraryTags tags={card.tags} />
       <span className="card-edit-hint" aria-hidden="true">
         Edit card <ArrowRight size={14} />
