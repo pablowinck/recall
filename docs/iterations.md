@@ -155,3 +155,11 @@ Discovery: the study Reveal action displayed an Enter icon alongside a Space hel
 Changes: unified study reveal with chiclet `<kbd>` hints for Space and Enter; upgraded progress bar height to 4px with smooth width transitions; styled Apple HIG tactile keycaps with subtle physical borders; added deck badges to library cards; and added a single-click "Clear filters" action to empty library states.
 
 Validation: 40 unit tests, 32 E2E tests across all three device sizes, TypeScript checks, and production builds passed locally on rebuilt containers.
+
+## 2026-09-10 — Apple HIG dark mode surface depth, vibrant sidebar blur, and mobile density, validated locally
+
+Discovery: dark mode surfaces (`#0e0e11` and `#18181c`) lacked clear elevation contrast on OLED and standard screens; desktop sidebar lacked Apple's `saturate(180%)` frosted vibrancy; and mobile stats grid stacked vertically on small viewports, pushing deck navigation below the fold.
+
+Changes: tuned dark mode surface hierarchy to Apple HIG palette (`#09090b` canvas, `#18181b` card surface, `#27272a` elevated elements); added `saturate(180%)` and `overflow-y: auto` to desktop sidebar; and optimized the mobile stats grid into a compact, high-density row so study actions and decks remain visible above the fold on small screens.
+
+Validation: 40 unit tests, 32 E2E tests across desktop, tablet, and mobile, TypeScript checks, Prettier formatting, and containerized Next.js builds passed locally.
