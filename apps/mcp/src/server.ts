@@ -3,7 +3,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { RecallClient } from '@recall/client';
 import { createRecallMcp } from './tools';
 
-/** Cria transporte stateless adequado a serverless. Exemplo: createMcpApp(apiUrl). */
+/** Create a stateless transport suitable for serverless deployment. Example: createMcpApp(apiUrl). */
 export function createMcpApp(apiUrl: string): Express {
   const app = express();
   app.disable('x-powered-by');

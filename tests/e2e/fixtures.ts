@@ -13,7 +13,7 @@ export interface TestAccount {
   cleanup: () => Promise<void>;
 }
 
-/** Cria somente identidades descartáveis no Supabase local. Exemplo: await createTestAccount(). */
+/** Create disposable identities only in local Supabase. Example: await createTestAccount(). */
 export async function createTestAccount(): Promise<TestAccount> {
   const url = process.env.SUPABASE_URL!;
   if (!['localhost', '127.0.0.1'].includes(new URL(url).hostname))
@@ -43,7 +43,7 @@ export async function createTestAccount(): Promise<TestAccount> {
   };
 }
 
-/** Conecta ao transporte HTTP real. Exemplo: await connectTestMcp(token). */
+/** Connect to the actual Streamable HTTP transport. Example: await connectTestMcp(token). */
 export async function connectTestMcp(token: string): Promise<Client> {
   const client = new Client({ name: 'recall-e2e', version: '0.1.0' });
   const transport = new StreamableHTTPClientTransport(new URL('http://localhost:3212/mcp'), {
@@ -53,7 +53,7 @@ export async function connectTestMcp(token: string): Promise<Client> {
   return client;
 }
 
-/** Lê JSON estruturado na resposta de uma ferramenta. Exemplo: readToolJson(result). */
+/** Read structured JSON from a tool result. Example: readToolJson(result). */
 export function readToolJson<T>(result: unknown): T {
   if (typeof result !== 'object' || result === null || !('content' in result)) {
     throw new Error('Expected an MCP result object with content');

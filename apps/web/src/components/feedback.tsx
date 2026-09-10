@@ -1,17 +1,17 @@
 import { Button, Spinner } from '@radix-ui/themes';
 import { AlertCircle } from 'lucide-react';
 
-/** Indica uma espera real e acessível. Exemplo: <LoadingState />. */
+/** Announce an actual loading state accessibly. Example: <LoadingState />. */
 export function LoadingState(): React.JSX.Element {
   return (
     <div className="loading-state" role="status">
       <Spinner size="3" />
-      <span>Preparando seu espaço…</span>
+      <span>Getting your workspace ready…</span>
     </div>
   );
 }
 
-/** Expõe uma falha recuperável. Exemplo: <ErrorNotice message={error} retry={reload} />. */
+/** Present an actionable, recoverable failure. Example: <ErrorNotice message={error} retry={reload} />. */
 export function ErrorNotice({
   message,
   retry,
@@ -25,17 +25,17 @@ export function ErrorNotice({
       <span>{message}</span>
       {retry && (
         <Button variant="soft" onClick={retry}>
-          Tentar novamente
+          Try again
         </Button>
       )}
     </div>
   );
 }
 
-/** Traduz erros desconhecidos sem detalhes internos. Exemplo: describeFailure(error). */
+/** Describe unknown failures without leaking implementation details. Example: describeFailure(error). */
 export function describeFailure(error: unknown): string {
   if (error instanceof TypeError)
-    return 'Sem conexão com o servidor. Confira sua conexão e tente novamente.';
+    return 'Unable to reach the server. Check your connection and try again.';
   if (error instanceof Error) return error.message;
-  return 'Algo não saiu como esperado. Tente novamente.';
+  return 'Something went wrong. Please try again.';
 }

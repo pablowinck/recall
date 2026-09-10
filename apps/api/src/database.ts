@@ -8,7 +8,7 @@ export interface TenantDatabase {
 export class PostgresTenantDatabase implements TenantDatabase {
   constructor(private readonly pool: Pool) {}
 
-  /** Aplica identidade e RLS em transação isolada. Exemplo: db.runFor(uid, readCards). */
+  /** Apply verified identity and RLS inside an isolated transaction. Example: db.runFor(uid, readCards). */
   async runFor<T>(userId: string, operation: (connection: PoolClient) => Promise<T>): Promise<T> {
     const connection = await this.pool.connect();
     try {
@@ -28,7 +28,7 @@ export class PostgresTenantDatabase implements TenantDatabase {
     }
   }
 
-  /** Resolve somente tokens válidos sem expor seu hash. Exemplo: db.resolveToken(sha256). */
+  /** Resolve valid tokens without exposing their hashes. Example: db.resolveToken(sha256). */
   async resolveToken(tokenHash: string): Promise<string | null> {
     const result = await this.pool.query<{ tenant_id: string }>(
       'select tenant_id from recall.access_tokens where token_hash = $1 and expires_at > now()',

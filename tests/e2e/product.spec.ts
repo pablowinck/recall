@@ -6,22 +6,23 @@ test('login → create/edit → MCP → study → persist → sign out', async (
   const account = await createTestAccount();
   try {
     await page.goto('/');
-    await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill(account.email);
-    await page.getByLabel('Senha', { exact: true }).fill(account.password);
-    await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-    await expect(page.getByRole('heading', { name: /Hoje é um bom dia/ })).toBeVisible();
-    await page.getByRole('button', { name: 'Novo cartão', exact: true }).click();
-    await page.getByRole('textbox', { name: /^Frente/ }).fill('What does stumped mean?');
-    await page.getByRole('textbox', { name: /^Verso/ }).fill('Sem saber a resposta.');
-    await page.getByRole('textbox', { name: /^Tags/ }).fill('inglês, vocabulário');
-    await page.getByRole('button', { name: 'Criar cartão', exact: true }).click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
+    await page.getByLabel('Password', { exact: true }).fill(account.password);
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+    await expect(page.getByRole('heading', { name: /A good day/ })).toBeVisible();
+    await page.getByRole('button', { name: 'New card', exact: true }).click();
+    await page.getByRole('textbox', { name: /^Front/ }).fill('What does stumped mean?');
+    await page.getByRole('textbox', { name: /^Back/ }).fill('Unable to work out the answer.');
+    await page.getByRole('textbox', { name: /^Tags/ }).fill('learning, vocabulary');
+    await page.getByRole('button', { name: 'Create card', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await page.getByRole('button', { name: 'Biblioteca', exact: true }).click();
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
     await page.getByRole('heading', { name: 'What does stumped mean?', exact: true }).click();
     await page
-      .getByRole('textbox', { name: /^Verso/ })
-      .fill('Sem saber como responder a uma pergunta.');
-    await page.getByRole('button', { name: 'Salvar alterações' }).click();
+      .getByRole('textbox', { name: /^Back/ })
+      .fill('Unable to work out the answer to a question.');
+    await page.getByRole('button', { name: 'Save changes' }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     const token = await account.api.createToken('Browser test');
     const mcp = await connectTestMcp(token.token);
@@ -40,17 +41,17 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       await mcp.close();
     }
     await page.reload();
-    await page.getByRole('button', { name: 'Biblioteca', exact: true }).click();
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'MCP card: knew' })).toBeVisible();
-    await page.getByRole('button', { name: 'Hoje', exact: true }).click();
-    await page.getByRole('button', { name: 'Começar a revisar' }).click();
+    await page.getByRole('button', { name: 'Today', exact: true }).click();
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
     await expect(page.getByRole('heading', { name: 'What does stumped mean?' })).toBeVisible();
     await expect(
-      page.getByText('Sem saber como responder a uma pergunta.', { exact: true }),
+      page.getByText('Unable to work out the answer to a question.', { exact: true }),
     ).toHaveCount(0);
-    await page.getByRole('button', { name: /Mostrar resposta/ }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
     await expect(
-      page.getByText('Sem saber como responder a uma pergunta.', { exact: true }),
+      page.getByText('Unable to work out the answer to a question.', { exact: true }),
     ).toBeVisible();
     await page.screenshot({
       path: `test-results/${testInfo.project.name}-study.png`,
@@ -62,17 +63,17 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       .analyze();
     expect(accessibility.violations).toEqual([]);
     if (testInfo.project.name === 'desktop')
-      await page.getByRole('button', { name: /Lembrei/ }).press('3');
-    else await page.getByRole('button', { name: /Lembrei/ }).click();
+      await page.getByRole('button', { name: /Good/ }).press('3');
+    else await page.getByRole('button', { name: /Good/ }).click();
     await expect(page.getByRole('heading', { name: 'MCP card: knew' })).toBeVisible();
     expect((await account.api.workspace()).stats.reviewed_today).toBe(1);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth,
     );
     expect(overflow).toBe(false);
-    await page.getByRole('button', { name: 'Sair da sessão' }).click();
+    await page.getByRole('button', { name: 'Leave session' }).click();
     await page
-      .getByRole('button', { name: 'Usar tema escuro', exact: true })
+      .getByRole('button', { name: 'Use dark theme', exact: true })
       .filter({ visible: true })
       .click();
     const darkAccessibility = await new AxeBuilder({ page })
@@ -85,10 +86,10 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       animations: 'disabled',
     });
     await page
-      .getByRole('button', { name: 'Sair da conta', exact: true })
+      .getByRole('button', { name: 'Sign out', exact: true })
       .filter({ visible: true })
       .click();
-    await expect(page.getByRole('heading', { name: 'Bom ter você aqui.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Welcome back.' })).toBeVisible();
   } finally {
     await account.cleanup();
   }

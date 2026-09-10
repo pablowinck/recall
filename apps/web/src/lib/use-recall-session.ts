@@ -10,7 +10,7 @@ interface RecallSession {
   client: RecallClient;
 }
 
-/** Mantém uma única sessão Auth por instância. Exemplo: useRecallSession(). */
+/** Maintain one Auth session per workspace instance. Example: useRecallSession(). */
 export function useRecallSession(): RecallSession {
   const [auth] = useState(() =>
     createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!),

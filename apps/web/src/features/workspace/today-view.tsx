@@ -9,40 +9,36 @@ interface TodayProps {
   browse: () => void;
 }
 
-/** Prioriza a próxima ação de estudo. Exemplo: <TodayView {...props} />. */
+/** Prioritize the next useful study action. Example: <TodayView {...props} />. */
 export function TodayView(props: TodayProps): React.JSX.Element {
   const { stats, decks } = props.workspace;
   return (
     <div className="view-enter">
       <header className="page-header">
         <div>
-          <span className="eyebrow">UM POUCO, TODOS OS DIAS</span>
+          <span className="eyebrow">A LITTLE, EVERY DAY</span>
           <h1>
-            Hoje é um bom dia
-            <br className="mobile-break" /> para lembrar.
+            A good day
+            <br className="mobile-break" /> to remember.
           </h1>
-          <p>Seu aprendizado continua daqui.</p>
+          <p>Your next discovery starts here.</p>
         </div>
         <Button variant="soft" onClick={props.create}>
           <Plus size={17} />
-          Novo cartão
+          New card
         </Button>
       </header>
       <StudyInvitation stats={stats} study={() => props.study()} create={props.create} />
       <div className="stats-grid">
-        <StatCard icon={<Check size={19} />} value={stats.reviewed_today} label="revisões hoje" />
-        <StatCard icon={<Layers2 size={19} />} value={stats.total} label="cartões na biblioteca" />
-        <StatCard
-          icon={<Flame size={19} />}
-          value={stats.streak}
-          label={stats.streak === 1 ? 'dia de sequência' : 'dias de sequência'}
-        />
+        <StatCard icon={<Check size={19} />} value={stats.reviewed_today} label="reviews today" />
+        <StatCard icon={<Layers2 size={19} />} value={stats.total} label="cards in your library" />
+        <StatCard icon={<Flame size={19} />} value={stats.streak} label="day streak" />
       </div>
       <section className="decks-section">
         <div className="section-heading">
-          <h2>Seus baralhos</h2>
+          <h2>Your decks</h2>
           <button className="text-button" onClick={props.browse}>
-            Ver biblioteca <ArrowRight size={16} />
+            Browse library <ArrowRight size={16} />
           </button>
         </div>
         <div className="deck-list">
@@ -57,10 +53,10 @@ export function TodayView(props: TodayProps): React.JSX.Element {
               </span>
               <span className="deck-description">
                 <strong>{deck.name}</strong>
-                <span>{deck.card_count} cartões</span>
+                <span>{deck.card_count} cards</span>
               </span>
               <span className={`due-badge ${deck.due_count ? '' : 'neutral'}`}>
-                {deck.due_count ? `${deck.due_count} para revisar` : 'Em dia'}
+                {deck.due_count ? `${deck.due_count} due for review` : 'Up to date'}
               </span>
               <ArrowRight className="deck-arrow" size={18} />
             </button>
@@ -84,30 +80,29 @@ function StudyInvitation({
   return (
     <section className="study-invitation">
       <div>
-        <span className="eyebrow">SUA PRÓXIMA SESSÃO</span>
+        <span className="eyebrow">YOUR NEXT SESSION</span>
         <h2>
           {empty ? (
-            'Toda lembrança começa\ncom um cartão.'
+            'Every memory starts\nwith a card.'
           ) : stats.due ? (
             <>
-              <strong>{stats.due}</strong>{' '}
-              {stats.due === 1 ? 'cartão esperando' : 'cartões esperando'}
+              <strong>{stats.due}</strong> {stats.due === 1 ? 'card waiting' : 'cards waiting'}
               <br />
-              por você.
+              for you.
             </>
           ) : (
-            'Tudo em dia.\nMuito bem.'
+            'All caught up.\nNicely done.'
           )}
         </h2>
         <p>
           {empty
-            ? 'Guarde uma palavra, uma ideia ou aquela dúvida que sempre volta.'
+            ? 'Save a word, an idea, or that question that keeps coming back.'
             : stats.due
-              ? 'Tente lembrar, confira a resposta e conte como foi.'
-              : 'Suas próximas revisões aparecem aqui na hora certa.'}
+              ? 'Try to recall it, reveal the answer, and tell us how it went.'
+              : 'Your next reviews will appear here when they are due.'}
         </p>
         <Button size="3" onClick={empty || !stats.due ? create : study}>
-          {empty || !stats.due ? 'Criar um cartão' : 'Começar a revisar'}
+          {empty || !stats.due ? 'Create a card' : 'Start reviewing'}
           <ArrowRight size={18} />
         </Button>
       </div>
@@ -116,9 +111,9 @@ function StudyInvitation({
         <div className="mini-card front">
           <Layers2 size={34} strokeWidth={1.2} />
           <span>
-            Um passo
+            One step
             <br />
-            de cada vez.
+            at a time.
           </span>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { FolderPlus } from 'lucide-react';
 import type { RecallClient } from '@recall/client';
 import { describeFailure, ErrorNotice } from '@/components/feedback';
 
-/** Cria organização adicional sem sair da biblioteca. Exemplo: <NewDeckDialog client={client} done={refresh} />. */
+/** Create a deck without leaving the library. Example: <NewDeckDialog client={client} done={refresh} />. */
 export function NewDeckDialog({
   client,
   done,
@@ -35,20 +35,20 @@ export function NewDeckDialog({
       <Dialog.Trigger>
         <Button variant="soft" color="gray">
           <FolderPlus size={17} />
-          Novo baralho
+          New deck
         </Button>
       </Dialog.Trigger>
       <Dialog.Content maxWidth="420px">
-        <Dialog.Title>Novo baralho</Dialog.Title>
-        <Dialog.Description mb="4">Reúna cartões de um mesmo assunto.</Dialog.Description>
+        <Dialog.Title>New deck</Dialog.Title>
+        <Dialog.Description mb="4">Keep cards about the same subject together.</Dialog.Description>
         <form onSubmit={submit}>
           <label>
-            Nome
+            Name
             <TextField.Root
               name="name"
               required
               maxLength={80}
-              placeholder="Ex.: Viagens"
+              placeholder="e.g. Travel"
               size="3"
             />
           </label>
@@ -56,11 +56,11 @@ export function NewDeckDialog({
           <div className="dialog-actions">
             <Dialog.Close>
               <Button type="button" variant="soft" color="gray">
-                Cancelar
+                Cancel
               </Button>
             </Dialog.Close>
             <Button type="submit" loading={busy}>
-              Criar baralho
+              Create deck
             </Button>
           </div>
         </form>

@@ -19,7 +19,7 @@ Do not commit `.env`, `.local`, tokens, Supabase admin keys, database dumps, bro
 - Put cross-app request schemas in `packages/contracts`. Route web and MCP changes through the shared client.
 - Inject clocks and external dependencies. Test I/O boundaries with named fake classes in unit tests; use real local services in E2E tests.
 - Use the existing formatter. Preserve comments explaining intent and link regressions to issues or commits when available.
-- If a decision changes a contract, major dependency or durable architecture, add an ADR in `Proposta` status. Maintainer confirmation is required before it becomes `Aceita`.
+- If a decision changes a contract, major dependency or durable architecture, add an ADR in `Proposed` status. Maintainer confirmation is required before it becomes `Accepted`.
 
 ## Agent-assisted changes
 

@@ -6,7 +6,7 @@ import { ArrowRight, LockKeyhole, Sparkles } from 'lucide-react';
 import { RecallBrand } from '@/components/brand';
 import { ErrorNotice } from '@/components/feedback';
 
-/** Formulário de entrada e cadastro via Supabase. Exemplo: <AuthScreen auth={auth} />. */
+/** Sign in or create an account through Supabase Auth. Example: <AuthScreen auth={auth} />. */
 export function AuthScreen({ auth }: { auth: SupabaseClient }): React.JSX.Element {
   const [signup, setSignup] = useState(false);
   const [error, setError] = useState('');
@@ -28,7 +28,7 @@ export function AuthScreen({ auth }: { auth: SupabaseClient }): React.JSX.Elemen
         ),
       );
     } catch (failure) {
-      setError(failure instanceof Error ? failure.message : 'Não foi possível entrar.');
+      setError(failure instanceof Error ? failure.message : 'Unable to sign in. Please try again.');
     } finally {
       setBusy(false);
     }
@@ -36,18 +36,18 @@ export function AuthScreen({ auth }: { auth: SupabaseClient }): React.JSX.Elemen
   return (
     <AuthLayout>
       <form onSubmit={submit} className="auth-form">
-        <span className="eyebrow">SEU ESPAÇO DE APRENDIZADO</span>
-        <h1>{signup ? 'Comece a lembrar.' : 'Bom ter você aqui.'}</h1>
+        <span className="eyebrow">YOUR LEARNING SPACE</span>
+        <h1>{signup ? 'Start remembering.' : 'Welcome back.'}</h1>
         <p>
           {signup
-            ? 'Crie sua conta e guarde o que quer aprender.'
-            : 'Entre para continuar de onde parou.'}
+            ? 'Create an account and save what you want to learn.'
+            : 'Sign in and pick up where you left off.'}
         </p>
         <AuthFields signup={signup} />
         {error && <ErrorNotice message={error} />}
         {notice && <p role="status">{notice}</p>}
         <Button size="3" type="submit" loading={busy}>
-          {signup ? 'Criar minha conta' : 'Entrar'}
+          {signup ? 'Create account' : 'Sign in'}
           <ArrowRight size={18} />
         </Button>
         <button
@@ -58,11 +58,11 @@ export function AuthScreen({ auth }: { auth: SupabaseClient }): React.JSX.Elemen
             setError('');
           }}
         >
-          {signup ? 'Já tenho uma conta' : 'Ainda não tenho conta'}
+          {signup ? 'I already have an account' : 'Create a new account'}
         </button>
         <span className="privacy-note">
           <LockKeyhole size={14} />
-          Seus cartões, só seus.
+          Your cards stay yours.
         </span>
       </form>
     </AuthLayout>
@@ -73,23 +73,23 @@ function AuthFields({ signup }: { signup: boolean }): React.JSX.Element {
   return (
     <div className="form-fields">
       <label>
-        E-mail
+        Email
         <TextField.Root
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="voce@exemplo.com"
+          placeholder="you@example.com"
           required
           size="3"
         />
       </label>
       <label>
-        Senha
+        Password
         <TextField.Root
           name="password"
           type="password"
           autoComplete={signup ? 'new-password' : 'current-password'}
-          placeholder={signup ? 'Pelo menos 10 caracteres' : 'Sua senha'}
+          placeholder={signup ? 'At least 10 characters' : 'Your password'}
           minLength={signup ? 10 : undefined}
           required
           size="3"
@@ -105,12 +105,12 @@ function AuthLayout({ children }: { children: React.ReactNode }): React.JSX.Elem
       <div className="auth-left">
         <RecallBrand />
         {children}
-        <footer>Um pouco hoje. Lembrado amanhã.</footer>
+        <footer>A little today. Remembered tomorrow.</footer>
       </div>
       <div className="auth-preview">
         <div className="sample-card">
           <span className="eyebrow">
-            <Sparkles size={15} /> UM EXEMPLO DE CARTÃO
+            <Sparkles size={15} /> AN EXAMPLE CARD
           </span>
           <h2>
             I’d like
@@ -120,13 +120,13 @@ function AuthLayout({ children }: { children: React.ReactNode }): React.JSX.Elem
           <div className="sample-divider" />
           <p>
             <strong>I’d = I would</strong>
-            <br />
-            Eu gostaria de um pouco de chá.
+            <br />A polite way to ask for tea.
           </p>
         </div>
         <p className="preview-caption">
-          A próxima vez que você encontrar “I’d”,
-          <br />a resposta já vai estar com você.
+          A small discovery today.
+          <br />
+          Something you remember tomorrow.
         </p>
       </div>
     </main>
@@ -144,8 +144,8 @@ async function authenticate(
     : await auth.auth.signInWithPassword({ email, password });
   if (result.error) {
     if (result.error.message.includes('Invalid login'))
-      throw new Error('E-mail ou senha incorretos. Confira e tente novamente.');
+      throw new Error('Incorrect email or password. Check your details and try again.');
     throw new Error(result.error.message);
   }
-  return signup && !result.data.session ? 'Confira seu e-mail para confirmar a conta.' : '';
+  return signup && !result.data.session ? 'Check your email to confirm your account.' : '';
 }

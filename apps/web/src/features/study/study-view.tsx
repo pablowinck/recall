@@ -11,7 +11,7 @@ interface StudyViewProps {
   exit: () => void;
 }
 
-/** Oferece foco com conteúdo e controles separados. Exemplo: <StudyView client={client} exit={exit} />. */
+/** Keep study content separate from session controls. Example: <StudyView client={client} exit={exit} />. */
 export function StudyView({ client, deck, exit }: StudyViewProps): React.JSX.Element {
   const session = useStudySession(client, deck);
   useStudyKeyboard(session);

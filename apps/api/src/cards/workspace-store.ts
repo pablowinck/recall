@@ -1,7 +1,7 @@
 import type { PoolClient } from 'pg';
 import type { Deck, Workspace, WorkspaceStats } from '@recall/contracts';
 
-/** Retorna baralhos e indicadores reais. Exemplo: readWorkspace(connection). */
+/** Return decks and actual study statistics. Example: readWorkspace(connection). */
 export async function readWorkspace(connection: PoolClient): Promise<Workspace> {
   const decks = await connection.query<Deck>(`select d.id, d.name, count(c.id)::int as card_count,
     count(c.id) filter(where c.due_at <= now() and not c.suspended)::int as due_count
@@ -29,7 +29,7 @@ async function readStats(connection: PoolClient): Promise<WorkspaceStats> {
   };
 }
 
-/** Conta dias consecutivos até hoje ou ontem. Exemplo: countStreak(['2026-09-10'], now). */
+/** Count consecutive study days ending today or yesterday. Example: countStreak(['2026-09-10'], now). */
 export function countStreak(days: string[], now: Date): number {
   const localDay = now.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   let cursor = new Date(`${localDay}T12:00:00Z`);
@@ -43,7 +43,7 @@ export function countStreak(days: string[], now: Date): number {
   return streak;
 }
 
-/** Cria um baralho no tenant autenticado. Exemplo: createDeck(connection, 'Viagens'). */
+/** Create a deck in the authenticated tenant. Example: createDeck(connection, 'Travel'). */
 export async function createDeck(connection: PoolClient, name: string): Promise<Deck> {
   const result = await connection.query<Deck>(
     `insert into recall.decks (tenant_id,name) values (auth.uid(),$1)

@@ -3,7 +3,7 @@ import type { RecallClient } from '@recall/client';
 import type { CardPage } from '@recall/contracts';
 import { describeFailure } from '@/components/feedback';
 
-/** Pagina e descarta buscas antigas. Exemplo: useLibrary(client, search, deck, page, revision). */
+/** Paginate results and discard stale search responses. Example: useLibrary(client, search, deck, page, revision). */
 export function useLibrary(
   client: RecallClient,
   search: string,

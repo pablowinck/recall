@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 import { RecallError } from '../errors';
 import { createRoutes, type ApiDependencies } from './routes';
 
-/** Monta o app sem abrir sockets nem carregar credenciais. Exemplo: createApi(fakeDependencies). */
+/** Compose the application without opening sockets or loading credentials. Example: createApi(fakeDependencies). */
 export function createApi(dependencies: ApiDependencies): Express {
   const app = express();
   app.disable('x-powered-by');
@@ -22,7 +22,7 @@ export function createApi(dependencies: ApiDependencies): Express {
     response.json({ status: 'ok', service: 'recall-api' }),
   );
   app.use('/v1', createRoutes(dependencies));
-  app.use((_request, response) => response.status(404).json({ error: 'Rota não encontrada.' }));
+  app.use((_request, response) => response.status(404).json({ error: 'Route not found.' }));
   app.use(apiErrorResponse);
   return app;
 }
@@ -34,18 +34,18 @@ const apiErrorResponse: ErrorRequestHandler = (error: unknown, _request, respons
   }
   if (error instanceof ZodError) {
     response.status(400).json({
-      error: 'Confira os campos informados.',
+      error: 'Check the fields you entered.',
       fields: error.issues.map((issue) => ({ path: issue.path, message: issue.message })),
     });
     return;
   }
   const code = error instanceof Error ? (error as Error & { code?: string }).code : undefined;
   if (code === '23505') {
-    response.status(409).json({ error: 'Este registro já existe. Atualize para continuar.' });
+    response.status(409).json({ error: 'This record already exists. Refresh to continue.' });
     return;
   }
   if (code === '23503' || code === '42501') {
-    response.status(400).json({ error: 'Baralho ou registro indisponível no seu espaço.' });
+    response.status(400).json({ error: 'This deck or record is not available in your workspace.' });
     return;
   }
   process.stderr.write(
@@ -56,5 +56,5 @@ const apiErrorResponse: ErrorRequestHandler = (error: unknown, _request, respons
       message: error instanceof Error ? error.message : 'unknown',
     }) + '\n',
   );
-  response.status(500).json({ error: 'Não foi possível concluir. Tente novamente.' });
+  response.status(500).json({ error: 'Unable to complete the request. Please try again.' });
 };

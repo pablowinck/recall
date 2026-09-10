@@ -1,2 +1,2 @@
--- Usuários locais são criados pela API de Auth em scripts/seed-local.ts.
--- Os 64 cartões entram pelo MCP, exercitando o mesmo fluxo dos agentes.
+-- Local users are created through the Auth API in scripts/seed-local.ts.
+-- The 64 cards are imported through MCP, exercising the same path as agents.

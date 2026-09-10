@@ -56,8 +56,10 @@ if (!account.mcp_token) {
   writeFileSync(accountPath, JSON.stringify(account, null, 2), { mode: 0o600 });
 }
 const workspace = await api.workspace();
+const starterDeck =
+  workspace.decks.find((deck) => deck.name === 'English') ?? (await api.createDeck('English'));
 const starter = JSON.parse(readFileSync('examples/english-starter.json', 'utf8')) as StarterCard[];
-const cards: CardDraft[] = starter.map((card) => ({ ...card, deck_id: workspace.decks[0]!.id }));
+const cards: CardDraft[] = starter.map((card) => ({ ...card, deck_id: starterDeck.id }));
 const mcp = new Client({ name: 'recall-seed', version: '0.1.0' });
 await mcp.connect(
   new StreamableHTTPClientTransport(new URL('http://localhost:3212/mcp'), {

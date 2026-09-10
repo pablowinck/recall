@@ -1,18 +1,18 @@
 import type { ReviewOption } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 
-/** Expõe consequências de cada escolha. Exemplo: <RatingControls session={session} />. */
+/** Show the scheduling consequence of each rating. Example: <RatingControls session={session} />. */
 export function RatingControls({ session }: { session: StudySessionState }): React.JSX.Element {
   return (
     <div className="rating-section">
-      <p>Como foi lembrar?</p>
+      <p>How did you do?</p>
       <div className="rating-grid">
         {session.queue[0]?.options.map((option) => (
           <RatingButton key={option.rating} option={option} session={session} />
         ))}
       </div>
       <span className="keyboard-hint">
-        Use as teclas 1 a 4 · Sem pressa, seja honesto com sua memória.
+        Use keys 1–4 · Take your time and rate your recall honestly.
       </span>
     </div>
   );

@@ -7,7 +7,7 @@ class FakeHttpTransport {
   fetch: typeof fetch = async (_url, init) => {
     this.requests.push(init ?? {});
     return new Response(
-      JSON.stringify(this.status === 200 ? { decks: [], stats: {} } : { error: 'Sessão expirada' }),
+      JSON.stringify(this.status === 200 ? { decks: [], stats: {} } : { error: 'Session expired' }),
       { status: this.status, headers: { 'Content-Type': 'application/json' } },
     );
   };

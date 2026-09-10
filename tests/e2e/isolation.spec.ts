@@ -102,9 +102,9 @@ test('MCP import is idempotent, tools work, and revoked tokens stop access', asy
     const card = listed.cards[0]!;
     const updated = await mcp.callTool({
       name: 'update_flashcard',
-      arguments: { card_id: card.id, patch: { back: 'Eu gostaria de chá.' } },
+      arguments: { card_id: card.id, patch: { back: 'A polite request for tea.' } },
     });
-    expect(readToolJson<Flashcard>(updated).back).toBe('Eu gostaria de chá.');
+    expect(readToolJson<Flashcard>(updated).back).toBe('A polite request for tea.');
     expect((await other.api.cards()).total).toBe(0);
     await account.api.revokeToken(token.id);
     expect(
@@ -139,6 +139,34 @@ test('anonymous requests and invalid inputs fail without modifying content', asy
     expect(invalid.status).toBe(400);
     expect((await account.api.workspace()).stats.total).toBe(0);
   } finally {
+    await account.cleanup();
+  }
+});
+
+test('English defaults preserve Portuguese, Italian, and French learning content', async () => {
+  const account = await createTestAccount();
+  const mcp = await connectTestMcp(account.jwt);
+  try {
+    const workspace = await account.api.workspace();
+    expect(workspace.decks[0]!.name).toBe('My first deck');
+    const examples = [
+      { front: 'O que significa saudade?', back: 'Uma sensação de falta de alguém ou de algo.' },
+      { front: 'Che cosa significa ricordare?', back: 'Conservare qualcosa nella memoria.' },
+      { front: 'Que signifie déjà ?', back: 'Une chose qui est arrivée auparavant.' },
+    ];
+    const cards = examples.map((card, index) => ({
+      ...card,
+      deck_id: workspace.decks[0]!.id,
+      source_key: `multilingual-${index}`,
+      tags: ['unicode'],
+    }));
+    const imported = await mcp.callTool({ name: 'import_flashcards', arguments: { cards } });
+    expect(imported.isError).not.toBe(true);
+    const stored = (await account.api.cards()).cards;
+    for (const example of examples)
+      expect(stored).toEqual(expect.arrayContaining([expect.objectContaining(example)]));
+  } finally {
+    await mcp.close();
     await account.cleanup();
   }
 });

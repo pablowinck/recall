@@ -4,7 +4,7 @@ import type { StudyCard } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingControls } from './rating-controls';
 
-/** Contextualiza o progresso da sessão atual. Exemplo: <StudyProgress session={session} exit={exit} />. */
+/** Show progress for the current review session. Example: <StudyProgress session={session} exit={exit} />. */
 export function StudyProgress({
   session,
   exit,
@@ -18,14 +18,14 @@ export function StudyProgress({
       <header className="study-header">
         <button className="text-button" onClick={exit}>
           <ArrowLeft size={17} />
-          Sair da sessão
+          Leave session
         </button>
         <span>
-          {session.completed} de {total} revisados
+          {session.completed} of {total} reviewed
         </span>
       </header>
       <Progress
-        aria-label="Progresso da sessão"
+        aria-label="Session progress"
         value={total ? (session.completed / total) * 100 : 0}
         size="1"
       />
@@ -33,7 +33,7 @@ export function StudyProgress({
   );
 }
 
-/** Renderiza texto sem executar HTML de cartões. Exemplo: <ReviewContent current={card} revealed />. */
+/** Render card text without executing its markup. Example: <ReviewContent current={card} revealed />. */
 export function ReviewContent({
   current,
   revealed,
@@ -45,15 +45,15 @@ export function ReviewContent({
   return (
     <>
       <div className="study-context">
-        <span className="eyebrow">LEMBRE ANTES DE REVELAR</span>
-        <span>{current.card.tags[1] ?? 'Seu aprendizado'}</span>
+        <span className="eyebrow">RECALL BEFORE REVEALING</span>
+        <span>{current.card.tags[1] ?? 'Your learning'}</span>
       </div>
       <article className={`review-card ${revealed ? 'is-revealed' : ''}`}>
-        <span className="eyebrow">FRENTE</span>
+        <span className="eyebrow">FRONT</span>
         <h1>{current.card.front}</h1>
         {revealed && (
           <div className="review-answer" aria-live="polite">
-            <span className="eyebrow">RESPOSTA</span>
+            <span className="eyebrow">ANSWER</span>
             <div>{current.card.back}</div>
           </div>
         )}
@@ -62,15 +62,15 @@ export function ReviewContent({
   );
 }
 
-/** Habilita avaliação só depois de revelar. Exemplo: <StudyActions session={session} />. */
+/** Allow a rating only after revealing the answer. Example: <StudyActions session={session} />. */
 export function StudyActions({ session }: { session: StudySessionState }): React.JSX.Element {
   if (session.revealed) return <RatingControls session={session} />;
   return (
     <div className="reveal-action">
       <Button size="4" onClick={session.reveal}>
-        Mostrar resposta <CornerDownLeft size={19} />
+        Reveal answer <CornerDownLeft size={19} />
       </Button>
-      <span>Espaço para revelar</span>
+      <span>Press Space to reveal</span>
     </div>
   );
 }

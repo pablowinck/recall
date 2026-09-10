@@ -6,7 +6,7 @@ import type { RecallClient } from '@recall/client';
 import type { AccessToken } from '@recall/contracts';
 import { describeFailure, ErrorNotice } from '@/components/feedback';
 
-/** Gerencia conexões pessoais sem expor tokens anteriores. Exemplo: <ConnectionsView client={client} />. */
+/** Manage personal connections without exposing previous tokens. Example: <ConnectionsView client={client} />. */
 export function ConnectionsView({ client }: { client: RecallClient }): React.JSX.Element {
   const [tokens, setTokens] = useState<AccessToken[]>([]);
   const [secret, setSecret] = useState('');
@@ -39,38 +39,38 @@ export function ConnectionsView({ client }: { client: RecallClient }): React.JSX
     <div className="view-enter connections-view">
       <header className="page-header">
         <div>
-          <span className="eyebrow">APRENDA COM SUAS FERRAMENTAS</span>
-          <h1>Conexões.</h1>
-          <p>Transforme uma conversa em novos cartões.</p>
+          <span className="eyebrow">LEARN WITH YOUR TOOLS</span>
+          <h1>Connections.</h1>
+          <p>Turn a conversation into new flashcards.</p>
         </div>
       </header>
       <section className="connection-intro">
         <span className="connection-icon">
           <Cable size={28} strokeWidth={1.5} />
         </span>
-        <h2>Recall no Codex e em outros agentes</h2>
+        <h2>Recall in Codex and other agents</h2>
         <p>
-          Crie, organize e consulte seus cartões durante uma conversa. Cada conexão acessa apenas o
-          seu espaço.
+          Create, organize, and find cards during a conversation. Each connection can access only
+          your workspace.
         </p>
         <div className="endpoint-box">
-          <span>Endereço MCP</span>
+          <span>MCP endpoint</span>
           <code>{process.env.NEXT_PUBLIC_MCP_URL}</code>
         </div>
         <Button size="3" onClick={() => void create()} loading={busy}>
           <Plus size={17} />
-          Criar conexão pessoal
+          Create personal connection
         </Button>
         <p className="privacy-note">
           <ShieldCheck size={15} />
-          Validade de 90 dias. Revogue quando quiser.
+          Valid for 90 days. Revoke it whenever you like.
         </p>
       </section>
       {error && <ErrorNotice message={error} />}
       {secret && <NewSecret token={secret} clear={() => setSecret('')} />}
       <section className="tokens-section">
-        <h2>Suas conexões</h2>
-        {!tokens.length && <p className="muted">Você ainda não criou uma conexão.</p>}
+        <h2>Your connections</h2>
+        {!tokens.length && <p className="muted">You have not created a connection yet.</p>}
         {tokens.map((token) => (
           <TokenRow
             key={token.id}
@@ -84,13 +84,15 @@ export function ConnectionsView({ client }: { client: RecallClient }): React.JSX
         ))}
       </section>
       <details className="connection-help">
-        <summary>Como conectar no Codex</summary>
+        <summary>How to connect to Codex</summary>
         <p>
-          Configure um servidor MCP HTTP com o endereço acima e use o token como Bearer token.
-          Guarde o segredo em uma variável de ambiente, nunca em um repositório.
+          Configure an HTTP MCP server with the endpoint above and use your token as a Bearer token.
+          Store the secret in an environment variable, never in a repository.
         </p>
         <pre>{`[mcp_servers.recall]\nurl = "${process.env.NEXT_PUBLIC_MCP_URL}"\nbearer_token_env_var = "RECALL_MCP_TOKEN"`}</pre>
-        <p>Depois, peça: “Liste meus baralhos no Recall” ou “Crie um cartão explicando I’d”.</p>
+        <p>
+          Then ask: “List my Recall decks” or “Create a flashcard about a topic I want to learn”.
+        </p>
       </details>
     </div>
   );
@@ -104,21 +106,21 @@ function NewSecret({ token, clear }: { token: string; clear: () => void }): Reac
       await navigator.clipboard.writeText(token);
       setCopied(true);
     } catch {
-      setError('Selecione e copie o token manualmente.');
+      setError('Select and copy the token manually.');
     }
   };
   return (
     <section className="new-secret">
-      <h2>Guarde seu token</h2>
-      <p>Ele aparece somente agora. Quem tiver este token poderá acessar seus cartões.</p>
-      <TextField.Root aria-label="Novo token pessoal" readOnly value={token} />
+      <h2>Save your token</h2>
+      <p>It is shown only once. Anyone with this token can access your cards.</p>
+      <TextField.Root aria-label="New personal token" readOnly value={token} />
       <div className="dialog-actions">
         <Button variant="soft" onClick={clear}>
-          Já guardei
+          I saved it
         </Button>
         <Button onClick={() => void copy()}>
           <Copy size={16} />
-          {copied ? 'Copiado' : 'Copiar token'}
+          {copied ? 'Copied' : 'Copy token'}
         </Button>
       </div>
       {error && <p role="status">{error}</p>}
@@ -152,30 +154,29 @@ function TokenRow({
       <div>
         <strong>{token.name}</strong>
         <span>
-          {token.prefix}… · até {new Date(token.expires_at).toLocaleDateString('pt-BR')}
+          {token.prefix}… · expires {new Date(token.expires_at).toLocaleDateString('en-US')}
         </span>
       </div>
       <AlertDialog.Root open={open} onOpenChange={setOpen}>
         <AlertDialog.Trigger>
-          <Button variant="ghost" color="gray" aria-label={`Revogar conexão ${token.name}`}>
+          <Button variant="ghost" color="gray" aria-label={`Revoke connection ${token.name}`}>
             <Trash2 size={18} />
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth="420px">
-          <AlertDialog.Title>Revogar esta conexão?</AlertDialog.Title>
+          <AlertDialog.Title>Revoke this connection?</AlertDialog.Title>
           <AlertDialog.Description>
-            O agente deixará de acessar seus cartões com este token. Você pode criar outra conexão
-            depois.
+            The agent will lose access through this token. You can create another connection later.
           </AlertDialog.Description>
           {error && <ErrorNotice message={error} />}
           <div className="dialog-actions">
             <AlertDialog.Cancel>
               <Button variant="soft" color="gray">
-                Manter conexão
+                Keep connection
               </Button>
             </AlertDialog.Cancel>
             <Button color="red" onClick={() => void remove()} loading={busy}>
-              Revogar conexão
+              Revoke connection
             </Button>
           </div>
         </AlertDialog.Content>

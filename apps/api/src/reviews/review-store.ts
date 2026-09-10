@@ -3,7 +3,7 @@ import type { Flashcard, ReviewInput, RecallRating, StudyCard } from '@recall/co
 import { applyRating, previewSchedule } from '@recall/domain';
 import { RecallError } from '../errors';
 
-/** Busca apenas cartões vencidos, sem incluir suspensos. Exemplo: studyQueue(connection, now). */
+/** Load only due cards, excluding paused cards. Example: studyQueue(connection, now). */
 export async function studyQueue(
   connection: PoolClient,
   now: Date,
@@ -18,7 +18,7 @@ export async function studyQueue(
   return result.rows.map(({ card }) => ({ card, options: previewSchedule(card.schedule, now) }));
 }
 
-/** Grava avaliação e agendamento atomicamente. Exemplo: recordReview(connection, id, input, now). */
+/** Commit the rating and schedule atomically. Example: recordReview(connection, id, input, now). */
 export async function recordReview(
   connection: PoolClient,
   cardId: string,
@@ -30,15 +30,15 @@ export async function recordReview(
     [cardId],
   );
   const current = locked.rows[0]?.card;
-  if (!current) throw new RecallError(404, 'Cartão não encontrado.');
+  if (!current) throw new RecallError(404, 'Card not found.');
   const prior = await connection.query<{ result: Flashcard; card_id: string; rating: number }>(
     'select result,card_id,rating from recall.reviews where id=$1',
     [input.request_id],
   );
   if (prior.rows[0]) return readPriorReview(prior.rows[0], cardId, input.rating);
   if (current.version !== input.version)
-    throw new RecallError(409, 'Este cartão mudou. Atualize a sessão para revisar.');
-  if (current.suspended) throw new RecallError(409, 'Este cartão está pausado.');
+    throw new RecallError(409, 'This card has changed. Refresh the session before reviewing it.');
+  if (current.suspended) throw new RecallError(409, 'This card is paused.');
   return saveScheduledReview(connection, current, input, now);
 }
 
@@ -48,7 +48,7 @@ function readPriorReview(
   rating: number,
 ): Flashcard {
   if (prior.card_id !== cardId || prior.rating !== rating) {
-    throw new RecallError(409, 'Identificador de revisão já usado para outra avaliação.');
+    throw new RecallError(409, 'This review identifier was already used for a different rating.');
   }
   return prior.result;
 }

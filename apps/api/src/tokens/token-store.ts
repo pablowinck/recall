@@ -3,14 +3,14 @@ import type { PoolClient } from 'pg';
 import type { AccessToken, CreatedToken } from '@recall/contracts';
 import { RecallError } from '../errors';
 
-/** Mostra metadados sem hashes nem segredos. Exemplo: listTokens(connection). */
+/** Return connection metadata without hashes or secrets. Example: listTokens(connection). */
 export async function listTokens(connection: PoolClient): Promise<AccessToken[]> {
   const result = await connection.query<AccessToken>(`select id,name,prefix,created_at,expires_at
     from recall.access_tokens order by created_at desc`);
   return result.rows;
 }
 
-/** Emite segredo de 256 bits mostrado uma vez. Exemplo: createToken(connection, 'Codex'). */
+/** Issue a 256-bit secret that is shown once. Example: createToken(connection, 'Codex'). */
 export async function createToken(connection: PoolClient, name: string): Promise<CreatedToken> {
   const token = `recall_${randomBytes(32).toString('hex')}`;
   const hash = createHash('sha256').update(token).digest('hex');
@@ -22,12 +22,12 @@ export async function createToken(connection: PoolClient, name: string): Promise
   return { ...result.rows[0]!, token };
 }
 
-/** Revoga acesso imediatamente. Exemplo: revokeToken(connection, id). */
+/** Revoke access immediately. Example: revokeToken(connection, id). */
 export async function revokeToken(
   connection: PoolClient,
   id: string,
 ): Promise<{ deleted: boolean }> {
   const result = await connection.query('delete from recall.access_tokens where id=$1', [id]);
-  if (!result.rowCount) throw new RecallError(404, 'Conexão não encontrada.');
+  if (!result.rowCount) throw new RecallError(404, 'Connection not found.');
   return { deleted: true };
 }

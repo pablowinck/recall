@@ -15,7 +15,7 @@ export interface StudySessionState {
   reload: () => Promise<void>;
 }
 
-/** Preserva a tentativa em retries e impede clique duplo. Exemplo: useStudySession(client). */
+/** Preserve retry identity and prevent duplicate clicks. Example: useStudySession(client). */
 export function useStudySession(client: RecallClient, deck?: string): StudySessionState {
   const [queue, setQueue] = useState<StudyCard[]>([]);
   const [completed, setCompleted] = useState(0);

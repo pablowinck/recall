@@ -9,7 +9,7 @@ export interface CardSearch {
   offset: number;
 }
 
-/** Lista conteúdo paginado sob RLS. Exemplo: listCards(connection, query). */
+/** List paginated content under row-level security. Example: listCards(connection, query). */
 export async function listCards(connection: PoolClient, query: CardSearch): Promise<CardPage> {
   const filter =
     "($1 = '' or front ilike '%' || $1 || '%' or back ilike '%' || $1 || '%') and ($2::uuid is null or deck_id = $2)";
@@ -25,7 +25,7 @@ export async function listCards(connection: PoolClient, query: CardSearch): Prom
   return { cards: result.rows.map((row) => row.card), total: count.rows[0]!.total };
 }
 
-/** Cria cartão com deduplicação por origem. Exemplo: insertCard(connection, draft). */
+/** Create a card with source-key deduplication. Example: insertCard(connection, draft). */
 export async function insertCard(connection: PoolClient, draft: CardDraft): Promise<Flashcard> {
   const result = await connection.query<{ card: Flashcard }>(
     `insert into recall.cards as c (tenant_id, deck_id, front, back, tags, source_key)
@@ -36,7 +36,7 @@ export async function insertCard(connection: PoolClient, draft: CardDraft): Prom
   return result.rows[0]!.card;
 }
 
-/** Edita somente conteúdo permitido. Exemplo: updateCard(connection, id, {front:'Hello'}). */
+/** Edit only the allowed card fields. Example: updateCard(connection, id, {front:'Hello'}). */
 export async function updateCard(
   connection: PoolClient,
   id: string,
@@ -48,16 +48,16 @@ export async function updateCard(
      where id=$1 returning to_jsonb(c) as card`,
     [id, patch.front, patch.back, patch.tags, patch.deck_id, patch.suspended],
   );
-  if (!result.rows[0]) throw new RecallError(404, 'Cartão não encontrado.');
+  if (!result.rows[0]) throw new RecallError(404, 'Card not found.');
   return result.rows[0].card;
 }
 
-/** Exclui um cartão do próprio tenant. Exemplo: deleteCard(connection, id). */
+/** Delete a card belonging to the authenticated tenant. Example: deleteCard(connection, id). */
 export async function deleteCard(
   connection: PoolClient,
   id: string,
 ): Promise<{ deleted: boolean }> {
   const result = await connection.query('delete from recall.cards where id = $1', [id]);
-  if (!result.rowCount) throw new RecallError(404, 'Cartão não encontrado.');
+  if (!result.rowCount) throw new RecallError(404, 'Card not found.');
   return { deleted: true };
 }

@@ -14,7 +14,7 @@ interface EditorProps {
   saved: () => void;
 }
 
-/** Editor único para criar e corrigir cartões. Exemplo: <CardEditor {...props} />. */
+/** Use one editor to create and update cards. Example: <CardEditor {...props} />. */
 export function CardEditor(props: EditorProps): React.JSX.Element {
   const [deck, setDeck] = useState(props.card?.deck_id ?? props.decks[0]?.id ?? '');
   const [busy, setBusy] = useState(false);
@@ -52,16 +52,16 @@ export function CardEditor(props: EditorProps): React.JSX.Element {
       }}
     >
       <Dialog.Content maxWidth="640px" className="card-editor">
-        <Dialog.Title>{props.card ? 'Editar cartão' : 'Novo cartão'}</Dialog.Title>
+        <Dialog.Title>{props.card ? 'Edit card' : 'New card'}</Dialog.Title>
         <Dialog.Description size="2" mb="5">
-          Uma ideia por cartão. Uma pergunta que ajude você a lembrar.
+          One idea per card. One question that helps you remember.
         </Dialog.Description>
         <form onSubmit={submit}>
           <div className="form-fields">
             <label>
-              Baralho
+              Deck
               <Select.Root value={deck} onValueChange={setDeck}>
-                <Select.Trigger aria-label="Baralho" />
+                <Select.Trigger aria-label="Deck" />
                 <Select.Content>
                   {props.decks.map((item) => (
                     <Select.Item key={item.id} value={item.id}>
@@ -72,33 +72,33 @@ export function CardEditor(props: EditorProps): React.JSX.Element {
               </Select.Root>
             </label>
             <label>
-              Frente <span className="field-hint">A pergunta ou palavra</span>
+              Front <span className="field-hint">The question or prompt</span>
               <TextArea
                 name="front"
                 defaultValue={props.card?.front}
-                placeholder="O que significa ‘stumped’ nesta frase?"
+                placeholder="What would you like to remember?"
                 required
                 maxLength={4000}
                 rows={4}
               />
             </label>
             <label>
-              Verso <span className="field-hint">A resposta, com um exemplo</span>
+              Back <span className="field-hint">The answer, with an example</span>
               <TextArea
                 name="back"
                 defaultValue={props.card?.back}
-                placeholder="Sem saber a resposta. I'm stumped by this question."
+                placeholder="Write the answer, with an example if it helps."
                 required
                 maxLength={8000}
                 rows={5}
               />
             </label>
             <label>
-              Tags <span className="field-hint">Separadas por vírgulas, até 12</span>
+              Tags <span className="field-hint">Comma-separated, up to 12</span>
               <TextField.Root
                 name="tags"
                 defaultValue={props.card?.tags.join(', ')}
-                placeholder="inglês, vocabulário"
+                placeholder="learning, vocabulary"
               />
             </label>
           </div>
@@ -115,10 +115,10 @@ export function CardEditor(props: EditorProps): React.JSX.Element {
               />
             )}
             <Button type="button" variant="soft" color="gray" onClick={props.close} disabled={busy}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit" loading={busy}>
-              {props.card ? 'Salvar alterações' : 'Criar cartão'}
+              {props.card ? 'Save changes' : 'Create card'}
             </Button>
           </div>
         </form>
@@ -157,25 +157,25 @@ function DeleteCard({
           variant="ghost"
           color="red"
           className="delete-button"
-          aria-label="Excluir cartão"
+          aria-label="Delete card"
         >
           <Trash2 size={18} />
         </Button>
       </AlertDialog.Trigger>
       <AlertDialog.Content maxWidth="420px">
-        <AlertDialog.Title>Excluir este cartão?</AlertDialog.Title>
+        <AlertDialog.Title>Delete this card?</AlertDialog.Title>
         <AlertDialog.Description>
-          O cartão e seu histórico de revisões serão excluídos. Essa ação não pode ser desfeita.
+          The card and its review history will be deleted. This cannot be undone.
         </AlertDialog.Description>
         {error && <ErrorNotice message={error} />}
         <div className="dialog-actions">
           <AlertDialog.Cancel>
             <Button variant="soft" color="gray">
-              Manter cartão
+              Keep card
             </Button>
           </AlertDialog.Cancel>
           <Button color="red" onClick={() => void remove()} loading={busy}>
-            Excluir definitivamente
+            Delete permanently
           </Button>
         </div>
       </AlertDialog.Content>

@@ -15,7 +15,7 @@ function toolResult(result: unknown): { content: { type: 'text'; text: string }[
   };
 }
 
-/** Expõe apenas operações da API no tenant do token. Exemplo: createRecallMcp(client). */
+/** Expose API operations scoped to the token owner. Example: createRecallMcp(client). */
 export function createRecallMcp(client: RecallClient): McpServer {
   const server = new McpServer({ name: 'recall', version: '0.1.0' });
   registerReadTools(server, client);

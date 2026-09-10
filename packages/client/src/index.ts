@@ -27,11 +27,11 @@ export interface RecallClientOptions {
   fetcher?: typeof fetch;
 }
 
-/** Cliente único usado por web e MCP. Exemplo: new RecallClient({baseUrl, token}). */
+/** Share one HTTP client between the web and MCP apps. Example: new RecallClient({baseUrl, token}). */
 export class RecallClient {
   constructor(private readonly options: RecallClientOptions) {}
 
-  /** Executa chamada autenticada sem cache. Exemplo: client.request<Workspace>('/workspace'). */
+  /** Send an authenticated request without caching personal content. Example: client.request<Workspace>('/workspace'). */
   async request<T>(path: string, method = 'GET', body?: unknown): Promise<T> {
     const token = await this.options.token();
     const response = await (this.options.fetcher ?? fetch)(`${this.options.baseUrl}/v1${path}`, {
@@ -92,5 +92,5 @@ function readErrorMessage(payload: unknown): string {
   ) {
     return payload.error;
   }
-  return 'Não foi possível concluir a solicitação.';
+  return 'Unable to complete the request. Please try again.';
 }

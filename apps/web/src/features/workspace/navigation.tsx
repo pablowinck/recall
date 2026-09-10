@@ -12,17 +12,17 @@ interface NavigationProps {
   signOut: () => void;
 }
 const sections = [
-  { id: 'today', title: 'Hoje', icon: CalendarDays },
-  { id: 'library', title: 'Biblioteca', icon: BookOpen },
-  { id: 'connections', title: 'Conexões', icon: Cable },
+  { id: 'today', title: 'Today', icon: CalendarDays },
+  { id: 'library', title: 'Library', icon: BookOpen },
+  { id: 'connections', title: 'Connections', icon: Cable },
 ] as const;
 
-/** Mantém navegação consistente entre dispositivos. Exemplo: <WorkspaceNavigation {...props} />. */
+/** Keep navigation consistent across screen sizes. Example: <WorkspaceNavigation {...props} />. */
 export function WorkspaceNavigation(props: NavigationProps): React.JSX.Element {
   return (
     <aside className="sidebar">
       <RecallBrand />
-      <nav aria-label="Navegação principal">
+      <nav aria-label="Main navigation">
         {sections.map(({ id, title, icon: Icon }) => (
           <button
             key={id}
@@ -37,31 +37,31 @@ export function WorkspaceNavigation(props: NavigationProps): React.JSX.Element {
       </nav>
       <div className="sidebar-bottom">
         <div className="study-note">
-          <span>NO SEU RITMO</span>
+          <span>AT YOUR OWN PACE</span>
           <p>
-            Consistência vale mais
+            Consistency matters
             <br />
-            que pressa.
+            more than speed.
           </p>
         </div>
         <div className="profile">
           <span className="avatar">{props.email[0]?.toUpperCase()}</span>
           <span className="profile-name">
-            Meu espaço<small>{props.email}</small>
+            My workspace<small>{props.email}</small>
           </span>
         </div>
         <div className="profile-actions">
-          <Tooltip content={props.dark ? 'Usar tema claro' : 'Usar tema escuro'}>
+          <Tooltip content={props.dark ? 'Use light theme' : 'Use dark theme'}>
             <IconButton
               variant="ghost"
-              aria-label={props.dark ? 'Usar tema claro' : 'Usar tema escuro'}
+              aria-label={props.dark ? 'Use light theme' : 'Use dark theme'}
               onClick={props.toggleTheme}
             >
               {props.dark ? <Sun size={18} /> : <Moon size={18} />}
             </IconButton>
           </Tooltip>
-          <Tooltip content="Sair da conta">
-            <IconButton variant="ghost" aria-label="Sair da conta" onClick={props.signOut}>
+          <Tooltip content="Sign out">
+            <IconButton variant="ghost" aria-label="Sign out" onClick={props.signOut}>
               <LogOut size={18} />
             </IconButton>
           </Tooltip>

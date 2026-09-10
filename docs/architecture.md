@@ -49,4 +49,4 @@ MCP source keys are unique within a tenant. Re-importing the starter data return
 - Docker starts the production builds for parity. Hot reload is available separately via `pnpm dev`.
 - Static bearer tokens are supported for MCP. OAuth discovery/consent is not implemented yet.
 
-See [ADR 0002](adr/0002-monorepo-typescript-e-isolamento-por-usuario.md) for the durable decision and its status.
+See [ADR 0002](adr/0002-typescript-monorepo-and-personal-tenants.md) for the durable decision and its status.

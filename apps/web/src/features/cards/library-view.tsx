@@ -17,7 +17,7 @@ interface LibraryProps {
   refresh: () => void;
 }
 
-/** Biblioteca pesquisável com paginação real. Exemplo: <LibraryView {...props} />. */
+/** Search and paginate the actual card library. Example: <LibraryView {...props} />. */
 export function LibraryView(props: LibraryProps): React.JSX.Element {
   const [search, setSearch] = useState('');
   const [deck, setDeck] = useState('');
@@ -27,19 +27,19 @@ export function LibraryView(props: LibraryProps): React.JSX.Element {
     <div className="view-enter">
       <header className="page-header">
         <div>
-          <span className="eyebrow">O QUE VOCÊ QUER LEMBRAR</span>
-          <h1>Sua biblioteca.</h1>
-          <p>Palavras, ideias e pequenas descobertas.</p>
+          <span className="eyebrow">WHAT YOU WANT TO REMEMBER</span>
+          <h1>Your library.</h1>
+          <p>Words, ideas, and little discoveries.</p>
         </div>
         <Button onClick={props.create}>
           <Plus size={17} />
-          Novo cartão
+          New card
         </Button>
       </header>
       <div className="library-toolbar">
         <TextField.Root
-          aria-label="Buscar cartões"
-          placeholder="Buscar uma palavra, pergunta ou resposta…"
+          aria-label="Search cards"
+          placeholder="Search a word, question, or answer…"
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
@@ -58,9 +58,9 @@ export function LibraryView(props: LibraryProps): React.JSX.Element {
             setPage(0);
           }}
         >
-          <Select.Trigger aria-label="Filtrar por baralho" />
+          <Select.Trigger aria-label="Filter by deck" />
           <Select.Content>
-            <Select.Item value="all">Todos os baralhos</Select.Item>
+            <Select.Item value="all">All decks</Select.Item>
             {props.decks.map((item) => (
               <Select.Item key={item.id} value={item.id}>
                 {item.name}
@@ -77,7 +77,7 @@ export function LibraryView(props: LibraryProps): React.JSX.Element {
       ) : (
         <>
           <div className="result-label">
-            {result.total} {result.total === 1 ? 'cartão' : 'cartões'}
+            {result.total} {result.total === 1 ? 'card' : 'cards'}
           </div>
           <div className="card-grid">
             {result.cards.map((card) => (
@@ -87,31 +87,29 @@ export function LibraryView(props: LibraryProps): React.JSX.Element {
           {!result.cards.length && (
             <div className="empty-state">
               <BookOpen size={32} strokeWidth={1.4} />
-              <h2>
-                {search || deck ? 'Nenhum cartão encontrado.' : 'Sua próxima descoberta mora aqui.'}
-              </h2>
+              <h2>{search || deck ? 'No cards found.' : 'Your next discovery belongs here.'}</h2>
               <p>
                 {search || deck
-                  ? 'Tente outra busca ou escolha outro baralho.'
-                  : 'Crie seu primeiro cartão e comece a construir sua memória.'}
+                  ? 'Try another search or choose a different deck.'
+                  : 'Create your first card and start building your memory.'}
               </p>
-              {!search && <Button onClick={props.create}>Criar cartão</Button>}
+              {!search && <Button onClick={props.create}>Create card</Button>}
             </div>
           )}
           <div className="pagination">
             <Button variant="soft" disabled={page === 0} onClick={() => setPage(page - 1)}>
               <ArrowLeft size={16} />
-              Anterior
+              Previous
             </Button>
             <span>
-              Página {page + 1} de {Math.max(1, Math.ceil(result.total / 24))}
+              Page {page + 1} of {Math.max(1, Math.ceil(result.total / 24))}
             </span>
             <Button
               variant="soft"
               disabled={(page + 1) * 24 >= result.total}
               onClick={() => setPage(page + 1)}
             >
-              Próxima
+              Next
               <ArrowRight size={16} />
             </Button>
           </div>
@@ -127,12 +125,12 @@ function CardTile({ card, edit }: { card: Flashcard; edit: () => void }): React.
     <button className="library-card" onClick={edit}>
       <span className={`card-status ${card.suspended ? 'paused' : due ? 'ready' : ''}`}>
         {card.suspended
-          ? 'Pausado'
+          ? 'Paused'
           : card.schedule === null
-            ? 'Novo'
+            ? 'New'
             : due
-              ? 'Para revisar'
-              : 'Agendado'}
+              ? 'Due for review'
+              : 'Scheduled'}
       </span>
       <h2>{card.front}</h2>
       <p>{card.back}</p>
@@ -142,7 +140,7 @@ function CardTile({ card, edit }: { card: Flashcard; edit: () => void }): React.
         ))}
       </div>
       <span className="card-edit-hint">
-        Editar cartão <ArrowRight size={14} />
+        Edit card <ArrowRight size={14} />
       </span>
     </button>
   );

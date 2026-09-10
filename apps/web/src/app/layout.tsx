@@ -4,14 +4,14 @@ import '@radix-ui/themes/styles.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Recall — um pouco hoje, lembrado amanhã',
-  description: 'Seu espaço para aprender com flashcards e repetição espaçada.',
+  title: 'Recall — a little today, remembered tomorrow',
+  description: 'Your space to learn anything with flashcards and spaced repetition.',
 };
 
-/** Define o documento acessível do produto. Exemplo: <RootLayout>{page}</RootLayout>. */
+/** Define the accessible application document. Example: <RootLayout>{page}</RootLayout>. */
 export default function RootLayout({ children }: { children: ReactNode }): React.JSX.Element {
   return (
-    <html lang="pt-BR">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

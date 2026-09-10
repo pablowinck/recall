@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-/** Persiste somente a preferência visual. Exemplo: const [appearance,toggle] = useAppearance(). */
+/** Persist only the appearance preference. Example: const [appearance,toggle] = useAppearance(). */
 export function useAppearance(): ['light' | 'dark', () => void] {
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light');
   useEffect(() => {

@@ -2,6 +2,8 @@
 
 A quiet place to remember. Open-source flashcards with spaced repetition, a responsive study interface, and an authenticated MCP server for your agents.
 
+Learn any language or subject. The interface and contributor documentation are in English, with no i18n layer. Flashcards can contain Portuguese, Italian, French, or any other Unicode text.
+
 Recall ships with 64 original English-learning cards covering vocabulary, past tense, future constructions, and contractions such as **I'd**. The starter import uses MCP and stable source keys, so running it twice does not duplicate cards or overwrite review history.
 
 ## What works
@@ -81,7 +83,7 @@ Start with [the architecture map](docs/architecture.md), [API/MCP contracts](doc
 
 ## Connect your agent
 
-Create a personal connection in the web app's **Conexões** view. Use the shown MCP URL with its Bearer token. For Codex and the local development setup, see [docs/mcp.md](docs/mcp.md).
+Create a personal connection in the web app's **Connections** view. Use the shown MCP URL with its Bearer token. For Codex and the local development setup, see [docs/mcp.md](docs/mcp.md).
 
 ## Deploy
 

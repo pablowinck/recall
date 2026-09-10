@@ -41,7 +41,7 @@ function tenantRoute(dependencies: ApiDependencies, operation: RouteOperation): 
   };
 }
 
-/** Declara o contrato HTTP numa única superfície. Exemplo: createRoutes(dependencies). */
+/** Declare the HTTP routes in one discoverable module. Example: createRoutes(dependencies). */
 export function createRoutes(dependencies: ApiDependencies): Router {
   const router = Router();
   const route = (operation: RouteOperation): RequestHandler => tenantRoute(dependencies, operation);

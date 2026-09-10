@@ -2,7 +2,7 @@
 
 ## Remote or local HTTP
 
-Create a token in **Conexões**. Set `RECALL_MCP_TOKEN` in the client process's environment and register:
+Create a token in **Connections**. Set `RECALL_MCP_TOKEN` in the client process's environment and register:
 
 ```toml
 [mcp_servers.recall]

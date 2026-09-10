@@ -3,7 +3,7 @@ import type { RecallClient } from '@recall/client';
 import type { Workspace } from '@recall/contracts';
 import { describeFailure } from '@/components/feedback';
 
-/** Busca indicadores sem dados fictícios. Exemplo: useWorkspace(client). */
+/** Load workspace statistics without fabricated values. Example: useWorkspace(client). */
 export function useWorkspace(client: RecallClient): {
   workspace: Workspace | null;
   error: string;

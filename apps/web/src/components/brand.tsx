@@ -1,6 +1,6 @@
 import { Layers2 } from 'lucide-react';
 
-/** Marca compacta que não compete com o estudo. Exemplo: <RecallBrand />. */
+/** Keep product identity compact and secondary to studying. Example: <RecallBrand />. */
 export function RecallBrand(): React.JSX.Element {
   return (
     <div className="brand">

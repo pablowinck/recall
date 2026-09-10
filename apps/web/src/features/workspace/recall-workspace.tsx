@@ -16,7 +16,7 @@ import { WorkspaceNavigation, type WorkspaceView } from './navigation';
 import { TodayView } from './today-view';
 import { useWorkspace } from './use-workspace';
 
-/** Raiz reiniciada por identidade para não reutilizar conteúdo entre contas. Exemplo: <RecallWorkspace />. */
+/** Reset workspace state by identity to prevent cross-account content reuse. Example: <RecallWorkspace />. */
 export function RecallWorkspace(): React.JSX.Element {
   const account = useRecallSession();
   const [appearance, toggleTheme] = useAppearance();
@@ -92,12 +92,12 @@ function AuthenticatedWorkspace({
         <div>
           <IconButton
             variant="ghost"
-            aria-label={dark ? 'Usar tema claro' : 'Usar tema escuro'}
+            aria-label={dark ? 'Use light theme' : 'Use dark theme'}
             onClick={toggleTheme}
           >
             {dark ? <Sun size={19} /> : <Moon size={19} />}
           </IconButton>
-          <IconButton variant="ghost" aria-label="Sair da conta" onClick={signOut}>
+          <IconButton variant="ghost" aria-label="Sign out" onClick={signOut}>
             <LogOut size={19} />
           </IconButton>
         </div>

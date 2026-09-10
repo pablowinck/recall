@@ -5,7 +5,7 @@ revoke all on schema private from public, anon, authenticated;
 
 create table recall.tenants (
   id uuid primary key references auth.users(id) on delete cascade,
-  name text not null default 'Meu espaço',
+  name text not null default 'My workspace',
   created_at timestamptz not null default now()
 );
 
@@ -77,8 +77,8 @@ create policy review_owner on recall.reviews to authenticated
 create policy token_owner on recall.access_tokens to authenticated
   using (tenant_id = (select auth.uid())) with check (tenant_id = (select auth.uid()));
 
--- Conteúdo é acessado exclusivamente pela API, que aplica o papel authenticated
--- dentro de uma transação. Não expor escrita direta pelo Data API evita adulterar FSRS.
+-- Only the API accesses content, applying the authenticated role inside a transaction.
+-- Keeping tables outside the Data API prevents direct changes to FSRS state.
 revoke all on recall.tenants, recall.decks, recall.cards, recall.reviews, recall.access_tokens from anon;
 grant select, insert, update, delete on recall.tenants, recall.decks, recall.cards, recall.reviews, recall.access_tokens to authenticated;
 
@@ -86,7 +86,7 @@ create function private.initialize_personal_tenant() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
   insert into recall.tenants (id) values (new.id);
-  insert into recall.decks (tenant_id, name) values (new.id, 'Inglês');
+  insert into recall.decks (tenant_id, name) values (new.id, 'My first deck');
   return new;
 end;
 $$;

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import type { RecallRating } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 
-/** Preserva digitação e evita avaliações por tecla repetida. Exemplo: useStudyKeyboard(session). */
+/** Preserve text entry and ignore repeated keyboard ratings. Example: useStudyKeyboard(session). */
 export function useStudyKeyboard(session: StudySessionState): void {
   useEffect(() => {
     const onKey = (event: KeyboardEvent): void => processStudyKey(event, session);
