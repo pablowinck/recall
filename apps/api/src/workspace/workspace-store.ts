@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg';
-import type { Deck, Workspace, WorkspaceStats } from '@recall/contracts';
+import type { Deck, DeckRemoval, Workspace, WorkspaceStats } from '@recall/contracts';
+import { RecallError } from '../errors.js';
 
 /** Return decks and actual study statistics. Example: readWorkspace(connection). */
 export async function readWorkspace(connection: PoolClient): Promise<Workspace> {
@@ -51,4 +52,42 @@ export async function createDeck(connection: PoolClient, name: string): Promise<
     [name],
   );
   return result.rows[0]!;
+}
+
+/**
+ * Delete a deck after its cards are moved or deleted, inside the caller's transaction.
+ * Example: deleteDeck(connection, id, { cards: 'delete' }).
+ */
+export async function deleteDeck(
+  connection: PoolClient,
+  id: string,
+  removal: DeckRemoval,
+): Promise<{ deleted: boolean }> {
+  const owned = await connection.query('select 1 from recall.decks where id = $1', [id]);
+  if (!owned.rowCount) throw new RecallError(404, 'Deck not found.');
+  await refuseLastDeck(connection);
+  if (removal.cards === 'move') await moveDeckCards(connection, id, removal.target);
+  else await connection.query('delete from recall.cards where deck_id = $1', [id]);
+  const result = await connection.query('delete from recall.decks where id = $1', [id]);
+  if (!result.rowCount) throw new RecallError(404, 'Deck not found.');
+  return { deleted: true };
+}
+
+// Every tenant keeps somewhere to put a card; without it the editor would open with no deck to choose.
+async function refuseLastDeck(connection: PoolClient): Promise<void> {
+  const decks = await connection.query<{ count: number }>(
+    'select count(*)::int as count from recall.decks',
+  );
+  if ((decks.rows[0]?.count ?? 0) > 1) return;
+  throw new RecallError(422, 'This is your only deck. Create another one first.');
+}
+
+async function moveDeckCards(connection: PoolClient, id: string, target: string): Promise<void> {
+  if (id === target) throw new RecallError(422, 'Choose a different deck for the cards.');
+  const destination = await connection.query('select 1 from recall.decks where id = $1', [target]);
+  if (!destination.rowCount) throw new RecallError(404, 'Deck not found.');
+  await connection.query(
+    'update recall.cards set deck_id = $2, updated_at = now() where deck_id = $1',
+    [id, target],
+  );
 }

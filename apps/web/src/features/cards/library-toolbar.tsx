@@ -2,6 +2,7 @@ import { Select, TextField } from '@radix-ui/themes';
 import { Search } from 'lucide-react';
 import type { Deck } from '@recall/contracts';
 import type { LibraryViewProps, LibraryViewState } from './library-types';
+import { DeleteDeckButton } from './delete-deck';
 import { NewDeckDialog } from './new-deck-dialog';
 
 /** Keep search controls stable while results reload. Example: <LibraryToolbar library={props} state={state} />. */
@@ -16,6 +17,7 @@ export function LibraryToolbar({
     <div className="library-toolbar">
       <LibrarySearch state={state} />
       <LibraryDeckFilter decks={library.decks} state={state} />
+      <DeleteFilteredDeck library={library} state={state} />
       {(state.query.search || state.query.deck) && (
         <button type="button" className="text-button" onClick={state.clear}>
           Clear filters
@@ -23,6 +25,29 @@ export function LibraryToolbar({
       )}
       <NewDeckDialog client={library.client} done={library.refresh} />
     </div>
+  );
+}
+
+// Deleting a deck belongs where a deck is already chosen: the filter the library is showing.
+function DeleteFilteredDeck({
+  library,
+  state,
+}: {
+  library: LibraryViewProps;
+  state: LibraryViewState;
+}): React.JSX.Element | null {
+  const deck = library.decks.find((item) => item.id === state.query.deck);
+  if (!deck) return null;
+  return (
+    <DeleteDeckButton
+      deck={deck}
+      decks={library.decks}
+      client={library.client}
+      done={() => {
+        state.clear();
+        library.refresh();
+      }}
+    />
   );
 }
 

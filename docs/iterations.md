@@ -383,3 +383,11 @@ Cards written by an assistant arrive in Markdown, and Recall printed the markers
 Card text is now parsed into a small tree of paragraphs, lists and inline emphasis — bold, italic and code — and rendered as elements. Nothing from a card is ever treated as markup: there is no HTML path, no links and no images, so an untrusted card still cannot reach the page as anything but text. The library preview and a card's accessible name drop the markers too, and the editor's Back hint names the four things that work while storing exactly what was typed.
 
 Validation: format, typecheck, 102 unit tests and build pass, including unmatched markers left literal and markers inside code left alone. All 109 E2E journeys pass on desktop, tablet and mobile, among them one that studies a card with bold, a list and code and finds no markers on screen. Unit tests now resolve the web `@/` alias, so a shared module can move without its imports being rewritten.
+
+## 2026-09-10 — UX loop 27: deleting a deck, with its cards accounted for
+
+Recall could create decks but never remove one, so a deck made by mistake stayed in Today, in the filter and in the editor forever. The owner asked for deletion and chose what should happen to the cards.
+
+`DELETE /v1/decks/:id` now states what happens to them — `?cards=delete`, or `?cards=move&target=<deck>` — and runs inside the caller's transaction under RLS, so a deck that is not yours is simply not found. A tenant always keeps one deck, so the last one refuses to go. In the library, the deck being filtered carries a delete control: an empty deck goes at once, and a deck holding cards asks first, offering to move them to another deck or delete them along with it.
+
+Validation: format, typecheck, 104 unit tests and build pass. All 118 E2E journeys pass on desktop, tablet and mobile: an empty deck deleted from the filter, a deck whose cards move elsewhere, a deck whose cards go with it, and a stranger's attempt on someone else's deck answered 404 while that deck stays. The UX tour reports no overflow or axe violations on three devices.

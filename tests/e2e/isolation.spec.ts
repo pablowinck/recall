@@ -21,6 +21,13 @@ test('API and Postgres RLS isolate tenants, including hostile identifiers', asyn
       status: 404,
     });
     await expect(stranger.api.deleteCard(card.id)).rejects.toMatchObject({ status: 404 });
+    await expect(stranger.api.deleteDeck(deck.id, { cards: 'delete' })).rejects.toMatchObject({
+      status: 404,
+    });
+    await expect(
+      stranger.api.deleteDeck(deck.id, { cards: 'move', target: deck.id }),
+    ).rejects.toMatchObject({ status: 404 });
+    expect((await owner.api.workspace()).decks.map((item) => item.id)).toContain(deck.id);
     await expect(
       stranger.api.createCard({ deck_id: deck.id, front: 'hostile', back: 'no', tags: [] }),
     ).rejects.toMatchObject({ status: 400 });

@@ -5,6 +5,7 @@ import type {
   CardPatch,
   CreatedToken,
   Deck,
+  DeckRemoval,
   Flashcard,
   ReviewInput,
   StudyCard,
@@ -62,6 +63,11 @@ export class RecallClient {
   }
   createDeck(name: string): Promise<Deck> {
     return this.request('/decks', 'POST', { name });
+  }
+  deleteDeck(id: string, removal: DeckRemoval): Promise<{ deleted: boolean }> {
+    const query = new URLSearchParams({ cards: removal.cards });
+    if (removal.cards === 'move') query.set('target', removal.target);
+    return this.request(`/decks/${id}?${query.toString()}`, 'DELETE');
   }
   study(deck?: string): Promise<StudyCard[]> {
     return this.request(`/study${deck ? `?deck=${deck}` : ''}`);

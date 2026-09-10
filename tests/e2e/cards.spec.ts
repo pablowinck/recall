@@ -312,3 +312,74 @@ test('a library card announces its question, not everything printed on it', asyn
     await account.cleanup();
   }
 });
+
+test('an empty deck is deleted straight from the library filter', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await account.api.createDeck('Scratch deck');
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Scratch deck', exact: true }).click();
+    await page.getByRole('button', { name: 'Delete deck Scratch deck', exact: true }).click();
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText('All decks');
+    const decks = (await account.api.workspace()).decks.map((deck) => deck.name);
+    expect(decks).not.toContain('Scratch deck');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('deleting a deck can move its cards to another deck', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = await account.api.createDeck('Temporary deck');
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Card that must survive',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Temporary deck', exact: true }).click();
+    await page.getByRole('button', { name: 'Delete deck Temporary deck', exact: true }).click();
+    await expect(page.getByRole('alertdialog')).toContainText('1 card lives in this deck');
+    await page.getByRole('button', { name: 'Delete deck', exact: true }).click();
+    await expect(page.getByRole('alertdialog')).toHaveCount(0);
+    const workspace = await account.api.workspace();
+    expect(workspace.decks.map((item) => item.name)).not.toContain('Temporary deck');
+    const cards = await account.api.cards();
+    expect(cards.total).toBe(1);
+    expect(cards.cards[0]?.deck_id).toBe(workspace.decks[0]!.id);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('deleting a deck can take its cards with it', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = await account.api.createDeck('Deck to discard');
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Card that goes with it',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Deck to discard', exact: true }).click();
+    await page.getByRole('button', { name: 'Delete deck Deck to discard', exact: true }).click();
+    await page.getByRole('radio', { name: 'Delete the cards with the deck' }).click();
+    await page.getByRole('button', { name: 'Delete deck', exact: true }).click();
+    await expect(page.getByRole('alertdialog')).toHaveCount(0);
+    expect((await account.api.cards()).total).toBe(0);
+    const decks = (await account.api.workspace()).decks.map((item) => item.name);
+    expect(decks).not.toContain('Deck to discard');
+  } finally {
+    await account.cleanup();
+  }
+});

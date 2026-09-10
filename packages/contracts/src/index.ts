@@ -19,6 +19,11 @@ export const reviewInputSchema = z.object({
   request_id: z.uuid(),
 });
 export const deckDraftSchema = z.object({ name: z.string().trim().min(1).max(80) });
+// Deleting a deck always states what happens to its cards, so nothing disappears by accident.
+export const deckRemovalSchema = z.discriminatedUnion('cards', [
+  z.object({ cards: z.literal('delete') }),
+  z.object({ cards: z.literal('move'), target: z.uuid() }),
+]);
 export const importCardsSchema = z.object({ cards: z.array(cardDraftSchema).min(1).max(100) });
 export const tokenDraftSchema = z.object({ name: z.string().trim().min(1).max(80) });
 
@@ -54,6 +59,7 @@ export interface Flashcard {
   created_at: string;
   updated_at: string;
 }
+export type DeckRemoval = z.infer<typeof deckRemovalSchema>;
 export interface Deck {
   id: string;
   name: string;
