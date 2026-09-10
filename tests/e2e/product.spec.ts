@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { createTestAccount, connectTestMcp } from './fixtures';
 import { FakeCardSaveOutage } from './fake-card-save-outage';
+import { signInToRecall } from './interaction-steps';
 
 test('login → create/edit → MCP → study → persist → sign out', async ({ page }, testInfo) => {
   const account = await createTestAccount();
@@ -136,6 +137,33 @@ test('card save failure keeps the draft and permits one successful retry', async
     expect(outage.attempts).toBe(2);
   } finally {
     outage.release();
+    await account.cleanup();
+  }
+});
+
+test('deleting the last card on a page returns to a valid page', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.importCards(
+      Array.from({ length: 25 }, (_, index) => ({
+        deck_id: deck.id,
+        front: `Paging question ${index + 1}`,
+        back: 'Paging answer',
+        tags: [],
+      })),
+    );
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await expect(page.locator('.library-card')).toHaveCount(1);
+    await page.locator('.library-card').click();
+    await page.getByRole('button', { name: 'Delete card', exact: true }).click();
+    await expect(page.getByRole('alertdialog')).toBeVisible({ timeout: 2000 });
+    await page.getByRole('button', { name: 'Delete permanently', exact: true }).click();
+    await expect(page.getByText('Page 1 of 1', { exact: true })).toBeVisible();
+    await expect(page.locator('.library-card')).toHaveCount(24);
+  } finally {
     await account.cleanup();
   }
 });

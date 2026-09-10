@@ -43,13 +43,14 @@ function DeleteCardButton({
   return (
     <ConfirmAction
       {...deleteCopy}
-      trigger={<DeleteTrigger busy={busy} />}
+      trigger={createDeleteTrigger(busy)}
       onConfirm={() => deleteEditedCard(editor, card.id)}
     />
   );
 }
 
-function DeleteTrigger({ busy }: { busy: boolean }): React.JSX.Element {
+// Return the actual Radix Button so its trigger props survive cloning (7f2219e regression).
+function createDeleteTrigger(busy: boolean): React.JSX.Element {
   const attributes = {
     type: 'button' as const,
     variant: 'ghost' as const,

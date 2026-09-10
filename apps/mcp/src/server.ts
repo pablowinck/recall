@@ -25,12 +25,27 @@ async function serveMcp(request: Request, response: Response, apiUrl: string): P
     return;
   }
   const client = new RecallClient({ baseUrl: apiUrl, token: async () => token });
-  try {
-    await client.workspace();
-  } catch {
+  if (!(await verifyApiAccess(client))) {
     response.status(401).json({ error: 'Invalid or expired token.' });
     return;
   }
+  await writeMcpResponse(request, response, client);
+}
+
+async function verifyApiAccess(client: RecallClient): Promise<boolean> {
+  try {
+    await client.workspace();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function writeMcpResponse(
+  request: Request,
+  response: Response,
+  client: RecallClient,
+): Promise<void> {
   const server = createRecallMcp(client);
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
