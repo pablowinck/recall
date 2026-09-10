@@ -424,3 +424,30 @@ test('rating buttons stay within reach on a long card', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('a rating that fails to save keeps the answer and retries in place', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Offline question',
+      back: 'Offline answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.route('**/v1/cards/*/reviews', (route) => route.abort(), { times: 1 });
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(
+      page.getByText('Your rating wasn’t saved. Check your connection and try again.'),
+    ).toBeVisible();
+    await expect(page.getByText('Offline answer', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Retry', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
+    expect((await account.api.workspace()).stats.reviewed_today).toBe(1);
+  } finally {
+    await account.cleanup();
+  }
+});

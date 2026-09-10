@@ -27,7 +27,14 @@ export async function reloadStudyQueue(
     const queue = await gateway.study(deck);
     if (generation !== runtime.generation) return;
     runtime.attempt = null;
-    update((current) => ({ ...current, queue, revealed: false, loading: false, error: '' }));
+    update((current) => ({
+      ...current,
+      queue,
+      revealed: false,
+      loading: false,
+      error: '',
+      ratingFailure: null,
+    }));
   } catch (failure) {
     if (generation === runtime.generation)
       update((current) => ({ ...current, loading: false, error: describeFailure(failure) }));
@@ -73,7 +80,7 @@ export async function recordStudyRating(
   if (!current || !context.snapshot.revealed || context.snapshot.loading || context.runtime.pending)
     return;
   context.runtime.pending = true;
-  context.update((snapshot) => ({ ...snapshot, saving: true, error: '' }));
+  context.update((snapshot) => ({ ...snapshot, saving: true, error: '', ratingFailure: null }));
   const attempt = prepareStudyAttempt(context, current.card.id, rating);
   await commitStudyRating(context, current, attempt);
 }
@@ -104,7 +111,10 @@ async function commitStudyRating(
     if (lastCard) void refillStudyQueue(context);
   } catch (failure) {
     if (generation === context.runtime.generation)
-      context.update((snapshot) => ({ ...snapshot, error: describeFailure(failure) }));
+      context.update((snapshot) => ({
+        ...snapshot,
+        ratingFailure: { rating: attempt.rating, conflict: isVersionConflict(failure) },
+      }));
   } finally {
     context.runtime.pending = false;
     if (generation === context.runtime.generation)
@@ -134,4 +144,12 @@ function acceptStudyRating(context: StudyActionContext, updated: Flashcard): voi
     revealed: false,
     returning: trackReturningCard(snapshot.returning, updated, now),
   }));
+}
+
+// A 409 means the card changed elsewhere, so retrying the same version would fail again.
+// Duck-typed so the check survives separate copies of the client package.
+function isVersionConflict(failure: unknown): boolean {
+  return (
+    typeof failure === 'object' && failure !== null && 'status' in failure && failure.status === 409
+  );
 }

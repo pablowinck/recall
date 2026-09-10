@@ -1,5 +1,6 @@
 import type { ReviewOption } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
+import { RatingFailureNotice } from './rating-failure-notice';
 
 /** Show the scheduling consequence of each rating. Example: <RatingControls session={session} />. */
 export function RatingControls({ session }: { session: StudySessionState }): React.JSX.Element {
@@ -11,6 +12,7 @@ export function RatingControls({ session }: { session: StudySessionState }): Rea
           <RatingButton key={option.rating} option={option} session={session} />
         ))}
       </div>
+      <RatingFailureNotice session={session} />
       <span className="keyboard-hint">
         Use keys 1–4 · Take your time and rate your recall honestly.
       </span>

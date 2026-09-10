@@ -239,3 +239,11 @@ People now pick their assistant (Claude Code, Codex, Cursor, VS Code, Claude Des
 Research note: ChatGPT developer-mode connectors accept only OAuth or no authentication, and claude.ai custom connectors expose OAuth (static headers are an organization-admin beta). Supabase Auth offers an OAuth 2.1 server with dynamic client registration for MCP; adopting it is proposed to the owner and not implemented.
 
 Validation: unit tests check that every setup targets the endpoint, embeds the token except where VS Code prompts for it, and produces valid JSON; the E2E connection journey picks Cursor, finds the bearer token in the setup, verifies the MCP tools with that token, and revokes "Cursor".
+
+## 2026-09-10 — UX loop 10: rating failures recover in place and study shows its context
+
+When a rating failed to save, "Try again" reloaded the whole queue: it showed the full-page loader, hid the revealed answer, dropped the pending attempt and pushed the rating grid down with a banner. Conflicts told people to "refresh the session" behind a button labeled "Try again". The study screen also never named the deck and counted progress only against the loaded batch ("0 of 20" while Today said 26).
+
+A failed rating now keeps the answer on screen and shows a notice inside the rating area: "Retry" resends the same rating with the same request id, and a version conflict offers "Reload card" instead. The context row names the deck, and progress counts against Today's due count for the chosen deck or the whole library ("3 of 26"), growing if returning cards add more.
+
+Validation: unit tests with a named unreliable gateway cover the retained answer, the reused request id and the conflict case; a new E2E journey aborts one review request, sees the notice with the answer still visible, retries, and reaches "Nicely done" with one saved review on desktop, tablet and mobile.

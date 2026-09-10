@@ -243,6 +243,10 @@
   color: var(--ink-2);
   margin-top: 1rem;
 }
+.rating-failure {
+  margin: 0.75rem 0 0;
+  text-align: left;
+}
 .session-complete {
   min-height: 65vh;
   display: flex;

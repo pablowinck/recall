@@ -63,10 +63,14 @@ function LibraryWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX
 }
 
 function StudyWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX.Element {
+  const { decks, stats } = model.workspace;
+  const studyDeck = decks.find((deck) => deck.id === model.studyDeck);
   return (
     <StudyView
       client={model.client}
       deck={model.studyDeck}
+      decks={decks}
+      expectedTotal={studyDeck ? studyDeck.due_count : stats.due}
       exit={() => model.actions.navigate('today')}
     />
   );

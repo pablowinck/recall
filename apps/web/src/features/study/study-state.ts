@@ -5,6 +5,11 @@ export interface ReturningCard {
   id: string;
   dueAt: string;
 }
+/** A rating the server did not save; a version conflict needs a reload instead of a retry. */
+export interface RatingFailure {
+  rating: RecallRating;
+  conflict: boolean;
+}
 export interface StudySnapshot {
   queue: StudyCard[];
   completed: number;
@@ -14,6 +19,7 @@ export interface StudySnapshot {
   refilling: boolean;
   error: string;
   returning: ReturningCard[];
+  ratingFailure: RatingFailure | null;
 }
 export interface StudyAttempt {
   cardId: string;
@@ -51,6 +57,7 @@ export function initialStudySnapshot(): StudySnapshot {
     refilling: false,
     error: '',
     returning: [],
+    ratingFailure: null,
   };
 }
 

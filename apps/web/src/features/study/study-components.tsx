@@ -7,12 +7,18 @@ import { RatingControls } from './rating-controls';
 
 interface StudyProgressProps {
   session: StudySessionState;
+  expectedTotal: number;
   exit: () => void;
 }
 
-/** Show progress for the current review session. Example: <StudyProgress session={session} exit={exit} />. */
-export function StudyProgress({ session, exit }: StudyProgressProps): React.JSX.Element {
-  const total = session.completed + session.queue.length;
+/** Show progress against the cards due when the session started. Example: <StudyProgress session={session} expectedTotal={26} exit={exit} />. */
+export function StudyProgress({
+  session,
+  expectedTotal,
+  exit,
+}: StudyProgressProps): React.JSX.Element {
+  // Cards load 20 at a time; Today's due count keeps "3 of 26" honest from the first card.
+  const total = Math.max(expectedTotal, session.completed + session.queue.length);
   const pct = total ? (session.completed / total) * 100 : 0;
   return (
     <>
@@ -44,6 +50,7 @@ function StudyProgressHeader({
 
 interface ReviewContentProps {
   current?: StudyCard;
+  deckName?: string;
   revealed: boolean;
   onReveal?: () => void;
 }
@@ -51,6 +58,7 @@ interface ReviewContentProps {
 /** Render card text without executing its markup. Example: <ReviewContent current={card} revealed />. */
 export function ReviewContent({
   current,
+  deckName,
   revealed,
   onReveal,
 }: ReviewContentProps): React.JSX.Element | null {
@@ -60,7 +68,7 @@ export function ReviewContent({
   const isClickable = !revealed && Boolean(onReveal);
   return (
     <>
-      <StudyCardContext category={current.card.tags.join(' · ')} />
+      <StudyCardContext deckName={deckName} tags={current.card.tags} />
       <article
         ref={focus.card}
         tabIndex={-1}
@@ -144,11 +152,17 @@ function ExitStudyButton({ exit }: { exit: () => void }): React.JSX.Element {
   );
 }
 
-function StudyCardContext({ category }: { category: string }): React.JSX.Element {
+function StudyCardContext({
+  deckName,
+  tags,
+}: {
+  deckName?: string;
+  tags: string[];
+}): React.JSX.Element {
   return (
     <div className="study-context">
-      <span className="eyebrow">Recall before revealing</span>
-      <span>{category}</span>
+      <span className="eyebrow">{deckName ?? 'Recall before revealing'}</span>
+      <span>{tags.join(' · ')}</span>
     </div>
   );
 }

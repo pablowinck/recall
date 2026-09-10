@@ -14,6 +14,7 @@ export interface StudySessionState extends StudySnapshot {
   rate: (rating: RecallRating) => Promise<void>;
   reload: () => Promise<void>;
   refill: (options?: { silent?: boolean }) => Promise<void>;
+  retryRating: () => Promise<void>;
 }
 function newRequestId(): string {
   const id = crypto.randomUUID();
@@ -47,6 +48,10 @@ export function useStudySession(client: RecallClient, deck?: string): StudySessi
     refill: (options) => refillStudyQueue(context, options),
     reveal: () => revealStudyAnswer(update),
     rate: (rating) => recordStudyRating(context, rating),
+    retryRating: () =>
+      snapshot.ratingFailure
+        ? recordStudyRating(context, snapshot.ratingFailure.rating)
+        : Promise.resolve(),
   };
 }
 
