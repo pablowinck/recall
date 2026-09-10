@@ -46,7 +46,7 @@
   text-align: center;
 }
 .error-state > svg {
-  color: var(--red-11);
+  color: var(--ink-2);
 }
 .error-state h1 {
   font-size: 1.375rem;

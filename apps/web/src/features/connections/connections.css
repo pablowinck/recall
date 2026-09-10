@@ -4,7 +4,7 @@
 .connection-intro,
 .new-secret {
   background: var(--surface);
-  border: 1px solid var(--separator);
+  box-shadow: var(--elev-1);
   border-radius: 22px;
   padding: 2rem;
   margin-bottom: 2rem;

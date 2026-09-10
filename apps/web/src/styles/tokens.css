@@ -1,3 +1,4 @@
+/* Elevation uses --elev-*: Radix owns --shadow-* on .radix-themes, which would override ours. */
 /* Product tokens live on :root, not on an app wrapper, so Radix portals such as dialogs inherit them. */
 :root {
   --canvas: #f1f0ef;
@@ -10,8 +11,12 @@
   --ink-2: #63635e;
   --ink-3: #8d8d86;
   --sidebar: rgba(241, 240, 239, 0.85);
-  --shadow-1: 0 1px 3px rgba(33, 32, 28, 0.05), 0 8px 24px -6px rgba(33, 32, 28, 0.08);
-  --shadow-2: 0 3px 8px rgba(33, 32, 28, 0.06), 0 16px 36px -8px rgba(33, 32, 28, 0.14);
+  --elev-1:
+    0 0 0 0.5px rgba(33, 32, 28, 0.08), 0 1px 2px rgba(33, 32, 28, 0.04),
+    0 2px 8px -2px rgba(33, 32, 28, 0.06);
+  --elev-2:
+    0 0 0 0.5px rgba(33, 32, 28, 0.08), 0 4px 12px -2px rgba(33, 32, 28, 0.08),
+    0 16px 40px -12px rgba(33, 32, 28, 0.14);
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 18px;
@@ -31,8 +36,10 @@
   --ink-2: #b5b3ad;
   --ink-3: #7c7b74;
   --sidebar: rgba(17, 17, 16, 0.85);
-  --shadow-1: 0 0 0 0.5px rgba(238, 238, 236, 0.08), 0 12px 36px -6px rgba(0, 0, 0, 0.5);
-  --shadow-2: 0 0 0 0.5px rgba(238, 238, 236, 0.1), 0 20px 44px -8px rgba(0, 0, 0, 0.65);
+  --elev-1: 0 0 0 1px rgba(238, 238, 236, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --elev-2:
+    0 0 0 1px rgba(238, 238, 236, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 40px -12px rgba(0, 0, 0, 0.6);
 }
 /* Radix defines accent scales on each Theme element (app root and portals), so accent aliases must live there too. */
 .radix-themes {
@@ -42,7 +49,11 @@
     'Apple Color Emoji', 'Segoe UI Emoji';
   --heading-font-family: var(--default-font-family);
   --cursor-button: pointer;
+  --color-overlay: rgba(33, 32, 28, 0.24);
   --accent-text: var(--accent-11);
   --accent-soft: var(--accent-a3);
   --focus-ring: var(--focus-8);
+}
+.dark .radix-themes {
+  --color-overlay: rgba(0, 0, 0, 0.5);
 }

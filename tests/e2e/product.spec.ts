@@ -479,25 +479,6 @@ test('a long deck name never widens the library', async ({ page }) => {
   }
 });
 
-test('touch screens get controls at least 44px tall', async ({ page }, testInfo) => {
-  test.skip(!testInfo.project.use.hasTouch, 'Touch sizing applies to coarse pointers only');
-  const account = await createTestAccount();
-  try {
-    await signInToRecall(page, account);
-    const controls = [
-      page.getByRole('button', { name: 'Use dark theme', exact: true }).filter({ visible: true }),
-      page.getByRole('button', { name: 'New card', exact: true }).first(),
-    ];
-    for (const control of controls) {
-      const box = await control.boundingBox();
-      // Subpixel layout can report 43.99999 for a 44px control.
-      expect(Math.round(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
-    }
-  } finally {
-    await account.cleanup();
-  }
-});
-
 test('a workspace that cannot load offers a calm retry', async ({ page }) => {
   const account = await createTestAccount();
   try {

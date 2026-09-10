@@ -25,17 +25,17 @@ export default defineConfig({
     },
     {
       name: 'desktop',
-      testMatch: '**/product.spec.ts',
+      testMatch: ['**/product.spec.ts', '**/touch-layout.spec.ts'],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } },
     },
     {
       name: 'tablet',
-      testMatch: '**/product.spec.ts',
+      testMatch: ['**/product.spec.ts', '**/touch-layout.spec.ts'],
       use: { ...devices['iPad Mini'], defaultBrowserType: 'chromium' },
     },
     {
       name: 'mobile',
-      testMatch: '**/product.spec.ts',
+      testMatch: ['**/product.spec.ts', '**/touch-layout.spec.ts'],
       use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
     },
   ],

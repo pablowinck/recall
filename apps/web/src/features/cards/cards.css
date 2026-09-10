@@ -37,22 +37,20 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
+  border: 0;
   padding: 1.5rem;
   background: var(--surface);
-  border: 1px solid var(--separator);
   border-radius: var(--r-lg);
   color: var(--ink);
   min-height: 235px;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--elev-1);
   transition:
     transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 }
 .library-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-text);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--elev-2);
 }
 .card-top-row {
   display: flex;
@@ -207,9 +205,28 @@
 .inline-deck-inputs > .rt-TextFieldRoot {
   flex: 1;
 }
-.card-editor {
-  max-height: 88dvh;
-  overflow-y: auto;
+/* Phones keep Create/Save reachable: the actions stick to the bottom of the dialog's single scroll area.
+   (A second scroll container inside Radix's scrolling overlay left the actions clipped and unclickable.) */
+@media (max-width: 600px) {
+  /* A bottom sheet as tall as the screen: the content scrolls inside it, so the sticky actions stay visible. */
+  .rt-BaseDialogScrollPadding:has(.card-editor) {
+    padding: 0.5rem 0 0;
+    margin-bottom: 0;
+  }
+  .card-editor {
+    height: calc(100dvh - 0.5rem);
+    max-height: none;
+    border-radius: 16px 16px 0 0;
+  }
+  .card-editor .dialog-actions {
+    position: sticky;
+    bottom: calc(-1 * var(--dialog-content-padding));
+    z-index: 1;
+    margin: 1rem calc(-1 * var(--dialog-content-padding)) calc(-1 * var(--dialog-content-padding));
+    padding: 0.75rem var(--dialog-content-padding) max(0.75rem, env(safe-area-inset-bottom));
+    background: var(--color-panel-solid);
+    box-shadow: 0 -1px 0 var(--separator);
+  }
 }
 @media (max-width: 768px) {
   .card-grid {
@@ -240,7 +257,8 @@
 .dialog-actions .delete-button + .shortcut-hint {
   margin-right: 0;
 }
-@media (hover: none) and (pointer: coarse) {
+/* Phone widths hide the hint too: the action row has no room for it, and some Android phones report hover. */
+@media (max-width: 600px), (hover: none) and (pointer: coarse) {
   .shortcut-hint {
     display: none;
   }

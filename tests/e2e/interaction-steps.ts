@@ -28,7 +28,8 @@ export async function expectNoAccessibilityViolations(page: Page): Promise<void>
 
 // Dialog fades on slower CI runners made a solid button measure 4.41:1 mid-animation (run 34521774379).
 // Only finite animations are awaited: spinners run forever.
-async function settleAnimations(page: Page): Promise<void> {
+/** Wait for finite animations to finish before measuring. Example: await settleAnimations(page). */
+export async function settleAnimations(page: Page): Promise<void> {
   await page.evaluate(() =>
     Promise.all(
       document

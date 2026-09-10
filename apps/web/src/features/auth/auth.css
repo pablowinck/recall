@@ -41,8 +41,7 @@
 }
 .sample-card {
   background: var(--surface);
-  border: 1px solid var(--separator);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--elev-2);
   border-radius: 28px;
   padding: 2.5rem;
   width: min(100%, 380px);
