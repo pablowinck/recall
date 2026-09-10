@@ -198,3 +198,25 @@ test('the chosen rating stays lit while it saves', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('a session hides the app chrome until it is over', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Focus question',
+      back: 'Focus answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    const navigation = page.locator('nav[aria-label="Main navigation"]');
+    await expect(navigation).toBeVisible();
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(navigation).toBeHidden();
+    await page.getByRole('button', { name: /Leave session/ }).click();
+    await expect(navigation).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

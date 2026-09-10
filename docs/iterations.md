@@ -327,3 +327,11 @@ On a phone, tapping a deck row or a library card left it in its hover state unti
 Hover styles now live behind `@media (hover: hover)`. Rating keeps the chosen button lit and slightly pressed while the others fade back after 300 ms; the study snapshot carries `savingRating` so the view can tell. Durations and easing come from `--ease-out` and the `--motion-*` tokens, and the three `transition: all` rules name the properties they animate.
 
 Validation: format, typecheck, 81 unit tests and build pass. All 85 E2E journeys pass on desktop, tablet and mobile, including one that delays the review request and finds the chosen rating still lit while the others are disabled. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 20: dark surfaces that separate, and a session without chrome
+
+In dark mode the canvas and the card surface sat 1.07:1 apart, so Today read as one flat sheet: stat cards, the deck list and the study card had no edge of their own, and the neutral deck pill used the canvas colour, which disappeared on them. During a session the sidebar stayed on desktop and tablet, competing with the card the reader is meant to be looking at.
+
+Dark tokens now step: canvas `#0a0a09`, surface `#212120`, raised `#2a2a28`, with slightly stronger fills and separators, and neutral pills use `--fill-2`. The `--ink-3` token, unused since the rebrand, is gone. A session hides the app chrome at every size, so the card owns the window and "Leave session" is the way back.
+
+Validation: format, typecheck, 81 unit tests and build pass. All 88 E2E journeys pass on desktop, tablet and mobile, among them one that finds the navigation hidden during a session and back when it ends. The UX tour reports no overflow or axe violations on three devices, and its dark captures show cards standing off the canvas.

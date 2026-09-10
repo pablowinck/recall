@@ -3,6 +3,13 @@
   display: grid;
   grid-template-columns: 236px minmax(0, 1fr);
 }
+/* A session is a reading room: the chrome steps aside at every size, and "Leave session" is the way back. */
+.app-shell.is-studying {
+  grid-template-columns: minmax(0, 1fr);
+}
+.app-shell.is-studying .sidebar {
+  display: none;
+}
 .sidebar {
   background: var(--sidebar);
   backdrop-filter: blur(24px) saturate(180%);
@@ -293,7 +300,7 @@
   white-space: nowrap;
 }
 .due-badge.neutral {
-  background: var(--canvas);
+  background: var(--fill-2);
   color: var(--ink-2);
 }
 .deck-arrow {
@@ -329,7 +336,6 @@
   :root {
     --mobile-nav-height: calc(3.75rem + max(0.55rem, env(safe-area-inset-bottom)));
   }
-  .app-shell.is-studying .sidebar,
   .app-shell.is-studying .mobile-top {
     display: none;
   }
