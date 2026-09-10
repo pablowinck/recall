@@ -1,5 +1,6 @@
+import { useEffect, useRef, type RefObject } from 'react';
 import { Button, Progress } from '@radix-ui/themes';
-import { ArrowLeft, CornerDownLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import type { StudyCard } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingControls } from './rating-controls';
@@ -32,6 +33,7 @@ function StudyProgressHeader({
 }): React.JSX.Element {
   return (
     <header className="study-header">
+      <h1 className="visually-hidden">Review session</h1>
       <ExitStudyButton exit={exit} />
       <span>
         {completed} of {total} reviewed
@@ -52,31 +54,57 @@ export function ReviewContent({
   revealed,
   onReveal,
 }: ReviewContentProps): React.JSX.Element | null {
+  const focus = useStudyFocus(current?.card.id, revealed);
   if (!current) return null;
   const isClickable = !revealed && Boolean(onReveal);
-  const tagLabel = current.card.tags.join(' · ');
   return (
     <>
-      <StudyCardContext category={tagLabel} />
+      <StudyCardContext category={current.card.tags.join(' · ')} />
       <article
+        ref={focus.card}
+        tabIndex={-1}
         className={`review-card ${revealed ? 'is-revealed' : ''} ${isClickable ? 'is-clickable' : ''}`}
         onClick={isClickable ? onReveal : undefined}
       >
         <span className="eyebrow">Front</span>
-        <h1>{current.card.front}</h1>
-        {revealed && <ReviewAnswer answer={current.card.back} />}
+        <h2>{current.card.front}</h2>
+        {revealed && <ReviewAnswer answer={current.card.back} focusRef={focus.answer} />}
       </article>
     </>
   );
 }
 
-function ReviewAnswer({ answer }: { answer: string }): React.JSX.Element {
+function ReviewAnswer({
+  answer,
+  focusRef,
+}: {
+  answer: string;
+  focusRef: RefObject<HTMLDivElement | null>;
+}): React.JSX.Element {
   return (
-    <div className="review-answer" aria-live="polite">
+    <div className="review-answer" aria-live="polite" ref={focusRef} tabIndex={-1}>
       <span className="eyebrow">Answer</span>
       <div>{answer}</div>
     </div>
   );
+}
+
+interface StudyFocusTargets {
+  card: RefObject<HTMLElement | null>;
+  answer: RefObject<HTMLDivElement | null>;
+}
+
+/** Keep keyboard and screen-reader users on the card when the control they used disappears. Example: useStudyFocus(id, revealed). */
+function useStudyFocus(cardId: string | undefined, revealed: boolean): StudyFocusTargets {
+  const card = useRef<HTMLElement>(null);
+  const answer = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const active = document.activeElement;
+    // Respect a control the person focused on purpose, such as "Leave session".
+    if (active && active !== document.body && active !== card.current) return;
+    (revealed ? answer.current : card.current)?.focus({ preventScroll: true });
+  }, [cardId, revealed]);
+  return { card, answer };
 }
 
 /** Allow a rating only after revealing the answer. Example: <StudyActions session={session} />. */

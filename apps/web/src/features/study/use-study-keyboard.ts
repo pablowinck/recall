@@ -1,31 +1,22 @@
-import { useEffect } from 'react';
-import type { RecallRating } from '@recall/contracts';
+import { useEffect, useEffectEvent } from 'react';
 import type { StudySessionState } from './use-study-session';
+import { readStudyCommand } from './study-keys';
 
-/** Preserve text entry and ignore repeated keyboard ratings. Example: useStudyKeyboard(session). */
+/** Listen once for study shortcuts while always reading the latest session. Example: useStudyKeyboard(session). */
 export function useStudyKeyboard(session: StudySessionState): void {
+  const onKey = useEffectEvent((event: KeyboardEvent) => processStudyKey(event, session));
   useEffect(() => {
-    const onKey = (event: KeyboardEvent): void => processStudyKey(event, session);
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [session]);
+    const listener = (event: KeyboardEvent): void => onKey(event);
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
 }
 
 function processStudyKey(event: KeyboardEvent, session: StudySessionState): void {
-  if (session.loading || session.saving || !session.queue.length || event.repeat) return;
-  if (event.ctrlKey || event.metaKey || event.altKey) return;
-  if (
-    (event.target as HTMLElement).closest(
-      'input,textarea,select,[role="dialog"],[role="alertdialog"]',
-    )
-  )
-    return;
-  if ((event.code === 'Space' || event.key === 'Enter') && !session.revealed) {
-    event.preventDefault();
-    session.reveal();
-  }
-  if (session.revealed && /^[1-4]$/.test(event.key)) {
-    event.preventDefault();
-    void session.rate(Number(event.key) as RecallRating);
-  }
+  if (session.loading || session.saving || !session.queue.length) return;
+  const command = readStudyCommand(event, session.revealed);
+  if (command === null) return;
+  event.preventDefault();
+  if (command === 'reveal') session.reveal();
+  else void session.rate(command);
 }

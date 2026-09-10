@@ -197,3 +197,11 @@ Views are now titled by name (Today, Library, Connections), and Today shows the 
 CI run 34521774379 for the previous release failed only on tablet: axe measured the card editor's primary button mid-fade at 4.41:1. Accessibility checks now wait for finite animations before analyzing. Production served the previous release's tokens and icons, confirmed by fetching its CSS and `icon.svg`.
 
 Validation: 43 unit tests (including the new session summary) and 41 E2E tests with updated accessible names passed, along with formatting, TypeScript and builds; the three-size journey reported no overflow or axe violations.
+
+## 2026-09-10 — UX loop 5: study keyboard that respects focus
+
+Reviewers reproduced that Enter on a focused "Leave session" or sidebar item revealed the answer instead of activating the control, digits failed on layouts where they need Shift, focus fell to `<body>` after every reveal and rating, the question jumped about 65 px when the answer appeared, and the page's only h1 was untrusted card text.
+
+Study shortcuts now come from a pure `readStudyCommand` function: Space and Enter reveal only when no button, link or field has focus; 1–4 read physical digit and numpad codes; repeats and modifier shortcuts are ignored. One listener stays mounted and always reads the latest session. Focus moves to the card and then to its answer when the control that was used disappears, without taking focus from a control the person chose. The card is top-aligned, and a visually hidden "Review session" h1 introduces the card front, now an h2.
+
+Validation: new unit tests cover focused controls, typing targets, physical and numpad digits, repeats and modifiers; a new E2E journey reveals with Space, rates with 3, checks focus after each step, and leaves with Enter on the focused button on all three sizes.

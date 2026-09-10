@@ -51,7 +51,8 @@
   min-height: 320px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* Top-aligned so revealing the answer never shifts the question under the reader's eyes. */
+  justify-content: flex-start;
   box-shadow:
     var(--shadow-1),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
@@ -62,11 +63,16 @@
 .review-card.is-clickable {
   cursor: pointer;
 }
+/* Focus lands here programmatically to keep screen readers on the card; it is not a control. */
+.review-card:focus,
+.review-answer:focus {
+  outline: none;
+}
 .review-card.is-clickable:hover {
   border-color: var(--accent-text);
   box-shadow: var(--shadow-2);
 }
-.review-card h1 {
+.review-card h2 {
   font-size: clamp(1.6rem, 2.5vw, 2.1rem);
   line-height: 1.45;
   white-space: pre-wrap;
@@ -263,7 +269,7 @@
     min-height: 280px;
     border-radius: 20px;
   }
-  .review-card h1 {
+  .review-card h2 {
     font-size: 1.4rem;
   }
   .review-answer > div {

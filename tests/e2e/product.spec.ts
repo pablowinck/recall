@@ -341,3 +341,33 @@ test('keyboard focus stays visible inside the card editor dialog', async ({ page
     await account.cleanup();
   }
 });
+
+test('study keys leave focused controls alone and keep focus on the card', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.importCards(
+      ['First keyboard question', 'Second keyboard question'].map((front) => ({
+        deck_id: deck.id,
+        front,
+        back: `Answer to ${front.toLowerCase()}`,
+        tags: [],
+      })),
+    );
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    const card = page.locator('.review-card');
+    await expect(card).toBeFocused();
+    await page.keyboard.press('Space');
+    await expect(page.locator('.review-answer')).toBeFocused();
+    await page.keyboard.press('3');
+    await expect(page.getByText('1 of 2 reviewed')).toBeVisible();
+    await expect(card).toBeFocused();
+    await page.getByRole('button', { name: /Leave session/ }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    expect((await account.api.workspace()).stats.reviewed_today).toBe(1);
+  } finally {
+    await account.cleanup();
+  }
+});
