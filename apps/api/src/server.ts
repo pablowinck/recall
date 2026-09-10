@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+import pino from 'pino';
 import { PostgresTenantDatabase } from './database';
 import { SupabaseAuthenticator } from './authentication';
 import { createApi } from './http/create-api';
@@ -28,6 +29,7 @@ const app = createApi({
   authenticator: new SupabaseAuthenticator(auth, database),
   clock: () => new Date(),
   origins: environment.WEB_ORIGIN.split(','),
+  logger: pino(),
 });
 
 export default app;

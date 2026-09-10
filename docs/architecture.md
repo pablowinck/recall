@@ -35,7 +35,7 @@ The web and MCP apps share HTTP contracts. Only the API accesses application dat
 
 ## Data and concurrency
 
-`tenants` own `decks`, `cards`, `reviews` and `access_tokens`. Composite deck/tenant foreign keys prevent attaching a card to another user's deck. All query parameters are bound SQL values. Tables are outside the Supabase Data API's exposed schemas.
+`tenants` own `decks`, `cards`, `reviews` and `access_tokens`. Composite deck/tenant and card/tenant foreign keys prevent attaching cards or reviews to another user's content. All query parameters are bound SQL values. Tables are outside the Supabase Data API's exposed schemas.
 
 A review locks the current card row, checks for an existing request ID, verifies the caller's expected version, computes FSRS on the server, updates the card and inserts the review in one transaction. Repeated requests return the stored result. Competing evaluations with stale versions return 409.
 

@@ -170,3 +170,51 @@ test('English defaults preserve Portuguese, Italian, and French learning content
     await account.cleanup();
   }
 });
+
+test('database constraints reject a review pointing to another tenant card', async () => {
+  const owner = await createTestAccount();
+  const stranger = await createTestAccount();
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
+  try {
+    const deck = (await owner.api.workspace()).decks[0]!;
+    const card = await owner.api.createCard({
+      deck_id: deck.id,
+      front: 'owned question',
+      back: 'owned answer',
+      tags: [],
+    });
+    const database = new PostgresTenantDatabase(pool);
+    await expect(
+      database.runFor(stranger.id, async (connection) =>
+        connection.query(
+          'insert into recall.reviews(id,tenant_id,card_id,rating,previous_version,result) values($1,auth.uid(),$2,3,0,$3)',
+          [crypto.randomUUID(), card.id, {}],
+        ),
+      ),
+    ).rejects.toMatchObject({ code: '23503' });
+  } finally {
+    await owner.cleanup();
+    await stranger.cleanup();
+    await pool.end();
+  }
+});
+
+test('malformed and oversized JSON return useful client errors', async () => {
+  const headers = { 'Content-Type': 'application/json' };
+  const malformed = await fetch('http://localhost:3211/v1/cards', {
+    method: 'POST',
+    headers,
+    body: '{invalid json',
+  });
+  expect(malformed.status).toBe(400);
+  expect(await malformed.json()).toEqual({
+    error: 'Invalid JSON body. Expected a valid JSON object.',
+  });
+  const oversized = await fetch('http://localhost:3211/v1/cards', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ front: 'x'.repeat(1100000) }),
+  });
+  expect(oversized.status).toBe(413);
+  expect(oversized.headers.get('cache-control')).toBe('no-store');
+});

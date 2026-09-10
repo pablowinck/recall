@@ -16,12 +16,14 @@ import { createDeck, readWorkspace } from '../cards/workspace-store';
 import { deleteCard, insertCard, listCards, updateCard } from '../cards/card-store';
 import { recordReview, studyQueue } from '../reviews/review-store';
 import { createToken, listTokens, revokeToken } from '../tokens/token-store';
+import type { ApiLogger } from './failures';
 
 export interface ApiDependencies {
   database: TenantDatabase;
   authenticator: Authenticator;
   clock: () => Date;
   origins: string[];
+  logger: ApiLogger;
 }
 type RouteOperation = (connection: PoolClient, request: Request) => Promise<unknown>;
 const cardSearchSchema = z.object({

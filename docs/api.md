@@ -20,7 +20,7 @@ All `/v1` endpoints require `Authorization: Bearer <Supabase JWT or recall_ toke
 
 Ratings: `1` Again, `2` Hard, `3` Good, `4` Easy. Never infer a user's recall rating. Keep the same request ID when retrying an uncertain write.
 
-Errors: 400 invalid fields or unavailable deck, 401 missing/expired identity, 404 unavailable owned resource, 409 duplicate or stale revision, 500 unexpected failure. Do not expose SQL or secrets in responses.
+Errors: 400 invalid fields/JSON or unavailable deck, 401 missing/expired identity, 404 unavailable owned resource, 409 duplicate or stale revision, 413 bodies larger than 1 MB, 415 unsupported encoding, 500 unexpected failure. Do not expose SQL, body fragments or secrets in responses or logs.
 
 ## MCP tools
 
