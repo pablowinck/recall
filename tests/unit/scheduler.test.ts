@@ -5,7 +5,7 @@ import {
   previewSchedule,
   formatInterval,
 } from '../../packages/domain/src/index';
-import { countStreak } from '../../apps/api/src/cards/workspace-store';
+import { countStreak } from '../../apps/api/src/workspace/workspace-store';
 
 const now = new Date('2026-09-10T15:00:00Z');
 
@@ -34,9 +34,16 @@ describe('FSRS scheduling', () => {
       expect(preview.due_at).toBe(applyRating(null, preview.rating, now).due);
   });
   it('formats a useful minute, hour or day label', () => {
+    const day = 1440 * 60000;
     expect(formatInterval(0)).toBe('1 min');
-    expect(formatInterval(60 * 60000)).toBe('1 h');
-    expect(formatInterval(1440 * 60000)).toBe('1 d');
+    expect(formatInterval(59 * 60000)).toBe('59 min');
+    expect(formatInterval(60 * 60000)).toBe('1 hr');
+    expect(formatInterval(day)).toBe('1 day');
+    expect(formatInterval(8 * day)).toBe('8 days');
+    expect(formatInterval(45 * day)).toBe('1.5 mo');
+    expect(formatInterval(120 * day)).toBe('4 mo');
+    expect(formatInterval(365 * day)).toBe('1 yr');
+    expect(formatInterval(548 * day)).toBe('1.5 yr');
   });
 });
 

@@ -1,0 +1,138 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:not(:disabled):active {
+  transform: scale(0.98);
+  transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1);
+}
+button:disabled {
+  cursor: not-allowed;
+}
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(0, 113, 227, 0.35),
+    0 0 0 1px var(--blue);
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+h1 {
+  font-size: clamp(2rem, 3.3vw, 2.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+  font-weight: 650;
+}
+h2 {
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+p {
+  color: var(--muted);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.text-button {
+  border: 0;
+  background: transparent;
+  padding: 0.5rem 0;
+  color: var(--blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.muted {
+  color: var(--muted);
+}
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  color: var(--blue);
+  border: 1px solid var(--blue);
+  border-radius: 8px;
+  z-index: 100;
+  font-weight: 500;
+  text-decoration: none;
+  transition: top 0.15s ease-out;
+}
+.skip-link:focus-visible {
+  top: 1rem;
+}
+.view-enter {
+  animation: appear 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+.form-fields {
+  display: grid;
+  gap: 1.1rem;
+}
+fieldset.form-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.field-hint {
+  color: var(--gray-11);
+  font-weight: 400;
+  font-size: 0.8125rem;
+}

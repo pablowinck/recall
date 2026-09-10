@@ -163,3 +163,11 @@ Discovery: dark mode surfaces (`#0e0e11` and `#18181c`) lacked clear elevation c
 Changes: tuned dark mode surface hierarchy to Apple HIG palette (`#09090b` canvas, `#18181b` card surface, `#27272a` elevated elements); added `saturate(180%)` and `overflow-y: auto` to desktop sidebar; and optimized the mobile stats grid into a compact, high-density row so study actions and decks remain visible above the fold on small screens.
 
 Validation: 40 unit tests, 32 E2E tests across desktop, tablet, and mobile, TypeScript checks, Prettier formatting, and containerized Next.js builds passed locally.
+
+## 2026-09-10 — UX loop 1: feature-first structure and readable intervals
+
+Started a continuous UX/UI refinement loop. A local journey script signs in a disposable account with multi-language decks and captures 75 screens (desktop, tablet, mobile; light and dark; dialogs, study, errors). UX/UI, senior frontend and Nielsen-heuristics reviewers turned those screens and the code into one prioritized backlog.
+
+API routes now live beside each feature (`<feature>-routes.ts`), with identity verification and the RLS transaction wrapper in `http/tenant-route.ts`. Web styles moved into their feature folders plus shared `styles/` tokens and base rules; each app has a short README mapping where to change behavior. Interval previews now read "1 hr", "8 days", "1.5 mo" and "1 yr".
+
+Validation: 40 unit tests and 32 E2E tests passed on rebuilt web and API containers, with formatting, TypeScript and builds. The journey passed on all three sizes with no horizontal overflow or axe violations.

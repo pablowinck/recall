@@ -1,0 +1,98 @@
+.connections-view {
+  max-width: 760px;
+}
+.connection-intro,
+.new-secret {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+.connection-icon {
+  display: grid;
+  place-items: center;
+  color: var(--blue);
+  background: var(--tint);
+  width: 60px;
+  height: 60px;
+  border-radius: 17px;
+  margin-bottom: 1.4rem;
+}
+.connection-intro h2 {
+  margin-bottom: 0.75rem;
+}
+.connection-intro > p {
+  font-size: 0.9375rem;
+}
+.connection-intro .privacy-note {
+  justify-content: flex-start;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+.endpoint-box {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--canvas);
+  border-radius: 12px;
+}
+.endpoint-box > span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.endpoint-box code {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.new-secret p {
+  font-size: 0.875rem;
+  margin: 0.5rem 0 1rem;
+}
+.tokens-section h2 {
+  margin-bottom: 1rem;
+}
+.token-row {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.token-row > div:first-child {
+  display: grid;
+  gap: 0.25rem;
+}
+.token-row strong {
+  font-size: 0.9375rem;
+}
+.token-row span {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.connection-help {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+}
+.connection-help summary {
+  cursor: pointer;
+  color: var(--blue);
+}
+.connection-help p {
+  margin-top: 1rem;
+}
+.connection-help pre {
+  background: var(--surface);
+  padding: 1rem;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+}
+@media (max-width: 768px) {
+  .connection-intro,
+  .new-secret {
+    padding: 1.4rem;
+  }
+}
