@@ -40,7 +40,7 @@ export class RecallClient {
       body: body === undefined ? undefined : JSON.stringify(body),
       cache: 'no-store',
     });
-    const payload: unknown = await response.json();
+    const payload: unknown = await readApiPayload(response);
     if (!response.ok) throw new RecallApiError(response.status, readErrorMessage(payload));
     return payload as T;
   }
@@ -80,6 +80,14 @@ export class RecallClient {
   }
   importCards(cards: CardDraft[]): Promise<{ cards: Flashcard[]; count: number }> {
     return this.request('/cards/import', 'POST', { cards });
+  }
+}
+
+async function readApiPayload(response: Response): Promise<unknown> {
+  try {
+    return await response.json();
+  } catch {
+    throw new RecallApiError(502, 'The service returned an invalid response. Please try again.');
   }
 }
 

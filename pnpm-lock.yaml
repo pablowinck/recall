@@ -17,6 +17,12 @@ importers:
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.63.0
+      '@recall/client':
+        specifier: workspace:*
+        version: link:packages/client
+      '@recall/contracts':
+        specifier: workspace:*
+        version: link:packages/contracts
       '@supabase/supabase-js':
         specifier: 2.116.0
         version: 2.116.0

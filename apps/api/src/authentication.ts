@@ -4,14 +4,18 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { TenantDatabase } from './database.js';
 import { RecallError } from './errors.js';
 
+interface SupabaseIdentityClient {
+  auth: Pick<SupabaseClient['auth'], 'getUser'>;
+}
+
 export interface Authenticator {
   verify(request: Request): Promise<string>;
 }
 
 export class SupabaseAuthenticator implements Authenticator {
   constructor(
-    private readonly auth: SupabaseClient,
-    private readonly database: TenantDatabase,
+    private readonly auth: SupabaseIdentityClient,
+    private readonly database: Pick<TenantDatabase, 'resolveToken'>,
   ) {}
 
   /** Verify a JWT or personal token before accessing content. Example: auth.verify(request). */
@@ -20,6 +24,8 @@ export class SupabaseAuthenticator implements Authenticator {
     if (!token) throw new RecallError(401, 'You are not signed in. Sign in to continue.');
     if (token.startsWith('recall_')) return this.verifyPersonalToken(token);
     const { data: identity, error } = await this.auth.auth.getUser(token);
+    if (error && (!error.status || error.status === 429 || error.status >= 500))
+      throw new RecallError(503, 'Authentication is temporarily unavailable. Please try again.');
     if (error || !identity.user)
       throw new RecallError(401, 'Your session has expired. Please sign in again.');
     return identity.user.id;

@@ -13,6 +13,14 @@ class FakeHttpTransport {
   };
 }
 
+class FakeGatewayTransport {
+  fetch: typeof fetch = async () =>
+    new Response('<html>Gateway unavailable</html>', {
+      status: 502,
+      headers: { 'Content-Type': 'text/html' },
+    });
+}
+
 it('forwards the current token and prevents caching personal content', async () => {
   const transport = new FakeHttpTransport(200);
   const client = new RecallClient({
@@ -33,4 +41,17 @@ it('preserves actionable server failures', async () => {
     fetcher: transport.fetch,
   });
   await expect(client.workspace()).rejects.toBeInstanceOf(RecallApiError);
+});
+
+it('turns an HTML gateway page into a recoverable API error', async () => {
+  const transport = new FakeGatewayTransport();
+  const client = new RecallClient({
+    baseUrl: 'http://recall.test',
+    token: async () => 'valid-session',
+    fetcher: transport.fetch,
+  });
+  await expect(client.workspace()).rejects.toMatchObject({
+    status: 502,
+    message: 'The service returned an invalid response. Please try again.',
+  });
 });

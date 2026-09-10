@@ -15,7 +15,12 @@ export default defineConfig({
   projects: [
     {
       name: 'api-mcp',
-      testMatch: ['**/isolation.spec.ts', '**/seed-lifecycle.spec.ts', '**/database-role.spec.ts'],
+      testMatch: [
+        '**/isolation.spec.ts',
+        '**/seed-lifecycle.spec.ts',
+        '**/database-role.spec.ts',
+        '**/mcp-availability.spec.ts',
+      ],
     },
     {
       name: 'desktop',

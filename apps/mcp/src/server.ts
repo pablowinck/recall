@@ -2,6 +2,7 @@ import express, { type Express, type Request, type Response } from 'express';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { RecallClient } from '@recall/client';
 import { createRecallMcp } from './tools.js';
+import { checkApiAccess } from './access-check.js';
 
 /** Create a stateless transport suitable for serverless deployment. Example: createMcpApp(apiUrl). */
 export function createMcpApp(apiUrl: string): Express {
@@ -25,20 +26,12 @@ async function serveMcp(request: Request, response: Response, apiUrl: string): P
     return;
   }
   const client = new RecallClient({ baseUrl: apiUrl, token: async () => token });
-  if (!(await verifyApiAccess(client))) {
-    response.status(401).json({ error: 'Invalid or expired token.' });
+  const rejection = await checkApiAccess(client);
+  if (rejection) {
+    response.status(rejection.status).json({ error: rejection.message });
     return;
   }
   await writeMcpResponse(request, response, client);
-}
-
-async function verifyApiAccess(client: RecallClient): Promise<boolean> {
-  try {
-    await client.workspace();
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 async function writeMcpResponse(

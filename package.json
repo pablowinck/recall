@@ -25,6 +25,8 @@
     "db:migrate": "tsx scripts/migrate.ts"
   },
   "devDependencies": {
+    "@recall/client": "workspace:*",
+    "@recall/contracts": "workspace:*",
     "@axe-core/playwright": "^4.13.0",
     "@modelcontextprotocol/sdk": "1.30.0",
     "@playwright/test": "^1.58.2",
