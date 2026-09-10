@@ -7,7 +7,7 @@ export interface LibraryViewProps {
   client: RecallClient;
   decks: Deck[];
   revision: number;
-  create: () => void;
+  create: (preferredDeckId?: string) => void;
   edit: (card: Flashcard) => void;
   refresh: () => void;
 }

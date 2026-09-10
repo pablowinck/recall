@@ -77,6 +77,12 @@
 .dialog-actions .delete-button {
   margin-right: auto;
 }
+/* Narrow dialogs cannot fit one row of actions; wrapping keeps every button inside the panel. */
+@media (max-width: 480px) {
+  .dialog-actions {
+    flex-wrap: wrap;
+  }
+}
 /* Keycaps are shared by study shortcuts and the card editor hint. */
 .keycap {
   display: inline-flex;

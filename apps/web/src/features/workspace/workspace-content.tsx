@@ -63,7 +63,7 @@ function LibraryWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX
       client={model.client}
       decks={model.workspace.decks}
       revision={model.revision}
-      create={() => model.actions.edit(null)}
+      create={(preferredDeckId) => model.actions.edit(null, preferredDeckId)}
       edit={model.actions.edit}
       refresh={model.actions.updated}
     />
@@ -97,6 +97,7 @@ function WorkspaceEditor({ model }: { model: LoadedWorkspaceModel }): React.JSX.
       client={model.client}
       decks={model.workspace.decks}
       card={model.editing ?? undefined}
+      preferredDeckId={model.editorDeck}
       close={() => model.actions.edit(undefined)}
       saved={model.actions.updated}
       onDeckCreated={model.actions.refresh}

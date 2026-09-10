@@ -10,7 +10,10 @@ export function LibraryView(props: LibraryViewProps): React.JSX.Element {
   const state = useLibraryView(props.client, props.revision);
   return (
     <div className="view-enter">
-      <PageHeading title="Library" action={<NewCardButton onClick={props.create} />} />
+      <PageHeading
+        title="Library"
+        action={<NewCardButton onClick={() => props.create(state.query.deck || undefined)} />}
+      />
       <LibraryToolbar library={props} state={state} />
       <LibraryResults library={props} state={state} />
     </div>

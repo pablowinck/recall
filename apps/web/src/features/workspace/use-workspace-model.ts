@@ -41,7 +41,7 @@ function createViewActions(
       if (view === 'today') void refresh();
     },
     startStudy: (studyDeck) => update((current) => ({ ...current, studyDeck, view: 'study' })),
-    edit: (editing) => update((current) => ({ ...current, editing })),
+    edit: (editing, editorDeck) => update((current) => ({ ...current, editing, editorDeck })),
   };
 }
 

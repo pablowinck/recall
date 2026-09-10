@@ -81,6 +81,27 @@ test('phones show the card editor actions without scrolling', async ({ page }, t
   }
 });
 
+// Loop 16: three actions never fit a phone row and spilled outside the panel.
+test('phones keep the connection actions inside the panel', async ({ page }, testInfo) => {
+  test.skip(!isPhoneProject(testInfo), 'The stacked panel actions apply to phone widths');
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'New personal token' })).toHaveValue(/^recall_/);
+    await settleAnimations(page);
+    const panel = (await page.locator('.new-secret').boundingBox())!;
+    for (const name of ['I saved it', 'Copy token', 'Copy setup']) {
+      const button = (await page.getByRole('button', { name, exact: true }).boundingBox())!;
+      expect(button.x).toBeGreaterThanOrEqual(panel.x);
+      expect(button.x + button.width).toBeLessThanOrEqual(panel.x + panel.width);
+    }
+  } finally {
+    await account.cleanup();
+  }
+});
+
 /** Reveal the current card and return where the Good rating ends, in viewport pixels. Example: await revealAndMeasureRatings(page). */
 async function revealAndMeasureRatings(page: Page): Promise<number> {
   await page.getByRole('button', { name: /Reveal answer/ }).click();

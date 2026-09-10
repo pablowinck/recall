@@ -3,12 +3,14 @@ import type { RecallClient } from '@recall/client';
 import type { CardDraft, Deck, Flashcard } from '@recall/contracts';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 import { buildCardDraft, hasDraftChanges } from './card-draft';
-import { readLastDeck, rememberLastDeck } from './last-deck';
+import { chooseInitialDeck } from './initial-deck';
+import { rememberLastDeck } from './last-deck';
 
 export interface CardEditorProps {
   client: RecallClient;
   decks: Deck[];
   card?: Flashcard;
+  preferredDeckId?: string;
   close: () => void;
   saved: () => void;
   onDeckCreated?: (deck: Deck) => void;
@@ -45,10 +47,6 @@ export function useCardEditor(props: CardEditorProps): CardEditorState {
     return hasDraftChanges(buildCardDraft(new FormData(form.current), deck), props.card);
   };
   return { ...inline, deck, setDeck, action, form, hasChanges, submit };
-}
-
-function chooseInitialDeck(props: CardEditorProps): string {
-  return props.card?.deck_id ?? readLastDeck(props.decks) ?? props.decks[0]?.id ?? '';
 }
 
 function useInlineDeck(props: CardEditorProps, select: (id: string) => void): InlineDeckState {

@@ -9,11 +9,12 @@ export interface WorkspaceUiState {
   editing: Flashcard | null | undefined;
   revision: number;
   studyDeck?: string;
+  editorDeck?: string;
 }
 export interface WorkspaceActions {
   navigate: (view: WorkspaceView) => void;
   startStudy: (deck?: string) => void;
-  edit: (card: Flashcard | null | undefined) => void;
+  edit: (card: Flashcard | null | undefined, preferredDeckId?: string) => void;
   updated: () => void;
   signOut: () => void;
   refresh: () => void;

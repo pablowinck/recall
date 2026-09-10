@@ -209,3 +209,25 @@ test('a long deck name never widens the library or the card editor', async ({ pa
     await account.cleanup();
   }
 });
+
+test('a new card from a filtered library starts in the filtered deck', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = await account.api.createDeck('Spanish practice');
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Question in Spanish practice',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Spanish practice', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Question in Spanish practice' })).toBeVisible();
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    await expect(page.getByRole('combobox', { name: 'Deck' })).toContainText('Spanish practice');
+  } finally {
+    await account.cleanup();
+  }
+});

@@ -94,12 +94,21 @@
   padding: 1rem;
   border-radius: var(--r-md);
   background: var(--fill-1);
-  font:
-    500 0.8125rem/1.6 ui-monospace,
-    'SF Mono',
-    Menlo,
-    Consolas,
-    monospace;
+  font: 500 0.8125rem/1.6 var(--font-mono);
+  /* Wrap at spaces, never inside the token: a token split across lines cannot be read back. */
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  overflow-x: auto;
+}
+.token-field input {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+@media (max-width: 480px) {
+  /* Three actions never fit a phone row; stack them with the primary copy on top. */
+  .new-secret .dialog-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
 }

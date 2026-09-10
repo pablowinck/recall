@@ -43,7 +43,12 @@ export function SecretPanel({
       <h2 id="new-secret-title">Connect {assistant.name}</h2>
       <p>{assistant.where} The token is shown only once; anyone with it can use your cards.</p>
       <pre className="setup-snippet">{setup}</pre>
-      <TextField.Root aria-label="New personal token" readOnly value={secret.token} />
+      <TextField.Root
+        className="token-field"
+        aria-label="New personal token"
+        readOnly
+        value={secret.token}
+      />
       <SecretActions setup={setup} token={secret.token} clear={clear} clipboard={clipboard} />
       <p role="status">{clipboard.error}</p>
     </section>

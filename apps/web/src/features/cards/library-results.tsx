@@ -54,7 +54,7 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
           Clear filters
         </Button>
       ) : (
-        <Button onClick={library.create}>Create your first card</Button>
+        <Button onClick={() => library.create()}>Create your first card</Button>
       )}
     </div>
   );
