@@ -17,7 +17,7 @@ export function ConnectionsView({ client }: { client: RecallClient }): React.JSX
         description="Use Recall inside Claude, Codex, Cursor and other assistants that support MCP."
       />
       <ConnectionIntro model={model} />
-      {model.error && <ErrorNotice message={model.error} />}
+      {model.actionError && <ErrorNotice message={model.actionError} />}
       {model.secret && <SecretPanel secret={model.secret} clear={model.clear} />}
       <TokenList model={model} />
     </div>

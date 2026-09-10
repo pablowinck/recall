@@ -451,3 +451,47 @@ test('a rating that fails to save keeps the answer and retries in place', async 
     await account.cleanup();
   }
 });
+
+test('a long deck name never widens the library', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const longName =
+      'Portuguese irregular verbs, reflexive pronouns and everyday travel expressions'.slice(0, 80);
+    const deck = await account.api.createDeck(longName);
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Question in a long deck',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: longName, exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Question in a long deck' })).toBeVisible();
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    );
+    expect(overflow).toBe(false);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('touch screens get controls at least 44px tall', async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.use.hasTouch, 'Touch sizing applies to coarse pointers only');
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    const controls = [
+      page.getByRole('button', { name: 'Use dark theme', exact: true }).filter({ visible: true }),
+      page.getByRole('button', { name: 'New card', exact: true }).first(),
+    ];
+    for (const control of controls) {
+      const box = await control.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+  } finally {
+    await account.cleanup();
+  }
+});

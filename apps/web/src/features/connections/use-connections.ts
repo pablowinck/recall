@@ -13,7 +13,9 @@ export interface IssuedConnection {
 export interface ConnectionsModel {
   tokens: AccessToken[];
   loading: boolean;
-  error: string;
+  actionError: string;
+  loadError: string;
+  reloadTokens: () => Promise<void>;
   busy: boolean;
   clientId: ConnectionClientId;
   chooseClient: (id: ConnectionClientId) => void;
@@ -41,7 +43,9 @@ export function useConnections(client: RecallClient): ConnectionsModel {
   return {
     tokens: resource.value ?? [],
     loading: resource.loading,
-    error: action.error || resource.error,
+    actionError: action.error,
+    loadError: resource.error,
+    reloadTokens: resource.refresh,
     busy: action.busy,
     clientId,
     chooseClient,

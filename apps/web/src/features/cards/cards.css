@@ -9,6 +9,15 @@
   flex: 1;
   min-width: 240px;
 }
+/* Radix select triggers never shrink, so a long deck name used to widen the toolbar and the page. */
+.library-toolbar .rt-SelectTrigger {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(100%, 260px);
+}
+.card-editor .rt-SelectTrigger {
+  max-width: 100%;
+}
 .result-label {
   color: var(--ink-2);
   font-size: 0.875rem;

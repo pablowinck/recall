@@ -247,3 +247,11 @@ When a rating failed to save, "Try again" reloaded the whole queue: it showed th
 A failed rating now keeps the answer on screen and shows a notice inside the rating area: "Retry" resends the same rating with the same request id, and a version conflict offers "Reload card" instead. The context row names the deck, and progress counts against Today's due count for the chosen deck or the whole library ("3 of 26"), growing if returning cards add more.
 
 Validation: unit tests with a named unreliable gateway cover the retained answer, the reused request id and the conflict case; a new E2E journey aborts one review request, sees the notice with the answer still visible, retries, and reaches "Nicely done" with one saved review on desktop, tablet and mobile.
+
+## 2026-09-10 — UX loop 11: touch targets, long deck names and connection load errors
+
+Probes measured 30×30 px header icon buttons and 32 px buttons, selects and dialog actions on phones, with 14 px fields that make iOS zoom on focus. A 75-character deck selected in the Library filter widened an iPhone layout to 630 px because Radix select triggers never shrink. A failed connection list load also claimed "You have not created a connection yet." without a retry, and the sidebar still used a cable icon while the page used a link.
+
+On coarse pointers, Radix size-2 buttons, icon buttons, selects and text fields are 44 px tall, fields use 16 px text, and text buttons get 44 px targets. Library and editor deck selects shrink with ellipsis. The connection list separates load failures, showing the error with "Try again" instead of the empty message, and navigation uses the same link icon as the page.
+
+Validation: new E2E checks confirm 44 px controls on touch devices and no horizontal overflow after filtering by an 80-character deck name; the connection journey still reaches the empty state after revoking.

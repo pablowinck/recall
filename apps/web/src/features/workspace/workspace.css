@@ -375,7 +375,8 @@
   }
   .mobile-top > div:last-child {
     display: flex;
-    gap: 1.1rem;
+    /* Keeps the enlarged 44px touch areas of the theme and sign-out buttons from overlapping. */
+    gap: 1.75rem;
     align-items: center;
     padding-right: 0.4rem;
   }

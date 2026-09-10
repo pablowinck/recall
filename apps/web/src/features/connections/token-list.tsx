@@ -2,6 +2,7 @@ import { Button, Spinner } from '@radix-ui/themes';
 import { Trash2 } from 'lucide-react';
 import type { AccessToken } from '@recall/contracts';
 import { ConfirmAction } from '@/components/confirm-action';
+import { ErrorNotice } from '@/components/feedback';
 import type { ConnectionsModel } from './use-connections';
 
 const revokeCopy = {
@@ -17,20 +18,27 @@ export function TokenList({ model }: { model: ConnectionsModel }): React.JSX.Ele
   return (
     <section className="tokens-section">
       <h2>Your connections</h2>
-      {model.loading && (
-        <div role="status">
-          <Spinner />
-          Loading connections…
-        </div>
-      )}
-      {!model.loading && !model.tokens.length && (
-        <p className="muted">You have not created a connection yet.</p>
-      )}
+      <TokenListStatus model={model} />
       {model.tokens.map((token) => (
         <TokenRow key={token.id} token={token} revoke={() => model.revoke(token.id)} />
       ))}
     </section>
   );
+}
+
+// A failed load must not claim there are no connections; it offers a retry instead.
+function TokenListStatus({ model }: { model: ConnectionsModel }): React.JSX.Element | null {
+  if (model.loading)
+    return (
+      <div role="status" className="tokens-loading">
+        <Spinner />
+        Loading connections…
+      </div>
+    );
+  if (model.loadError)
+    return <ErrorNotice message={model.loadError} retry={() => void model.reloadTokens()} />;
+  if (!model.tokens.length) return <p className="muted">You have not created a connection yet.</p>;
+  return null;
 }
 
 function TokenRow({

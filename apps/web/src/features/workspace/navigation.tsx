@@ -1,4 +1,4 @@
-import { BookOpen, CalendarDays, Cable } from 'lucide-react';
+import { BookOpen, CalendarDays, Link2 } from 'lucide-react';
 import { RecallBrand } from '@/components/brand';
 import { NavigationProfile } from './navigation-profile';
 import type { NavigationProps } from './navigation-types';
@@ -7,7 +7,7 @@ export type { WorkspaceView } from './navigation-types';
 const sections = [
   { id: 'today', title: 'Today', icon: CalendarDays },
   { id: 'library', title: 'Library', icon: BookOpen },
-  { id: 'connections', title: 'Connections', icon: Cable },
+  { id: 'connections', title: 'Connections', icon: Link2 },
 ] as const;
 type NavigationSection = (typeof sections)[number];
 
