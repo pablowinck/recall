@@ -117,3 +117,13 @@ A later MCP check returned an invalid-token response, although the same unexpire
 The API now maps retryable Auth failures, throttling and server errors to 503 while preserving 401 for invalid credentials. The shared client turns malformed upstream response bodies into a typed 502 error instead of leaking a JSON parser error. MCP distinguishes invalid tokens from unavailable upstream services. Named fake providers and an actual local HTTP gateway fixture cover these paths. No authentication requirement or tenant policy was relaxed.
 
 Validation: 40 unit tests, 28 E2E tests, formatting, TypeScript and all builds passed with rebuilt Docker containers. The new gateway-outage regression passed alongside the existing authenticated web/MCP journeys on all three device sizes.
+
+## 2026-09-10 — remove deprecated GitHub Actions runtimes
+
+The successful production CI run reported that checkout, Node setup and pnpm setup still targeted the deprecated Node 20 action runtime. Verified the current upstream releases and their `action.yml` files, then updated checkout to v7.0.1, setup-node to v7.0.0 and pnpm/action-setup to v6.1.0. All three actions use Node 24 and are pinned to their release commit SHAs for reproducible execution.
+
+The workflow keeps the explicit pnpm 10.26.0 installation, Node 24 project runtime, frozen lockfile, pnpm cache and existing full functional verification command. The hosted CI run is the integration check for the new action versions. Production verification uses a disposable QA identity; no personal starter cards receive synthetic reviews.
+
+Upstream references: [checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1), [setup-node v7.0.0](https://github.com/actions/setup-node/releases/tag/v7.0.0), [pnpm/action-setup v6.1.0](https://github.com/pnpm/action-setup/releases/tag/v6.1.0).
+
+Local verification passed with 40 unit tests and 28 E2E tests, plus formatting, TypeScript and production builds.
