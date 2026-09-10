@@ -489,8 +489,27 @@ test('touch screens get controls at least 44px tall', async ({ page }, testInfo)
     ];
     for (const control of controls) {
       const box = await control.boundingBox();
-      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+      // Subpixel layout can report 43.99999 for a 44px control.
+      expect(Math.round(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
     }
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a workspace that cannot load offers a calm retry', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.route('**/v1/workspace**', (route) => route.abort());
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Couldn’t load Recall' })).toBeVisible();
+    await expect(
+      page.getByText('Can’t reach Recall. Check your connection and try again.'),
+    ).toBeVisible();
+    await page.unroute('**/v1/workspace**');
+    await page.getByRole('button', { name: 'Try again', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
   } finally {
     await account.cleanup();
   }

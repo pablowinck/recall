@@ -255,3 +255,13 @@ Probes measured 30×30 px header icon buttons and 32 px buttons, selects and dia
 On coarse pointers, Radix size-2 buttons, icon buttons, selects and text fields are 44 px tall, fields use 16 px text, and text buttons get 44 px targets. Library and editor deck selects shrink with ellipsis. The connection list separates load failures, showing the error with "Try again" instead of the empty message, and navigation uses the same link icon as the page.
 
 Validation: new E2E checks confirm 44 px controls on touch devices and no horizontal overflow after filtering by an 80-character deck name; the connection journey still reaches the empty state after revoking.
+
+## 2026-09-10 — UX loop 12: a calm page when the workspace cannot load
+
+A failed workspace load rendered only a red banner at the top of an otherwise empty page, with a lavender "Try again" on pink and the message "Unable to reach the server". Reviewers read it as a broken page rather than a recoverable state.
+
+When the workspace cannot load at all, the view now shows a centered state: a cloud icon, "Couldn’t load Recall", the reason, and a solid "Try again". Inline notices for views that still work (a failed refresh, a rating, a connection list) use a neutral surface with only the icon in red and a gray "Try again". Network failures read "Can’t reach Recall. Check your connection and try again."
+
+The previous release's CI run 34527289889 failed only on tablet: the new touch-target check measured a 44 px control as 43.99999 px. A runtime probe confirmed 44 px buttons (13 px ghost padding, 44 px base height), and the check now rounds the measured height. Production served that release's CSS.
+
+Validation: a new E2E journey aborts the workspace request after sign-in, sees the page-level state and message, retries after the network returns, and lands on Today on desktop, tablet and mobile.

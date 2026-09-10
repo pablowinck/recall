@@ -1,4 +1,4 @@
-import { ErrorNotice, LoadingState } from '@/components/feedback';
+import { ErrorNotice, ErrorState, LoadingState } from '@/components/feedback';
 import { CardEditor } from '../cards/card-editor';
 import { LibraryView } from '../cards/library-view';
 import { StudyView } from '../study/study-view';
@@ -8,6 +8,14 @@ import type { LoadedWorkspaceModel, WorkspaceModel } from './workspace-model';
 
 /** Render only the selected authenticated working view. Example: <WorkspaceContent model={model} />. */
 export function WorkspaceContent({ model }: { model: WorkspaceModel }): React.JSX.Element {
+  if (!model.workspace && model.error)
+    return (
+      <ErrorState
+        title="Couldn’t load Recall"
+        message={model.error}
+        retry={model.actions.refresh}
+      />
+    );
   return (
     <>
       {model.error && <ErrorNotice message={model.error} retry={model.actions.refresh} />}
