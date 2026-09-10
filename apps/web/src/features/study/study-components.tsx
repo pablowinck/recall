@@ -4,55 +4,77 @@ import type { StudyCard } from '@recall/contracts';
 import type { StudySessionState } from './use-study-session';
 import { RatingControls } from './rating-controls';
 
-/** Show progress for the current review session. Example: <StudyProgress session={session} exit={exit} />. */
-export function StudyProgress({
-  session,
-  exit,
-}: {
+interface StudyProgressProps {
   session: StudySessionState;
   exit: () => void;
-}): React.JSX.Element {
+}
+
+/** Show progress for the current review session. Example: <StudyProgress session={session} exit={exit} />. */
+export function StudyProgress({ session, exit }: StudyProgressProps): React.JSX.Element {
   const total = session.completed + session.queue.length;
+  const pct = total ? (session.completed / total) * 100 : 0;
   return (
     <>
-      <header className="study-header">
-        <ExitStudyButton exit={exit} />
-        <span>
-          {session.completed} of {total} reviewed
-        </span>
-      </header>
-      <Progress
-        aria-label="Session progress"
-        value={total ? (session.completed / total) * 100 : 0}
-        size="1"
-      />
+      <StudyProgressHeader completed={session.completed} total={total} exit={exit} />
+      <Progress aria-label="Session progress" value={pct} size="1" />
     </>
   );
+}
+
+function StudyProgressHeader({
+  completed,
+  total,
+  exit,
+}: {
+  completed: number;
+  total: number;
+  exit: () => void;
+}): React.JSX.Element {
+  return (
+    <header className="study-header">
+      <ExitStudyButton exit={exit} />
+      <span>
+        {completed} of {total} reviewed
+      </span>
+    </header>
+  );
+}
+
+interface ReviewContentProps {
+  current?: StudyCard;
+  revealed: boolean;
+  onReveal?: () => void;
 }
 
 /** Render card text without executing its markup. Example: <ReviewContent current={card} revealed />. */
 export function ReviewContent({
   current,
   revealed,
-}: {
-  current?: StudyCard;
-  revealed: boolean;
-}): React.JSX.Element | null {
+  onReveal,
+}: ReviewContentProps): React.JSX.Element | null {
   if (!current) return null;
+  const isClickable = !revealed && Boolean(onReveal);
   return (
     <>
       <StudyCardContext category={current.card.tags[0] ?? 'Your learning'} />
-      <article className={`review-card ${revealed ? 'is-revealed' : ''}`}>
+      <article
+        className={`review-card ${revealed ? 'is-revealed' : ''} ${isClickable ? 'is-clickable' : ''}`}
+        onClick={isClickable ? onReveal : undefined}
+      >
         <span className="eyebrow">FRONT</span>
         <h1>{current.card.front}</h1>
-        {revealed && (
-          <div className="review-answer" aria-live="polite">
-            <span className="eyebrow">ANSWER</span>
-            <div>{current.card.back}</div>
-          </div>
-        )}
+        {revealed && <ReviewAnswer answer={current.card.back} />}
       </article>
     </>
+  );
+}
+
+function ReviewAnswer({ answer }: { answer: string }): React.JSX.Element {
+  return (
+    <div className="review-answer" aria-live="polite">
+      <span className="eyebrow">ANSWER</span>
+      <div>{answer}</div>
+    </div>
   );
 }
 

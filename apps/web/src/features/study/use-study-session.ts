@@ -14,7 +14,10 @@ export interface StudySessionState extends StudySnapshot {
   rate: (rating: RecallRating) => Promise<void>;
   reload: () => Promise<void>;
 }
-const newRequestId = (): string => crypto.randomUUID();
+function newRequestId(): string {
+  const id = crypto.randomUUID();
+  return id;
+}
 
 /** Preserve retry identity and prevent duplicate clicks. Example: useStudySession(client). */
 export function useStudySession(client: RecallClient, deck?: string): StudySessionState {

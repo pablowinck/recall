@@ -31,11 +31,17 @@ function RatingButton({
       disabled={session.saving}
       onClick={() => void session.rate(option.rating)}
     >
-      <span className="rating-key" aria-hidden="true">
-        {option.rating}
-      </span>
+      <RatingKeyCap rating={option.rating} />
       <strong>{option.label}</strong>
       <span>{option.interval}</span>
     </button>
+  );
+}
+
+function RatingKeyCap({ rating }: { rating: number }): React.JSX.Element {
+  return (
+    <kbd className="keycap" aria-hidden="true">
+      {rating}
+    </kbd>
   );
 }

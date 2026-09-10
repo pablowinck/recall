@@ -5,6 +5,8 @@
 }
 .sidebar {
   background: var(--sidebar);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-right: 1px solid var(--line);
   padding: 2.4rem 1.25rem 1.5rem;
   position: sticky;
@@ -31,9 +33,10 @@
   background: transparent;
   color: var(--muted);
   padding: 0.8rem 1rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   text-align: left;
   font-size: 0.9375rem;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-item.active {
   color: var(--blue);
@@ -42,6 +45,7 @@
 }
 .nav-item:hover {
   background: var(--tint);
+  color: var(--ink);
 }
 .sidebar-bottom {
   margin-top: auto;
@@ -125,12 +129,13 @@
 .study-invitation {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: var(--radius-xl);
   padding: 2.4rem 2.8rem;
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   overflow: hidden;
+  box-shadow: var(--card-shadow);
 }
 .study-invitation h2 {
   white-space: pre-line;
@@ -170,13 +175,14 @@
   top: 0;
 }
 .mini-card.front {
-  background: var(--surface);
+  background: var(--surface-elevated);
   transform: rotate(9deg);
   left: 40px;
   top: 12px;
-  box-shadow: 0 12px 32px #00000009;
+  box-shadow: var(--card-shadow-hover);
   padding: 1.3rem;
   color: var(--blue);
+  border: 1px solid var(--line);
 }
 .mini-card span {
   display: block;
@@ -195,21 +201,47 @@
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
-.stat-card > span {
-  color: var(--muted);
-  float: right;
+.stat-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--line-subtle);
+}
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--tint);
+  color: var(--blue);
+}
+.stat-icon.streak {
+  background: rgba(255, 149, 0, 0.12);
+  color: #ff9500;
 }
 .stat-card strong {
   font-size: 1.9rem;
-  font-weight: 550;
+  font-weight: 600;
   line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 .stat-card p {
   font-size: 0.8125rem;
-  margin-top: 0.45rem;
+  margin: 0;
 }
 .section-heading {
   display: flex;
@@ -221,8 +253,15 @@
 .deck-list {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+.empty-deck-list {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 .deck-row {
   background: transparent;
@@ -234,6 +273,7 @@
   text-align: left;
   padding: 1.3rem 1.5rem;
   gap: 1rem;
+  transition: background-color 0.15s ease;
 }
 .deck-row + .deck-row {
   border-top: 1px solid var(--line);
@@ -280,6 +320,10 @@
 .deck-arrow {
   margin-left: 0.75rem;
   color: var(--muted);
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.deck-row:hover .deck-arrow {
+  transform: translateX(3px);
 }
 @media (max-width: 1100px) {
   .app-shell {
@@ -300,8 +344,12 @@
     transform-origin: right center;
   }
 }
-@media (max-width: 760px) {
-  .app-shell.is-studying .sidebar {
+@media (max-width: 768px) {
+  :root {
+    --mobile-nav-height: calc(3.75rem + max(0.55rem, env(safe-area-inset-bottom)));
+  }
+  .app-shell.is-studying .sidebar,
+  .app-shell.is-studying .mobile-top {
     display: none;
   }
   .app-shell.is-studying .page-content {
@@ -318,7 +366,10 @@
     padding: 0.55rem 1rem max(0.55rem, env(safe-area-inset-bottom));
     border-right: 0;
     border-top: 1px solid var(--line);
-    background: var(--surface);
+    background: var(--sidebar);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
   }
   .sidebar .brand,
   .sidebar-bottom {
@@ -357,7 +408,7 @@
     border-radius: 10px;
   }
   .page-content {
-    padding: 1.8rem 1.25rem 7.5rem;
+    padding: 1.8rem 1.25rem calc(var(--mobile-nav-height) + 1.5rem);
   }
   .page-header {
     align-items: flex-start;
@@ -392,9 +443,6 @@
     padding: 1rem 0.8rem;
     border-radius: 14px;
   }
-  .stat-card > span {
-    display: none;
-  }
   .stat-card strong {
     font-size: 1.65rem;
   }
@@ -412,5 +460,11 @@
   .due-badge {
     font-size: 0.75rem;
     padding: 0.3rem 0.5rem;
+  }
+}
+@media (max-width: 520px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }

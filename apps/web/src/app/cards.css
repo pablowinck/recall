@@ -19,6 +19,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
+.library-results-container.is-refreshing {
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
+}
 .library-card {
   display: flex;
   flex-direction: column;
@@ -27,16 +31,19 @@
   padding: 1.5rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   color: var(--ink);
   min-height: 235px;
+  box-shadow: var(--card-shadow);
   transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+    transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .library-card:hover {
+  transform: translateY(-2px);
   border-color: var(--blue);
-  box-shadow: 0 3px 15px #00000005;
+  box-shadow: var(--card-shadow-hover);
 }
 .card-status {
   font-size: 0.75rem;
@@ -77,10 +84,12 @@
   margin-top: auto;
 }
 .tag-list > span {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
   background: var(--canvas);
-  padding: 0.25rem 0.45rem;
-  border-radius: 5px;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
   color: var(--muted);
   max-width: 100%;
   overflow-wrap: anywhere;
@@ -246,7 +255,7 @@ label {
   overflow-x: auto;
   font-size: 0.8rem;
 }
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .card-grid {
     grid-template-columns: 1fr;
   }

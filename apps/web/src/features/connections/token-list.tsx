@@ -47,13 +47,19 @@ function TokenRow({
   );
   return (
     <div className="token-row">
-      <div>
-        <strong>{token.name}</strong>
-        <span>
-          {token.prefix}… · expires {new Date(token.expires_at).toLocaleDateString('en-US')}
-        </span>
-      </div>
+      <TokenMetadata token={token} />
       <ConfirmAction {...revokeCopy} trigger={trigger} onConfirm={revoke} />
+    </div>
+  );
+}
+
+function TokenMetadata({ token }: { token: AccessToken }): React.JSX.Element {
+  return (
+    <div>
+      <strong>{token.name}</strong>
+      <span>
+        {token.prefix}… · expires {new Date(token.expires_at).toLocaleDateString('en-US')}
+      </span>
     </div>
   );
 }

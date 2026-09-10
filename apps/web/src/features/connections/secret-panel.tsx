@@ -46,6 +46,7 @@ async function copySecret(
   try {
     await navigator.clipboard.writeText(token);
     copied(token);
+    setTimeout(() => copied(''), 2500);
     failed('');
   } catch {
     failed('Select and copy the token manually.');

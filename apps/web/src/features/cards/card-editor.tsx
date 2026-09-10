@@ -27,15 +27,23 @@ function CardEditorContent({
 }): React.JSX.Element {
   return (
     <Dialog.Content maxWidth="640px" className="card-editor">
-      <Dialog.Title>{editor.card ? 'Edit card' : 'New card'}</Dialog.Title>
-      <Dialog.Description size="2" mb="5">
-        One idea per card. One question that helps you remember.
-      </Dialog.Description>
+      <CardEditorHeader hasCard={Boolean(editor.card)} />
       <form onSubmit={state.submit}>
         <CardEditorFields editor={editor} state={state} />
         {state.action.error && <ErrorNotice message={state.action.error} />}
         <CardEditorActions editor={editor} busy={state.action.busy} />
       </form>
     </Dialog.Content>
+  );
+}
+
+function CardEditorHeader({ hasCard }: { hasCard: boolean }): React.JSX.Element {
+  return (
+    <>
+      <Dialog.Title>{hasCard ? 'Edit card' : 'New card'}</Dialog.Title>
+      <Dialog.Description size="2" mb="5">
+        One idea per card. One question that helps you remember.
+      </Dialog.Description>
+    </>
   );
 }

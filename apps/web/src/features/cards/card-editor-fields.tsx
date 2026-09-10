@@ -33,17 +33,31 @@ function DeckField({
   return (
     <label>
       Deck
-      <Select.Root value={selected} onValueChange={change}>
-        <Select.Trigger aria-label="Deck" />
-        <Select.Content>
-          {decks.map((deck) => (
-            <Select.Item key={deck.id} value={deck.id}>
-              {deck.name}
-            </Select.Item>
-          ))}
-        </Select.Content>
-      </Select.Root>
+      <DeckSelect decks={decks} selected={selected} change={change} />
     </label>
+  );
+}
+
+function DeckSelect({
+  decks,
+  selected,
+  change,
+}: {
+  decks: Deck[];
+  selected: string;
+  change: (id: string) => void;
+}): React.JSX.Element {
+  return (
+    <Select.Root value={selected} onValueChange={change}>
+      <Select.Trigger aria-label="Deck" />
+      <Select.Content>
+        {decks.map((deck) => (
+          <Select.Item key={deck.id} value={deck.id}>
+            {deck.name}
+          </Select.Item>
+        ))}
+      </Select.Content>
+    </Select.Root>
   );
 }
 

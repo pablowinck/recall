@@ -21,7 +21,11 @@ export function StudyView({ client, deck, exit }: StudyViewProps): React.JSX.Ele
   return (
     <section className="study-view view-enter">
       <StudyProgress session={session} exit={exit} />
-      <ReviewContent current={session.queue[0]} revealed={session.revealed} />
+      <ReviewContent
+        current={session.queue[0]}
+        revealed={session.revealed}
+        onReveal={session.reveal}
+      />
       {session.error && <ErrorNotice message={session.error} retry={() => void session.reload()} />}
       <StudyActions session={session} />
     </section>

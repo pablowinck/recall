@@ -8,6 +8,8 @@ node_modules
 .local
 .turbo
 **/.turbo
+.vercel
+**/.vercel
 test-results
 playwright-report
 supabase/.temp

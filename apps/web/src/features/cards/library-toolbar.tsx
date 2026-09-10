@@ -47,17 +47,25 @@ function LibraryDeckFilter({
   return (
     <Select.Root
       value={state.query.deck || 'all'}
-      onValueChange={(value) => state.selectDeck(value === 'all' ? '' : value)}
+      onValueChange={(val) => state.selectDeck(val === 'all' ? '' : val)}
     >
       <Select.Trigger aria-label="Filter by deck" />
       <Select.Content>
-        <Select.Item value="all">All decks</Select.Item>
-        {decks.map((deck) => (
-          <Select.Item key={deck.id} value={deck.id}>
-            {deck.name}
-          </Select.Item>
-        ))}
+        <DeckFilterOptions decks={decks} />
       </Select.Content>
     </Select.Root>
+  );
+}
+
+function DeckFilterOptions({ decks }: { decks: Deck[] }): React.JSX.Element {
+  return (
+    <>
+      <Select.Item value="all">All decks</Select.Item>
+      {decks.map((deck) => (
+        <Select.Item key={deck.id} value={deck.id}>
+          {deck.name}
+        </Select.Item>
+      ))}
+    </>
   );
 }

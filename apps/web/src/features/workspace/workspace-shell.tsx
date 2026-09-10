@@ -18,6 +18,9 @@ export function WorkspaceShell({
 }: WorkspaceShellProps): React.JSX.Element {
   return (
     <div className={`app-shell ${studying ? 'is-studying' : ''}`}>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <WorkspaceNavigation {...navigation} />
       <MobileHeader navigation={navigation} />
       <main id="main-content" className="page-content">

@@ -13,15 +13,27 @@ export function DeckList(props: DeckListProps): React.JSX.Element {
     <section className="decks-section">
       <DeckListHeading browse={props.browse} />
       <div className="deck-list">
-        {props.decks.map((deck) => (
-          <DeckRow
-            key={deck.id}
-            deck={deck}
-            open={() => (deck.due_count ? props.study(deck.id) : props.browse())}
-          />
-        ))}
+        {props.decks.length === 0 ? (
+          <EmptyDeckList />
+        ) : (
+          props.decks.map((deck) => (
+            <DeckRow
+              key={deck.id}
+              deck={deck}
+              open={() => (deck.due_count ? props.study(deck.id) : props.browse())}
+            />
+          ))
+        )}
       </div>
     </section>
+  );
+}
+
+function EmptyDeckList(): React.JSX.Element {
+  return (
+    <div className="empty-deck-list">
+      <p>No decks created yet. Decks keep your topics organized.</p>
+    </div>
   );
 }
 

@@ -18,14 +18,27 @@ export function SessionComplete({
       <span className="eyebrow">ONE STEP FORWARD</span>
       <h1>{session.completed ? 'Nicely done.' : 'All caught up.'}</h1>
       <CompletionMessage completed={session.completed} />
-      <Button size="3" onClick={() => void session.reload()}>
-        Check for more reviews
-        <ArrowRight size={17} />
-      </Button>
-      <button className="text-button" onClick={exit}>
-        Back to today
-      </button>
+      <SessionCompleteActions session={session} exit={exit} />
     </div>
+  );
+}
+
+function SessionCompleteActions({
+  session,
+  exit,
+}: {
+  session: StudySessionState;
+  exit: () => void;
+}): React.JSX.Element {
+  return (
+    <>
+      <Button size="3" onClick={exit}>
+        Back to today
+      </Button>
+      <button className="text-button" onClick={() => void session.reload()}>
+        Check for more reviews <ArrowRight size={16} />
+      </button>
+    </>
   );
 }
 

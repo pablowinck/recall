@@ -14,8 +14,13 @@ export function useStudyKeyboard(session: StudySessionState): void {
 function processStudyKey(event: KeyboardEvent, session: StudySessionState): void {
   if (session.loading || session.saving || !session.queue.length || event.repeat) return;
   if (event.ctrlKey || event.metaKey || event.altKey) return;
-  if ((event.target as HTMLElement).closest('input,textarea,select,[role="dialog"]')) return;
-  if (event.code === 'Space' && !session.revealed) {
+  if (
+    (event.target as HTMLElement).closest(
+      'input,textarea,select,[role="dialog"],[role="alertdialog"]',
+    )
+  )
+    return;
+  if ((event.code === 'Space' || event.key === 'Enter') && !session.revealed) {
     event.preventDefault();
     session.reveal();
   }

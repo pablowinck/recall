@@ -14,9 +14,11 @@ interface LibraryResultsProps {
 export function LibraryResults({ library, state }: LibraryResultsProps): React.JSX.Element {
   const { result, loading, error } = state.response;
   if (error) return <ErrorNotice message={error} retry={library.refresh} />;
-  if (loading || state.query.page > lastLibraryPage(result.total)) return <LoadingState />;
+  const outOfBounds = state.query.page > lastLibraryPage(result.total);
+  if (loading && !result.cards.length && !result.total) return <LoadingState />;
+  if (outOfBounds && loading) return <LoadingState />;
   return (
-    <>
+    <div className={`library-results-container ${loading ? 'is-refreshing' : ''}`}>
       <div className="result-label">
         {result.total} {result.total === 1 ? 'card' : 'cards'}
       </div>
@@ -26,8 +28,8 @@ export function LibraryResults({ library, state }: LibraryResultsProps): React.J
         ))}
       </div>
       {!result.cards.length && <EmptyLibrary library={library} state={state} />}
-      <LibraryPagination state={state} />
-    </>
+      {result.cards.length > 0 && <LibraryPagination state={state} />}
+    </div>
   );
 }
 
