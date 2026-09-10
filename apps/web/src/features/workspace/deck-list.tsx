@@ -4,14 +4,14 @@ import type { Deck } from '@recall/contracts';
 interface DeckListProps {
   decks: Deck[];
   study: (deck?: string) => void;
-  browse: () => void;
+  browse: (deck?: string) => void;
 }
 
 /** Open the appropriate action for each owned deck. Example: <DeckList {...props} />. */
 export function DeckList(props: DeckListProps): React.JSX.Element {
   return (
     <section className="decks-section">
-      <DeckListHeading browse={props.browse} />
+      <DeckListHeading browse={() => props.browse()} />
       <div className="deck-list">
         {props.decks.length === 0 ? (
           <EmptyDeckList />
@@ -20,7 +20,7 @@ export function DeckList(props: DeckListProps): React.JSX.Element {
             <DeckRow
               key={deck.id}
               deck={deck}
-              open={() => (deck.due_count ? props.study(deck.id) : props.browse())}
+              open={() => (deck.due_count ? props.study(deck.id) : props.browse(deck.id))}
             />
           ))
         )}

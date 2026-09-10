@@ -343,3 +343,11 @@ Cards written through MCP or an import can carry CRLF line endings, but a textar
 The draft comparison now normalizes line endings and tag spacing, so only real edits count. Dismissal ignores non-primary clicks, and the browser confirms a reload or a closed tab while the editor holds unsaved text. A duplicate name answers "You already have a deck with that name." through `deck-errors.ts`, for the deck dialog and the inline creator alike, and the inline field stops at the 80 characters the contract allows.
 
 Validation: format, typecheck, 85 unit tests and build pass, including CRLF and tag-spacing comparisons and the duplicate-name mapping. All 91 E2E journeys pass on desktop, tablet and mobile, among them one that closes a tab holding a typed draft and finds the browser asking first. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 22: a library that remembers where you were
+
+The library kept its search, deck filter and page inside the view, so a trip to Today and back cleared everything and dropped the reader on page one of every card. Filters could only be cleared from the empty state, after a search had already failed. A deck row with nothing due opened the whole library instead of that deck's cards.
+
+The query now lives in the workspace state, next to the current view, so leaving and returning keeps the search text, the deck and the page. A "Clear filters" button sits with the filters whenever one is active, and clearing is a single update instead of two that could race. A deck row with nothing due opens the library already filtered to that deck.
+
+Validation: format, typecheck, 85 unit tests and build pass. All 97 E2E journeys pass on desktop, tablet and mobile, among them one that filters, leaves for Today, returns to the same filter and clears it, and one that opens an empty deck straight into a filtered library. The UX tour reports no overflow or axe violations on three devices.

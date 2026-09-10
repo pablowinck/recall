@@ -7,7 +7,12 @@ import type { LibraryViewProps } from './library-types';
 
 /** Search and paginate the actual card library. Example: <LibraryView {...props} />. */
 export function LibraryView(props: LibraryViewProps): React.JSX.Element {
-  const state = useLibraryView(props.client, props.revision);
+  const state = useLibraryView({
+    client: props.client,
+    revision: props.revision,
+    query: props.query,
+    changeQuery: props.changeQuery,
+  });
   return (
     <div className="view-enter">
       <PageHeading

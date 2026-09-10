@@ -245,3 +245,48 @@ test('closing the tab cannot take an unsaved draft silently', async ({ page }) =
     await account.cleanup();
   }
 });
+
+test('the library keeps its filter while you visit another view', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = await account.api.createDeck('Kitchen Italian');
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Question about pasta',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Kitchen Italian', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Search cards' }).fill('pasta');
+    await expect(page.getByRole('heading', { name: 'Question about pasta' })).toBeVisible();
+    await page.getByRole('button', { name: 'Today', exact: true }).click();
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'Search cards' })).toHaveValue('pasta');
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText(
+      'Kitchen Italian',
+    );
+    await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'Search cards' })).toHaveValue('');
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText('All decks');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a deck with nothing to review opens the library filtered to it', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await account.api.createDeck('Empty shelf');
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: /Empty shelf/ }).click();
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText(
+      'Empty shelf',
+    );
+  } finally {
+    await account.cleanup();
+  }
+});

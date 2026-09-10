@@ -7,6 +7,8 @@ export interface LibraryViewProps {
   client: RecallClient;
   decks: Deck[];
   revision: number;
+  query: LibraryQuery;
+  changeQuery: (query: LibraryQuery) => void;
   create: (preferredDeckId?: string) => void;
   edit: (card: Flashcard) => void;
   refresh: () => void;
@@ -17,4 +19,5 @@ export interface LibraryViewState {
   search: (value: string) => void;
   selectDeck: (value: string) => void;
   goToPage: (page: number) => void;
+  clear: () => void;
 }

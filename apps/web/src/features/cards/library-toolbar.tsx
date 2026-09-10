@@ -16,6 +16,11 @@ export function LibraryToolbar({
     <div className="library-toolbar">
       <LibrarySearch state={state} />
       <LibraryDeckFilter decks={library.decks} state={state} />
+      {(state.query.search || state.query.deck) && (
+        <button type="button" className="text-button" onClick={state.clear}>
+          Clear filters
+        </button>
+      )}
       <NewDeckDialog client={library.client} done={library.refresh} />
     </div>
   );

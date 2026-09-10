@@ -8,7 +8,7 @@ interface TodayProps {
   workspace: Workspace;
   study: (deck?: string) => void;
   create: () => void;
-  browse: () => void;
+  browse: (deck?: string) => void;
 }
 
 /** Prioritize the next useful study action. Example: <TodayView {...props} />. */

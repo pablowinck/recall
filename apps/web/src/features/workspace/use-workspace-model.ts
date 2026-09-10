@@ -16,6 +16,7 @@ export function useWorkspaceModel(account: RecallAccount): WorkspaceModel {
     view: 'today',
     editing: undefined,
     revision: 0,
+    libraryQuery: { search: '', deck: '', page: 0 },
   });
   const remote = useWorkspace(account.client);
   useWorkspaceFreshness(state.view === 'today', () => void remote.refresh());
@@ -36,13 +37,20 @@ export function useWorkspaceModel(account: RecallAccount): WorkspaceModel {
 function createViewActions(
   update: UpdateWorkspaceUi,
   refresh: () => Promise<void>,
-): Pick<WorkspaceActions, 'navigate' | 'startStudy' | 'edit'> {
+): Pick<WorkspaceActions, 'navigate' | 'startStudy' | 'browse' | 'setLibraryQuery' | 'edit'> {
   return {
     navigate: (view) => {
       update((current) => ({ ...current, view }));
       if (view === 'today') void refresh();
     },
     startStudy: (studyDeck) => update((current) => ({ ...current, studyDeck, view: 'study' })),
+    browse: (deck) =>
+      update((current) => ({
+        ...current,
+        view: 'library',
+        libraryQuery: { search: '', deck: deck ?? '', page: 0 },
+      })),
+    setLibraryQuery: (libraryQuery) => update((current) => ({ ...current, libraryQuery })),
     edit: (editing, editorDeck) => update((current) => ({ ...current, editing, editorDeck })),
   };
 }

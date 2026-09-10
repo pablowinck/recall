@@ -50,7 +50,7 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
           : 'Write a question and its answer. Recall schedules every review for you.'}
       </p>
       {filtered ? (
-        <Button variant="soft" onClick={() => clearLibraryFilters(state)}>
+        <Button variant="soft" onClick={state.clear}>
           Clear filters
         </Button>
       ) : (
@@ -58,11 +58,6 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
       )}
     </div>
   );
-}
-
-function clearLibraryFilters(state: LibraryViewState): void {
-  state.search('');
-  state.selectDeck('');
 }
 
 function LibraryPagination({ state }: { state: LibraryViewState }): React.JSX.Element {

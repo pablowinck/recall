@@ -52,7 +52,7 @@ function TodayWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX.E
       workspace={model.workspace}
       study={model.actions.startStudy}
       create={() => model.actions.edit(null)}
-      browse={() => model.actions.navigate('library')}
+      browse={model.actions.browse}
     />
   );
 }
@@ -63,6 +63,8 @@ function LibraryWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX
       client={model.client}
       decks={model.workspace.decks}
       revision={model.revision}
+      query={model.libraryQuery}
+      changeQuery={model.actions.setLibraryQuery}
       create={(preferredDeckId) => model.actions.edit(null, preferredDeckId)}
       edit={model.actions.edit}
       refresh={model.actions.updated}
