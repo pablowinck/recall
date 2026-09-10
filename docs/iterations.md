@@ -127,3 +127,15 @@ The workflow keeps the explicit pnpm 10.26.0 installation, Node 24 project runti
 Upstream references: [checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1), [setup-node v7.0.0](https://github.com/actions/setup-node/releases/tag/v7.0.0), [pnpm/action-setup v6.1.0](https://github.com/pnpm/action-setup/releases/tag/v6.1.0).
 
 Local verification passed with 40 unit tests and 28 E2E tests, plus formatting, TypeScript and production builds.
+
+## 2026-09-10 — index tenant connection listings
+
+The production advisor reported three informational foreign-key index findings. A read-only audit confirmed that `access_tokens.tenant_id` lacked an index. The card/deck lookup already uses `cards_deck_idx` with both equality conditions despite the reversed column order; the review/card lookup has existing card-prefix and tenant-prefix paths. Those indexes do not need duplicates merely to clear the advisor.
+
+Migration `20260910152546` adds `access_tokens_tenant_created_idx` on `(tenant_id, created_at desc)`, supporting the RLS tenant predicate, newest-first connection listing and tenant cleanup. Application authorization and production planner settings are unchanged.
+
+A local fixture with 12 owner tokens and 20,000 neighbor tokens reproduced a sequential scan discarding 20,001 rows. One unforced before/after measurement changed from sequential scan plus sort (426 shared buffers) to an index scan (3 shared buffers). These are synthetic local observations, not production latency claims; production tables were empty during the audit. PostgreSQL can still choose sequential scans based on table size and statistics.
+
+The regression exercises the indexed RLS path with sequential scans discouraged only inside its local test transaction, so shared local statistics cannot make the check flaky. It verifies the actual query plan and the owner's API result, without timing thresholds or production planner changes. The fixture identities and their token rows are cleaned up after the test.
+
+Local verification passed: 40 unit tests, 29 E2E tests, formatting, TypeScript and all application builds.
