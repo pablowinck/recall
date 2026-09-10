@@ -50,8 +50,10 @@
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 }
-.library-card:hover {
-  box-shadow: var(--elev-2);
+@media (hover: hover) {
+  .library-card:hover {
+    box-shadow: var(--elev-2);
+  }
 }
 .card-top-row {
   display: flex;
@@ -182,11 +184,15 @@
   font-size: 0.8125rem;
   font-weight: 500;
   border-radius: var(--r-sm);
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
 }
-.inline-deck-btn:hover {
-  background: var(--accent-soft);
-  color: var(--ink);
+@media (hover: hover) {
+  .inline-deck-btn:hover {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
 }
 .inline-deck-box {
   background: var(--surface-raised);

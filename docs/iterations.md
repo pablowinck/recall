@@ -319,3 +319,11 @@ Reviewing on a phone showed that revealing a long card looked like nothing had h
 Revealing now scrolls the answer into view when it starts below two thirds of the screen, keeping the tail of the question above it, and it honours `prefers-reduced-motion`. `reveal-scroll.ts` decides that offset as a pure function. Today refreshes when the tab comes back, when the network returns and once a minute while it stays visible, which also keeps the date in its heading current.
 
 Validation: format, typecheck, 81 unit tests and build pass, including four cases of the scroll decision. All 82 E2E journeys pass on desktop, tablet and mobile, among them one that reveals a twenty-sentence question and finds the answer in the viewport, and one where a card created elsewhere shows up on Today when the tab returns. A probe at 390 px captures the answer on screen right after the reveal.
+
+## 2026-09-10 — UX loop 19: hover that belongs to a mouse, and a rating that shows what you chose
+
+On a phone, tapping a deck row or a library card left it in its hover state until something else was touched, because the hover styles applied to any pointer. Rating a card dimmed all four buttons at once, so nothing said which one had been chosen while the review saved. Three components still animated with `transition: all`, which animates properties nobody asked to move.
+
+Hover styles now live behind `@media (hover: hover)`. Rating keeps the chosen button lit and slightly pressed while the others fade back after 300 ms; the study snapshot carries `savingRating` so the view can tell. Durations and easing come from `--ease-out` and the `--motion-*` tokens, and the three `transition: all` rules name the properties they animate.
+
+Validation: format, typecheck, 81 unit tests and build pass. All 85 E2E journeys pass on desktop, tablet and mobile, including one that delays the review request and finds the chosen rating still lit while the others are disabled. The UX tour reports no overflow or axe violations on three devices.

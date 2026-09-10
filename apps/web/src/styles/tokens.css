@@ -22,6 +22,10 @@
   --r-lg: 18px;
   --r-xl: 22px;
   --r-pill: 9999px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-press: 0.08s;
+  --motion-fast: 0.15s;
+  --motion-base: 0.25s;
   /* Tokens and setup commands need 0/O and 1/l to differ. */
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 }

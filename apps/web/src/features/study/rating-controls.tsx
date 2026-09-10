@@ -29,7 +29,7 @@ function RatingButton({
 }): React.JSX.Element {
   return (
     <button
-      className={`rating-button rating-${option.rating}`}
+      className={`rating-button rating-${option.rating} ${session.savingRating === option.rating ? 'is-chosen' : ''}`}
       disabled={session.saving}
       onClick={() => void session.rate(option.rating)}
     >

@@ -16,7 +16,7 @@ button {
 }
 button:not(:disabled):active {
   transform: scale(0.98);
-  transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--motion-press) var(--ease-out);
 }
 button:disabled {
   cursor: not-allowed;

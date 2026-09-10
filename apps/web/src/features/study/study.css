@@ -18,12 +18,17 @@
   font-weight: 500;
   color: var(--ink-2);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
 }
-.study-header .text-button:hover {
-  color: var(--ink);
-  border-color: var(--fill-2);
-  background: var(--accent-soft);
+@media (hover: hover) {
+  .study-header .text-button:hover {
+    color: var(--ink);
+    border-color: var(--fill-2);
+    background: var(--accent-soft);
+  }
 }
 .study-header > span {
   font-size: 0.8125rem;
@@ -65,8 +70,10 @@
 .review-answer:focus {
   outline: none;
 }
-.review-card.is-clickable:hover {
-  box-shadow: var(--elev-2);
+@media (hover: hover) {
+  .review-card.is-clickable:hover {
+    box-shadow: var(--elev-2);
+  }
 }
 .review-card h2 {
   /* Fluid from phone to desktop; long questions step down through the classes below. */
@@ -193,8 +200,14 @@
     background 0.15s,
     transform 0.08s ease-out;
 }
-.rating-button:disabled {
-  opacity: 0.5;
+/* While a rating saves, the chosen one stays lit and the rest step back, so the choice reads back. */
+.rating-button:disabled:not(.is-chosen) {
+  opacity: 0.4;
+  transition: opacity var(--motion-fast) ease 0.3s;
+}
+.rating-button.is-chosen {
+  transform: scale(0.98);
+  box-shadow: var(--elev-2);
 }
 .rating-button strong {
   font-size: 0.9375rem;
@@ -208,26 +221,34 @@
 .rating-1 strong {
   color: var(--red-11);
 }
-.rating-1:hover:not(:disabled) {
-  background: var(--red-a3);
+@media (hover: hover) {
+  .rating-1:hover:not(:disabled) {
+    background: var(--red-a3);
+  }
 }
 .rating-2 strong {
   color: var(--amber-11);
 }
-.rating-2:hover:not(:disabled) {
-  background: var(--amber-a3);
+@media (hover: hover) {
+  .rating-2:hover:not(:disabled) {
+    background: var(--amber-a3);
+  }
 }
 .rating-3 strong {
   color: var(--accent-text);
 }
-.rating-3:hover:not(:disabled) {
-  background: var(--accent-soft);
+@media (hover: hover) {
+  .rating-3:hover:not(:disabled) {
+    background: var(--accent-soft);
+  }
 }
 .rating-4 strong {
   color: var(--green-11);
 }
-.rating-4:hover:not(:disabled) {
-  background: var(--green-a3);
+@media (hover: hover) {
+  .rating-4:hover:not(:disabled) {
+    background: var(--green-a3);
+  }
 }
 .rating-button .keycap {
   position: absolute;

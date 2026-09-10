@@ -34,6 +34,7 @@ export async function reloadStudyQueue(
       loading: false,
       error: '',
       saving: false,
+      savingRating: null,
       ratingFailure: null,
     }));
   } catch (failure) {
@@ -94,7 +95,13 @@ export async function recordStudyRating(
   if (!current || !context.snapshot.revealed || context.snapshot.loading || context.runtime.pending)
     return;
   context.runtime.pending = true;
-  context.update((snapshot) => ({ ...snapshot, saving: true, error: '', ratingFailure: null }));
+  context.update((snapshot) => ({
+    ...snapshot,
+    saving: true,
+    savingRating: rating,
+    error: '',
+    ratingFailure: null,
+  }));
   const attempt = prepareStudyAttempt(context, current.card.id, rating);
   await commitStudyRating(context, current, attempt);
 }
@@ -132,7 +139,7 @@ async function commitStudyRating(
   } finally {
     context.runtime.pending = false;
     if (generation === context.runtime.generation)
-      context.update((snapshot) => ({ ...snapshot, saving: false }));
+      context.update((snapshot) => ({ ...snapshot, saving: false, savingRating: null }));
   }
 }
 

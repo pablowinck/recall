@@ -172,3 +172,29 @@ test('revealing a long question brings the answer into view', async ({ page }) =
     await account.cleanup();
   }
 });
+
+test('the chosen rating stays lit while it saves', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Slow to save',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.route('**/v1/cards/*/reviews', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await route.continue();
+    });
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(page.locator('.rating-button.is-chosen')).toContainText('Good');
+    await expect(page.getByRole('button', { name: /Again/ })).toBeDisabled();
+    await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

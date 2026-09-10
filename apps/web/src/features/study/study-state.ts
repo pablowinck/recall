@@ -16,6 +16,7 @@ export interface StudySnapshot {
   revealed: boolean;
   loading: boolean;
   saving: boolean;
+  savingRating: RecallRating | null;
   refilling: boolean;
   error: string;
   returning: ReturningCard[];
@@ -54,6 +55,7 @@ export function initialStudySnapshot(): StudySnapshot {
     revealed: false,
     loading: true,
     saving: false,
+    savingRating: null,
     refilling: false,
     error: '',
     returning: [],
