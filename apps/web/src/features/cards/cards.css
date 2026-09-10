@@ -229,3 +229,19 @@
     padding-inline: 0.6rem;
   }
 }
+.shortcut-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-right: auto;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+.dialog-actions .delete-button + .shortcut-hint {
+  margin-right: 0;
+}
+@media (hover: none) and (pointer: coarse) {
+  .shortcut-hint {
+    display: none;
+  }
+}

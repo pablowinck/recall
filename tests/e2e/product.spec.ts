@@ -221,6 +221,7 @@ test('creates and revokes a personal MCP connection through the web', async ({ p
       await mcp.close();
     }
     await page.getByRole('button', { name: 'I saved it', exact: true }).click();
+    await page.getByRole('button', { name: 'Close without copying', exact: true }).click();
     await expect(tokenField).toHaveCount(0);
     await page.getByRole('button', { name: 'Revoke connection Cursor', exact: true }).click();
     await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();

@@ -265,3 +265,13 @@ When the workspace cannot load at all, the view now shows a centered state: a cl
 The previous release's CI run 34527289889 failed only on tablet: the new touch-target check measured a 44 px control as 43.99999 px. A runtime probe confirmed 44 px buttons (13 px ghost padding, 44 px base height), and the check now rounds the measured height. Production served that release's CSS.
 
 Validation: a new E2E journey aborts the workspace request after sign-in, sees the page-level state and message, retries after the network returns, and lands on Today on desktop, tablet and mobile.
+
+## 2026-09-10 — UX loop 13: visible save shortcut and a guarded one-time token
+
+The card editor already saved with Cmd/Ctrl+Enter from its text fields, but nothing said so, so batch authoring still meant reaching for the mouse. On Connections, "I saved it" permanently hid a token that might never have been copied.
+
+The editor shows "⌘ ↵ to save" (Ctrl on other platforms) next to its actions on pointer devices; touch screens hide it. Keycap styles moved to shared components because study and the editor both use them. Closing the token panel without copying now asks "Close without copying?" with "Keep token"; copying with the buttons or by hand (select and copy) skips the question.
+
+Validation: unit tests cover the platform modifier label; the E2E connection journey confirms closing without copying on desktop, tablet and mobile.
+
+The local mobile journey stalled on the card editor: a probe placed its actions at y=742 in a 664 px viewport, below the fold inside the dialog's scroll area (wave 2 finding N-12, scheduled next). Product E2E tests, including card deletion on mobile, passed.

@@ -1,6 +1,7 @@
 import { Button } from '@radix-ui/themes';
 import { Trash2 } from 'lucide-react';
 import { ConfirmAction } from '@/components/confirm-action';
+import { shortcutModifierLabel } from '@/lib/keyboard';
 import type { CardEditorProps } from './use-card-editor';
 
 const deleteCopy = {
@@ -10,7 +11,7 @@ const deleteCopy = {
   cancelLabel: 'Keep card',
 };
 
-/** Prevent competing card mutations while saving. Example: <CardEditorActions editor={props} busy={busy} />. */
+/** Prevent competing card mutations while saving. Example: <CardEditorActions editor={props} busy={busy} cancel={close} />. */
 export function CardEditorActions({
   editor,
   busy,
@@ -23,6 +24,7 @@ export function CardEditorActions({
   return (
     <div className="dialog-actions">
       <DeleteCardButton editor={editor} busy={busy} />
+      <SaveShortcutHint />
       <Button type="button" variant="soft" color="gray" onClick={cancel} disabled={busy}>
         Cancel
       </Button>
@@ -30,6 +32,17 @@ export function CardEditorActions({
         {editor.card ? 'Save changes' : 'Create card'}
       </Button>
     </div>
+  );
+}
+
+// The shortcut already works in every text field; showing it lets people author batches without the mouse.
+function SaveShortcutHint(): React.JSX.Element {
+  return (
+    <span className="shortcut-hint" aria-hidden="true">
+      <kbd className="keycap">{shortcutModifierLabel(navigator.platform)}</kbd>
+      <kbd className="keycap">↵</kbd>
+      to save
+    </span>
   );
 }
 
