@@ -87,6 +87,7 @@ function WorkspaceEditor({ model }: { model: LoadedWorkspaceModel }): React.JSX.
       card={model.editing ?? undefined}
       close={() => model.actions.edit(undefined)}
       saved={model.actions.updated}
+      onDeckCreated={model.actions.refresh}
     />
   );
 }

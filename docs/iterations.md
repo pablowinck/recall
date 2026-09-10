@@ -139,3 +139,11 @@ A local fixture with 12 owner tokens and 20,000 neighbor tokens reproduced a seq
 The regression exercises the indexed RLS path with sequential scans discouraged only inside its local test transaction, so shared local statistics cannot make the check flaky. It verifies the actual query plan and the owner's API result, without timing thresholds or production planner changes. The fixture identities and their token rows are cleaned up after the test.
 
 Local verification passed: 40 unit tests, 29 E2E tests, formatting, TypeScript and all application builds.
+
+## 2026-09-10 — inline deck creation and editor keyboard flow, validated locally
+
+Discovery: authoring a card in `CardEditor` required selecting from pre-existing decks. If a card belonged to a new deck, the user had to cancel the dialog, discarding unpersisted prompt/answer fields, navigate away to create the deck, and restart card authoring. In addition, multi-line textareas lacked a keyboard submit shortcut.
+
+Changes: added seamless inline deck creation to `CardEditorFields` with auto-selection and zero dialog-stacking or draft loss. The front question field now auto-focuses on open, and `Cmd+Enter` / `Ctrl+Enter` triggers form submission directly from textareas. Rebuilt the web Docker container and added an E2E regression verifying inline deck creation retains draft text and attaches the created card to the new deck.
+
+Validation: 40 unit tests, 32 E2E tests (including the new desktop, tablet, and mobile journeys), TypeScript checks, Prettier formatting, and all production builds passed locally.

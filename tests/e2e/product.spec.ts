@@ -265,3 +265,45 @@ test('a duplicate deck name remains editable after the server rejects it', async
     await account.cleanup();
   }
 });
+
+test('creates a new deck inline from the card editor without discarding entered card text', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    await page
+      .getByPlaceholder('What would you like to remember?')
+      .fill('Qual è la capitale d’Italia?');
+    await page.getByPlaceholder('Write the answer, with an example if it helps.').fill('Roma.');
+
+    await page.getByRole('button', { name: 'New deck', exact: true }).click();
+    const inlineInput = page.getByPlaceholder('e.g. Spanish Vocabulary');
+    await inlineInput.fill('Italian Language');
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await expect(inlineInput).toHaveCount(0);
+
+    // Verify card content was preserved and new deck is selected
+    await expect(page.getByPlaceholder('What would you like to remember?')).toHaveValue(
+      'Qual è la capitale d’Italia?',
+    );
+    await expect(
+      page.getByPlaceholder('Write the answer, with an example if it helps.'),
+    ).toHaveValue('Roma.');
+
+    await page.getByRole('button', { name: 'Create card', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+
+    const cards = (await account.api.cards()).cards;
+    const italianCard = cards.find((c) => c.front === 'Qual è la capitale d’Italia?');
+    expect(italianCard).toBeDefined();
+
+    const decks = (await account.api.workspace()).decks;
+    const italianDeck = decks.find((d) => d.name === 'Italian Language');
+    expect(italianDeck).toBeDefined();
+    expect(italianCard?.deck_id).toBe(italianDeck?.id);
+  } finally {
+    await account.cleanup();
+  }
+});

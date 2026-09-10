@@ -19,7 +19,7 @@ Use explicit types, specific names, early returns and one responsibility per mod
 
 Use `pnpm format`. Verify with `pnpm verify` while the local stack runs. Every behavior change needs appropriate coverage; bug fixes need regression evidence. Use named fake classes for external I/O in unit tests. E2E tests deliberately use real local Auth, Postgres, API and MCP.
 
-Do not create another task or delegate unless the user explicitly requests it. Do not edit other projects or stop their containers. Our app containers use Compose project `recall`; our Supabase containers end in `_recall`. In WSL2, run with `zsh -lc` so Node 24 and pnpm are loaded; if WSL restarts, restart the recall and `_recall` containers to restore loopback port bindings.
+Do not create another task or delegate unless the user explicitly requests it. Do not edit other projects or stop their containers. Our app containers use Compose project `recall`; our Supabase containers end in `_recall`. In WSL2, run with `zsh -lc` so Node 24 and pnpm are loaded; if WSL restarts, restart the recall and `_recall` containers to restore loopback port bindings. After modifying `apps/web`, `apps/api` or `apps/mcp`, rebuild the target container with `docker compose up --build -d <service>` so E2E tests exercise the latest code.
 
 ## Continuous iteration
 

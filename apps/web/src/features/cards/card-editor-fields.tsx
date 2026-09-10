@@ -1,6 +1,8 @@
-import { Select, TextArea, TextField } from '@radix-ui/themes';
-import type { ComponentProps } from 'react';
+import { Button, Select, TextArea, TextField } from '@radix-ui/themes';
+import { Plus } from 'lucide-react';
+import { useState, type ComponentProps, type KeyboardEvent } from 'react';
 import type { Deck } from '@recall/contracts';
+import { ErrorNotice } from '@/components/feedback';
 import type { CardEditorProps, CardEditorState } from './use-card-editor';
 
 /** Keep card fields independent of request state. Example: <CardEditorFields editor={props} state={state} />. */
@@ -13,7 +15,7 @@ export function CardEditorFields({
 }): React.JSX.Element {
   return (
     <fieldset className="form-fields" aria-label="Card details" disabled={state.action.busy}>
-      <DeckField decks={editor.decks} selected={state.deck} change={state.setDeck} />
+      <DeckField state={state} />
       <FrontField value={editor.card?.front} />
       <BackField value={editor.card?.back} />
       <TagsField tags={editor.card?.tags ?? []} />
@@ -21,20 +23,32 @@ export function CardEditorFields({
   );
 }
 
-function DeckField({
-  decks,
-  selected,
-  change,
-}: {
-  decks: Deck[];
-  selected: string;
-  change: (id: string) => void;
-}): React.JSX.Element {
+function DeckField({ state }: { state: CardEditorState }): React.JSX.Element {
+  if (state.creatingDeck) {
+    return <InlineDeckCreator state={state} />;
+  }
   return (
-    <label>
-      Deck
-      <DeckSelect decks={decks} selected={selected} change={change} />
-    </label>
+    <div>
+      <div className="deck-field-header">
+        <label htmlFor="card-deck-select" className="deck-field-label">
+          Deck
+        </label>
+        <button
+          type="button"
+          className="inline-deck-btn"
+          onClick={() => state.setCreatingDeck(true)}
+        >
+          <Plus size={14} />
+          <span>New deck</span>
+        </button>
+      </div>
+      <DeckSelect
+        decks={state.decks}
+        selected={state.deck}
+        change={state.setDeck}
+        startCreating={() => state.setCreatingDeck(true)}
+      />
+    </div>
   );
 }
 
@@ -42,23 +56,90 @@ function DeckSelect({
   decks,
   selected,
   change,
+  startCreating,
 }: {
   decks: Deck[];
   selected: string;
   change: (id: string) => void;
+  startCreating: () => void;
 }): React.JSX.Element {
+  const onValueChange = (value: string): void => {
+    if (value === '__create_new__') startCreating();
+    else change(value);
+  };
   return (
-    <Select.Root value={selected} onValueChange={change}>
-      <Select.Trigger aria-label="Deck" />
+    <Select.Root value={selected} onValueChange={onValueChange}>
+      <Select.Trigger id="card-deck-select" aria-label="Deck" />
       <Select.Content>
         {decks.map((deck) => (
           <Select.Item key={deck.id} value={deck.id}>
             {deck.name}
           </Select.Item>
         ))}
+        <Select.Separator />
+        <Select.Item value="__create_new__">+ Create new deck...</Select.Item>
       </Select.Content>
     </Select.Root>
   );
+}
+
+function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Element {
+  const [name, setName] = useState('');
+  const submitInline = async (): Promise<void> => {
+    if (!name.trim() || state.deckAction.busy) return;
+    await state.createInlineDeck(name);
+  };
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      void submitInline();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      state.setCreatingDeck(false);
+    }
+  };
+  return (
+    <div className="inline-deck-box">
+      <div className="deck-field-header">
+        <span className="deck-field-label">New deck name</span>
+        <button
+          type="button"
+          className="inline-deck-btn"
+          onClick={() => state.setCreatingDeck(false)}
+          disabled={state.deckAction.busy}
+        >
+          Cancel
+        </button>
+      </div>
+      <div className="inline-deck-inputs">
+        <TextField.Root
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder="e.g. Spanish Vocabulary"
+          disabled={state.deckAction.busy}
+          autoFocus
+        />
+        <Button
+          type="button"
+          size="2"
+          onClick={() => void submitInline()}
+          loading={state.deckAction.busy}
+          disabled={!name.trim()}
+        >
+          Add
+        </Button>
+      </div>
+      {state.deckAction.error && <ErrorNotice message={state.deckAction.error} />}
+    </div>
+  );
+}
+
+function handleEditorKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
+  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+    event.preventDefault();
+    event.currentTarget.form?.requestSubmit();
+  }
 }
 
 function FrontField({ value }: { value?: string }): React.JSX.Element {
@@ -69,6 +150,8 @@ function FrontField({ value }: { value?: string }): React.JSX.Element {
     required: true,
     maxLength: 4000,
     rows: 4,
+    autoFocus: !value,
+    onKeyDown: handleEditorKeyDown,
   };
   return (
     <label>
@@ -86,6 +169,7 @@ function BackField({ value }: { value?: string }): React.JSX.Element {
     required: true,
     maxLength: 8000,
     rows: 5,
+    onKeyDown: handleEditorKeyDown,
   };
   return (
     <label>
