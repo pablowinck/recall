@@ -689,3 +689,11 @@ The forced rescan warned that the MCP server card on the site had no `tools` lis
 The tool names, descriptions and behaviour hints now live in one catalog in the shared contracts package. The MCP server registers its tools from it, and the server card at `/.well-known/mcp` lists the same entries, so the two cannot drift apart. The change map names the catalog.
 
 Validation: format, typecheck, 130 unit tests and build pass, including a test that the card lists all nine tools and flags the one that deletes. All 174 browser, API and MCP journeys pass on desktop, tablet and mobile, including a journey that compares the card's tools with the tools the running MCP server lists for a signed-in account.
+
+## 2026-09-11 — UX loop 65: the deck removal dialog in smaller pieces
+
+After loop 59, a scan for long functions found the deck removal dialog at 58 lines, the longest left in the app. It kept the choice between moving and deleting the cards, the target deck, the confirmation and all of the dialog's markup in one component.
+
+The choice now lives in a small hook, the move-or-delete options and the dialog's buttons are their own components, and the dialog composes them. The markup, the default of moving the cards and the behaviour are unchanged.
+
+Validation: format, typecheck, 130 unit tests and build pass. All 174 browser, API and MCP journeys pass on desktop, tablet and mobile, including the journeys that delete an empty deck, move a deck's cards and delete a deck with its cards.

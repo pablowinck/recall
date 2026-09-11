@@ -79,6 +79,13 @@ function DeleteDeckTrigger({
   );
 }
 
+interface DeckRemovalChoice {
+  keepCards: boolean;
+  setKeepCards: (keep: boolean) => void;
+  target: string;
+  setTarget: (id: string) => void;
+}
+
 function DeckRemovalDialog({
   deck,
   others,
@@ -86,10 +93,11 @@ function DeckRemovalDialog({
   remove,
 }: DeckRemovalDialogProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
-  const [keepCards, setKeepCards] = useState(true);
-  const [target, setTarget] = useState(others[0]?.id ?? '');
+  const choice = useDeckRemovalChoice(others);
   const confirm = (): void => {
-    const removal: DeckRemoval = keepCards ? { cards: 'move', target } : { cards: 'delete' };
+    const removal: DeckRemoval = choice.keepCards
+      ? { cards: 'move', target: choice.target }
+      : { cards: 'delete' };
     void remove(removal).then((removed) => {
       if (removed) setOpen(false);
     });
@@ -102,39 +110,70 @@ function DeckRemovalDialog({
       <AlertDialog.Content maxWidth="460px">
         <AlertDialog.Title>Delete “{deck.name}”?</AlertDialog.Title>
         <AlertDialog.Description>{describeDeckCards(deck)}</AlertDialog.Description>
-        <RadioGroup.Root
-          className="deck-removal-choice"
-          value={keepCards ? 'move' : 'delete'}
-          onValueChange={(value) => setKeepCards(value === 'move')}
-        >
-          <RadioGroup.Item value="move">Move the cards to another deck</RadioGroup.Item>
-          {keepCards && (
-            <Select.Root value={target} onValueChange={setTarget}>
-              <Select.Trigger aria-label="Deck for the cards" />
-              <Select.Content>
-                {others.map((other) => (
-                  <Select.Item key={other.id} value={other.id}>
-                    {other.name}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Root>
-          )}
-          <RadioGroup.Item value="delete">Delete the cards with the deck</RadioGroup.Item>
-        </RadioGroup.Root>
+        <DeckRemovalOptions choice={choice} others={others} />
         {action.error && <ErrorNotice message={action.error} />}
-        <div className="dialog-actions">
-          <AlertDialog.Cancel>
-            <Button variant="soft" color="gray" disabled={action.busy}>
-              Keep deck
-            </Button>
-          </AlertDialog.Cancel>
-          <Button color="red" loading={action.busy} onClick={confirm}>
-            Delete deck
-          </Button>
-        </div>
+        <DeckRemovalActions busy={action.busy} confirm={confirm} />
       </AlertDialog.Content>
     </AlertDialog.Root>
+  );
+}
+
+// Moving the cards to the first other deck is the default, the choice that loses nothing.
+function useDeckRemovalChoice(others: Deck[]): DeckRemovalChoice {
+  const [keepCards, setKeepCards] = useState(true);
+  const [target, setTarget] = useState(others[0]?.id ?? '');
+  return { keepCards, setKeepCards, target, setTarget };
+}
+
+function DeckRemovalOptions({
+  choice,
+  others,
+}: {
+  choice: DeckRemovalChoice;
+  others: Deck[];
+}): React.JSX.Element {
+  return (
+    <RadioGroup.Root
+      className="deck-removal-choice"
+      value={choice.keepCards ? 'move' : 'delete'}
+      onValueChange={(value) => choice.setKeepCards(value === 'move')}
+    >
+      <RadioGroup.Item value="move">Move the cards to another deck</RadioGroup.Item>
+      {choice.keepCards && (
+        <Select.Root value={choice.target} onValueChange={choice.setTarget}>
+          <Select.Trigger aria-label="Deck for the cards" />
+          <Select.Content>
+            {others.map((other) => (
+              <Select.Item key={other.id} value={other.id}>
+                {other.name}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select.Root>
+      )}
+      <RadioGroup.Item value="delete">Delete the cards with the deck</RadioGroup.Item>
+    </RadioGroup.Root>
+  );
+}
+
+function DeckRemovalActions({
+  busy,
+  confirm,
+}: {
+  busy: boolean;
+  confirm: () => void;
+}): React.JSX.Element {
+  return (
+    <div className="dialog-actions">
+      <AlertDialog.Cancel>
+        <Button variant="soft" color="gray" disabled={busy}>
+          Keep deck
+        </Button>
+      </AlertDialog.Cancel>
+      <Button color="red" loading={busy} onClick={confirm}>
+        Delete deck
+      </Button>
+    </div>
   );
 }
 
