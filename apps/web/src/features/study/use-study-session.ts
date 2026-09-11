@@ -4,6 +4,7 @@ import type { RecallRating } from '@recall/contracts';
 import {
   initialStudySnapshot,
   revealStudyAnswer,
+  type StudyActionContext,
   type StudyRuntime,
   type StudySnapshot,
 } from './study-state';
@@ -22,8 +23,7 @@ export interface StudySessionState extends StudySnapshot {
   retryRating: () => Promise<void>;
 }
 function newRequestId(): string {
-  const id = crypto.randomUUID();
-  return id;
+  return crypto.randomUUID();
 }
 function readClock(): Date {
   return new Date();
@@ -47,16 +47,19 @@ export function useStudySession(client: RecallClient, deck?: string): StudySessi
     now: readClock,
     deck,
   };
+  return { ...snapshot, reload, ...bindStudyActions(context) };
+}
+
+// Actions close over the snapshot of the render that made them, so a retry repeats the rating that failed.
+function bindStudyActions(
+  context: StudyActionContext,
+): Omit<StudySessionState, keyof StudySnapshot | 'reload'> {
+  const failure = context.snapshot.ratingFailure;
   return {
-    ...snapshot,
-    reload,
     refill: (options) => refillStudyQueue(context, options),
-    reveal: () => revealStudyAnswer(update),
+    reveal: () => revealStudyAnswer(context.update),
     rate: (rating) => recordStudyRating(context, rating),
-    retryRating: () =>
-      snapshot.ratingFailure
-        ? recordStudyRating(context, snapshot.ratingFailure.rating)
-        : Promise.resolve(),
+    retryRating: () => (failure ? recordStudyRating(context, failure.rating) : Promise.resolve()),
   };
 }
 

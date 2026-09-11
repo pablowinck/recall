@@ -641,3 +641,11 @@ The usability review found that a card with too many tags, or with a tag that wa
 The editor now checks the tags before saving and says "Use up to 12 tags." or "Keep each tag to 40 characters or fewer.", keeping everything the person typed. The limits live next to the editor rather than coming from the shared schema, which would ship the validation library to the browser, and a unit test fails if the two ever disagree.
 
 Validation: format, typecheck, 127 unit tests and build pass, including tests for both messages and for the limits against the shared schema. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including a journey that tries thirteen tags and gets the message without creating a card.
+
+## 2026-09-11 — UX loop 59: two long functions split where a contributor would look
+
+The frontend review counted functions well past the project's twenty-line guideline, which makes them harder for people and coding agents to change safely. The two largest in the editing and study paths were the inline deck form in the card editor, which held its state, its Enter rule and all of its markup in 53 lines, and the study session hook, which built its whole action object inline in 29.
+
+The inline deck form is now a small hook for the name, its submit and its Enter rule, a header with the label and the cancel button, and the form that composes them. The study session hook hands its actions to a separate function that binds them to the current snapshot, and the request id helper lost a temporary variable. Nothing changes on screen or in behaviour.
+
+Validation: format, typecheck, 127 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including the inline deck, input method and rating retry journeys that exercise both pieces.

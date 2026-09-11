@@ -72,56 +72,81 @@ function DeckSelect({
   );
 }
 
-function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Element {
+interface InlineDeckName {
+  name: string;
+  setName: (name: string) => void;
+  submit: () => Promise<void>;
+  onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void;
+}
+
+// Escape is handled by the editor dialog, which closes this inline form before the editor itself.
+function useInlineDeckName(state: CardEditorState): InlineDeckName {
   const [name, setName] = useState('');
-  const submitInline = async (): Promise<void> => {
+  const submit = async (): Promise<void> => {
     if (!name.trim() || state.deckAction.busy) return;
     await state.createInlineDeck(name);
   };
-  // Escape is handled by the editor dialog, which closes this inline form before the editor itself.
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (!isCommandEnter(e)) return;
-    e.preventDefault();
-    void submitInline();
+  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+    if (!isCommandEnter(event)) return;
+    event.preventDefault();
+    void submit();
   };
+  return { name, setName, submit, onKeyDown };
+}
+
+function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Element {
+  const deckName = useInlineDeckName(state);
+  const busy = state.deckAction.busy;
   return (
     <div className="inline-deck-box">
-      <div className="deck-field-header">
-        <label htmlFor="inline-deck-name" className="deck-field-label">
-          New deck name
-        </label>
-        <button
-          type="button"
-          className="inline-deck-btn"
-          aria-label="Cancel new deck"
-          onClick={() => state.setCreatingDeck(false)}
-          disabled={state.deckAction.busy}
-        >
-          Cancel
-        </button>
-      </div>
+      <InlineDeckHeader busy={busy} cancel={() => state.setCreatingDeck(false)} />
       <div className="inline-deck-inputs">
         <TextField.Root
           id="inline-deck-name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={onKeyDown}
+          value={deckName.name}
+          onChange={(event) => deckName.setName(event.target.value)}
+          onKeyDown={deckName.onKeyDown}
           maxLength={80}
           placeholder="e.g. Spanish Vocabulary"
-          disabled={state.deckAction.busy}
+          disabled={busy}
           autoFocus
         />
         <Button
           type="button"
           size="2"
-          onClick={() => void submitInline()}
-          loading={state.deckAction.busy}
-          disabled={!name.trim()}
+          onClick={() => void deckName.submit()}
+          loading={busy}
+          disabled={!deckName.name.trim()}
         >
           Add
         </Button>
       </div>
       {state.deckAction.error && <ErrorNotice message={state.deckAction.error} />}
+    </div>
+  );
+}
+
+function InlineDeckHeader({
+  busy,
+  cancel,
+}: {
+  busy: boolean;
+  cancel: () => void;
+}): React.JSX.Element {
+  return (
+    <div className="deck-field-header">
+      <label htmlFor="inline-deck-name" className="deck-field-label">
+        New deck name
+      </label>
+      <button
+        type="button"
+        className="inline-deck-btn"
+        aria-label="Cancel new deck"
+        onClick={cancel}
+        disabled={busy}
+      >
+        Cancel
+      </button>
     </div>
   );
 }
