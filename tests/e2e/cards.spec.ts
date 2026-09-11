@@ -105,7 +105,12 @@ test('creates a new deck inline from the card editor without discarding entered 
       .fill('Qual è la capitale d’Italia?');
     await page.getByPlaceholder('Write the answer, with an example if it helps.').fill('Roma.');
 
+    await page.getByRole('combobox', { name: 'Deck' }).click();
+    await expect(page.getByRole('option', { name: 'My first deck' })).toBeVisible();
+    await expect(page.getByRole('option', { name: /Create new deck/ })).toHaveCount(0);
+    await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'New deck', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Cancel new deck' })).toBeVisible();
     const inlineInput = page.getByRole('textbox', { name: 'New deck name' });
     await inlineInput.fill('日本語');
     // The Enter that confirms an input method's word is text input, so it must not create the deck.

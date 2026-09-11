@@ -609,3 +609,11 @@ The frontend review listed dead code among the things that slow contributors dow
 The `.endpoint-box` rules are removed. Nothing on screen changes.
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including the Connections journeys.
+
+## 2026-09-11 — UX loop 55: one way to add a deck from the card editor
+
+The usability review found two controls for the same job in the card editor: a "New deck" button above the deck list, and a "+ Create new deck..." item at the bottom of the list itself. With the new deck form open, the editor also had two buttons named "Cancel", one for the form and one for the whole editor, which a screen reader could not tell apart.
+
+The deck list now only chooses a deck, and the "New deck" button is the one way to add one. The form's cancel button is named "Cancel new deck" for assistive technology, while it still reads "Cancel" on screen.
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks that the deck list offers no create item and that the form's cancel button has its own name.

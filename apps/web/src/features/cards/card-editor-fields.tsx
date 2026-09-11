@@ -43,33 +43,23 @@ function DeckField({ state }: { state: CardEditorState }): React.JSX.Element {
           <span>New deck</span>
         </button>
       </div>
-      <DeckSelect
-        decks={state.decks}
-        selected={state.deck}
-        change={state.setDeck}
-        startCreating={() => state.setCreatingDeck(true)}
-      />
+      <DeckSelect decks={state.decks} selected={state.deck} change={state.setDeck} />
     </div>
   );
 }
 
+// The "New deck" button above is the one way to add a deck here; an item inside the list only doubled it.
 function DeckSelect({
   decks,
   selected,
   change,
-  startCreating,
 }: {
   decks: Deck[];
   selected: string;
   change: (id: string) => void;
-  startCreating: () => void;
 }): React.JSX.Element {
-  const onValueChange = (value: string): void => {
-    if (value === '__create_new__') startCreating();
-    else change(value);
-  };
   return (
-    <Select.Root value={selected} onValueChange={onValueChange}>
+    <Select.Root value={selected} onValueChange={change}>
       <Select.Trigger id="card-deck-select" aria-label="Deck" />
       <Select.Content>
         {decks.map((deck) => (
@@ -77,8 +67,6 @@ function DeckSelect({
             {deck.name}
           </Select.Item>
         ))}
-        <Select.Separator />
-        <Select.Item value="__create_new__">+ Create new deck...</Select.Item>
       </Select.Content>
     </Select.Root>
   );
@@ -105,6 +93,7 @@ function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Ele
         <button
           type="button"
           className="inline-deck-btn"
+          aria-label="Cancel new deck"
           onClick={() => state.setCreatingDeck(false)}
           disabled={state.deckAction.busy}
         >
