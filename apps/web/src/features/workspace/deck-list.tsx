@@ -68,6 +68,10 @@ function DeckRow({ deck, open }: { deck: Deck; open: () => void }): React.JSX.El
       <span className={`due-badge ${deck.due_count ? '' : 'neutral'}`}>
         {describeDeckStatus(deck)}
       </span>
+      {/* A row starts a review when cards are due and opens the library otherwise; the arrow alone did not say. */}
+      <span className="visually-hidden">
+        {deck.due_count ? ', start a review' : ', open in the library'}
+      </span>
       <ArrowRight className="deck-arrow" size={18} />
     </button>
   );

@@ -637,3 +637,22 @@ test('rating hints open on hover with a mouse and never on a tap', async ({ page
     await account.cleanup();
   }
 });
+
+test('the review context and deck rows tell screen readers what they are', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Labelled question',
+      back: 'Labelled answer',
+      tags: ['anatomy', 'bones'],
+    });
+    await signInToRecall(page, account);
+    await expect(page.getByRole('button', { name: /start a review$/ })).toBeVisible();
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.locator('.study-context')).toHaveText(/Deck: .+Tags: anatomy · bones/);
+  } finally {
+    await account.cleanup();
+  }
+});

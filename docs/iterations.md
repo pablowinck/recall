@@ -1119,3 +1119,11 @@ The wave 4 frontend review listed code a contributor or coding agent would trip 
 The connection message now lives once, beside `describeFailure`, and sign-in uses it. `describeFailure` has one import path. The guard that explains a missing public setting moved to its own module and covers the API address too.
 
 Validation: format, typecheck, 153 unit tests and build pass, including a test that sign-in and the app say the same thing when a request never arrives. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 118: the review context and deck rows say what they are
+
+The wave 4 Nielsen review listened to Recall with a screen reader. Above a card, the deck name and the tags were read as one run of words, "My first deck anatomy · bones". On Today, a deck row was read as its name, card count and status, without saying whether pressing it would start a review or open the library.
+
+The review context now labels its parts for screen readers, "Deck:" and "Tags:". Each deck row ends with what it does, "start a review" when cards are due and "open in the library" otherwise. Nothing changes on screen.
+
+Validation: format, typecheck, 153 unit tests and build pass. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that checks a deck row's action and the review context's labels.

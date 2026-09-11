@@ -190,9 +190,16 @@ function StudyCardContext({
   tags: string[];
 }): React.JSX.Element {
   return (
+    // Screen readers hear the deck and the tags as labelled parts instead of one run of words.
     <div className="study-context">
-      <span className="eyebrow">{deckName}</span>
-      <span>{tags.join(' · ')}</span>
+      <span className="eyebrow">
+        {deckName && <span className="visually-hidden">Deck: </span>}
+        {deckName}
+      </span>
+      <span>
+        {tags.length > 0 && <span className="visually-hidden">Tags: </span>}
+        {tags.join(' · ')}
+      </span>
     </div>
   );
 }
