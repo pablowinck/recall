@@ -625,3 +625,11 @@ The frontend review found that a saved appearance changed the page but not the b
 When a choice is saved, the script that applies it before the first paint now also adds a theme-color tag for that choice ahead of the system tags. Browsers use the first matching tag, and React 19 skips extra tags in the head when it hydrates, so the page and the toolbar match from the first frame on every page, including the landing page. Following the system still uses the two original tags.
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks of the toolbar colour with a saved dark choice on a light system and after the choice is cleared.
+
+## 2026-09-11 — UX loop 57: switching views moves focus to the new view's title
+
+The usability review noted that choosing a view in the navigation, or going Back to one, changed the page without telling a screen reader. Focus stayed on the navigation button or went nowhere, so the new view's content started unannounced. Loop 30 had already given each view its own tab title and a scroll to the top.
+
+After the first view, every switch now moves focus to the new view's title, whether it came from the navigation or from Back and Forward. A screen reader reads where the person landed, and the next Tab starts inside that view. The first view after sign-in leaves focus where the page starts, and a study session keeps its own focus on the card.
+
+Validation: format, typecheck, 127 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks that the Library title takes focus after a click in the navigation and after Back.
