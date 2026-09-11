@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
-import '@radix-ui/themes/styles.css';
 import './globals.css';
 import { appearanceBootstrapScript } from '@/lib/appearance';
 import { SITE_URL } from '@/lib/site';
 
 // Apple devices keep SF Pro through -apple-system; Inter gives every other platform the same calm geometry.
-const inter = Inter({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-inter' });
+// The latin subset covers Portuguese, Spanish and Italian; optional display never swaps fonts after the first paint.
+const inter = Inter({ subsets: ['latin'], display: 'optional', variable: '--font-inter' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

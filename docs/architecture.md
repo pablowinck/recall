@@ -29,7 +29,7 @@ The web and MCP apps share HTTP contracts. Only the API accesses application dat
 | A feature's styles           | `apps/web/src/features/<feature>/<feature>.css`                                                                              |
 | Landing page, SEO metadata   | `apps/web/src/features/marketing/`, `apps/web/src/app/page.tsx`, `apps/web/src/app/robots.ts`, `apps/web/src/app/sitemap.ts` |
 | Workspace addresses and Back | `apps/web/src/features/workspace/workspace-url.ts`, `apps/web/src/features/workspace/use-workspace-history.ts`               |
-| Assistant OAuth consent      | `apps/web/src/features/auth/oauth-consent-screen.tsx`, `apps/web/src/app/oauth/consent/page.tsx`                             |
+| Assistant OAuth consent      | `apps/web/src/features/auth/oauth-consent-screen.tsx`, `apps/web/src/app/(product)/oauth/consent/page.tsx`                   |
 | MCP OAuth discovery          | `apps/mcp/src/protected-resource.ts`, ADR 0004                                                                               |
 | Design tokens / base styles  | `apps/web/src/styles/`, imported in order by `app/globals.css`                                                               |
 | Shared HTTP calls            | `packages/client/src/index.ts`                                                                                               |
@@ -54,6 +54,6 @@ MCP source keys are unique within a tenant. Re-importing the starter data return
 - FSRS has fixed 90% target retention initially. Per-user scheduling preferences are a later change, not a hidden setting.
 - Study history day boundaries currently use America/Sao_Paulo. Per-user time zones need an explicit preference before international rollout.
 - Docker starts the production builds for parity. Hot reload is available separately via `pnpm dev`.
-- Static bearer tokens are supported for MCP. OAuth discovery/consent is not implemented yet.
+- MCP accepts personal bearer tokens. OAuth sign-in (ADR 0004) is implemented and covered end to end locally: the MCP server publishes protected resource metadata when `AUTH_ISSUER_URL` is set, and `/oauth/consent` approves or denies clients. Production enables it once the Supabase OAuth server is switched on.
 
 See [ADR 0002](adr/0002-typescript-monorepo-and-personal-tenants.md) for the durable decision and its status.

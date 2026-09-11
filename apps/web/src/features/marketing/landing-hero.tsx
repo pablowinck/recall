@@ -1,24 +1,11 @@
 import Link from 'next/link';
-import { RecallBrand } from '@/components/brand';
-import { GitHubStars } from './github-stars';
 
-/** Open the page with the one thing Recall does differently. Example: <LandingHero stars={null} />. */
-export function LandingHero({ stars }: { stars: number | null }): React.JSX.Element {
+/** Open the page with the one thing Recall does differently. Example: <LandingHero />. */
+export function LandingHero(): React.JSX.Element {
   return (
-    <header className="landing-hero">
-      <nav className="landing-nav" aria-label="Landing navigation">
-        <Link className="landing-home" href="/">
-          <RecallBrand />
-        </Link>
-        <div className="landing-nav-actions">
-          <GitHubStars stars={stars} />
-          <Link className="landing-signin" href="/app">
-            Sign in
-          </Link>
-        </div>
-      </nav>
+    <section className="landing-hero" aria-labelledby="hero-title">
       <p className="landing-eyebrow">Flashcards your AI fills through MCP</p>
-      <h1>
+      <h1 id="hero-title">
         Your AI writes the cards.
         <br />
         Recall makes them stick.
@@ -32,13 +19,14 @@ export function LandingHero({ stars }: { stars: number | null }): React.JSX.Elem
         <Link className="landing-cta" href="/app?new=1">
           Create a free account
         </Link>
-        <Link className="landing-secondary" href="#how-it-works">
+        {/* A plain anchor: next/link would prefetch this page to scroll within it. */}
+        <a className="landing-secondary" href="#how-it-works">
           See how it works
-        </Link>
+        </a>
       </div>
       <p className="landing-note">
         Sign up with email. Connect an assistant when you’re ready, or write cards yourself.
       </p>
-    </header>
+    </section>
   );
 }

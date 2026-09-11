@@ -17,7 +17,7 @@ Use English for all interface copy, API messages, comments, ADRs, documentation 
 
 Keep every app simple, documented and feature-first so people and LLM agents can contribute quickly: a feature folder owns its components, state and styles; shared code stays small and obvious; update the change map in `docs/architecture.md` when structure moves.
 
-Radix Themes renders dialogs, selects and tooltips in portals outside `.recall-root`, and dialog titles as `h1`. Define product tokens on `:root`/`:root.dark` and accent aliases on `.radix-themes` (`apps/web/src/styles/tokens.css`). Appearance is the `dark` class on `<html>`, set before paint by the head script in `app/layout.tsx`. Radix also owns `--shadow-*`, `--space-*`, `--radius-*` and `--color-*` on `.radix-themes`, where they override same-named product tokens; use other names such as `--elev-*` and `--r-*`.
+Radix Themes renders dialogs, selects and tooltips in portals outside `.recall-root`, and dialog titles as `h1`. Define product tokens on `:root`/`:root.dark` (`apps/web/src/styles/tokens.css`) and accent aliases on `.radix-themes` (`apps/web/src/styles/radix-theme.css`). Radix CSS and product styles load only in `app/(product)/layout.tsx`, so the landing page ships neither. Appearance is the `dark` class on `<html>`, set before paint by the head script in `app/layout.tsx`. Radix also owns `--shadow-*`, `--space-*`, `--radius-*` and `--color-*` on `.radix-themes`, where they override same-named product tokens; use other names such as `--elev-*` and `--r-*`.
 
 Use explicit types, specific names, early returns and one responsibility per module. Target functions of 4–20 lines and files below 500 lines. Split feature state, actions and presentation instead of growing component bodies. Public functions need intent and a usage example in their documentation. Preserve comments explaining why a choice exists.
 
@@ -25,7 +25,7 @@ Use `pnpm format`. Verify with `pnpm verify` while the local stack runs. Every b
 
 Do not create another task or delegate unless the user explicitly requests it. Do not edit other projects or stop their containers. Our app containers use Compose project `recall`; our Supabase containers end in `_recall`. In WSL2, run with `zsh -lc` so Node 24 and pnpm are loaded; if WSL restarts, restart the recall and `_recall` containers to restore loopback port bindings. After modifying `apps/web`, `apps/api` or `apps/mcp`, rebuild the target container with `docker compose up --build -d <service>` so E2E tests exercise the latest code; before trusting a browser probe, confirm the served chunk contains the change.
 
-A fresh git worktree has no `.env`, `apps/web/.env.local`, `.local/account.json` or `node_modules`: copy the first three from the main checkout and run `pnpm install --frozen-lockfile`. Turbo's cache is shared, so a replayed web build can hide a missing `.env.local`. `compose.yaml` pins the project name, so a rebuild from any worktree replaces the shared `recall` containers.
+A fresh git worktree has no `.env`, `apps/web/.env.local`, `.local/account.json` or `node_modules`: copy the first three from the main checkout and run `pnpm install --frozen-lockfile`. Turbo's cache is shared, so a replayed web build can hide a missing `.env.local`. `compose.yaml` pins the project name, so a rebuild from any worktree replaces the shared `recall` containers. Moving or deleting a Next route leaves `apps/web/.next/types` importing the old path, so remove `apps/web/.next` before `pnpm check`.
 
 ## Continuous iteration
 

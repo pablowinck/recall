@@ -1,0 +1,42 @@
+/* Loaded after @radix-ui/themes/styles.css in app/(product)/layout.tsx; same-specificity rules here must follow it. */
+/* Radix defines accent scales on each Theme element (app root and portals), so accent aliases must live there too. */
+.radix-themes {
+  --default-font-family: var(--font-sans);
+  --heading-font-family: var(--default-font-family);
+  --cursor-button: pointer;
+  --color-overlay: rgba(33, 32, 28, 0.24);
+  --accent-text: var(--accent-11);
+  --accent-soft: var(--accent-a3);
+  --focus-ring: var(--focus-8);
+}
+.dark .radix-themes {
+  --color-overlay: rgba(0, 0, 0, 0.5);
+}
+/* Touch screens get 44px targets (Apple HIG) and 16px fields, because iOS zooms into smaller text on focus. */
+@media (pointer: coarse) {
+  .rt-BaseButton.rt-r-size-2 {
+    --base-button-height: 44px;
+  }
+  /* Ghost icon buttons size by padding; Radix offsets it with negative margins, so layout stays put. */
+  .rt-IconButton.rt-variant-ghost.rt-r-size-2 {
+    --icon-button-ghost-padding: 13px;
+  }
+  .rt-Button.rt-variant-ghost {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .rt-SelectTrigger.rt-r-size-2 {
+    --select-trigger-height: 44px;
+  }
+  .rt-TextFieldRoot.rt-r-size-2 {
+    --text-field-height: 44px;
+  }
+  .radix-themes .rt-TextFieldInput,
+  .radix-themes .rt-TextAreaInput {
+    font-size: 16px;
+  }
+  .text-button,
+  .inline-deck-btn {
+    min-height: 44px;
+  }
+}

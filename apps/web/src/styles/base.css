@@ -169,31 +169,3 @@ label {
   font-weight: 400;
   font-size: 0.8125rem;
 }
-/* Touch screens get 44px targets (Apple HIG) and 16px fields, because iOS zooms into smaller text on focus. */
-@media (pointer: coarse) {
-  .rt-BaseButton.rt-r-size-2 {
-    --base-button-height: 44px;
-  }
-  /* Ghost icon buttons size by padding; Radix offsets it with negative margins, so layout stays put. */
-  .rt-IconButton.rt-variant-ghost.rt-r-size-2 {
-    --icon-button-ghost-padding: 13px;
-  }
-  .rt-Button.rt-variant-ghost {
-    min-width: 44px;
-    min-height: 44px;
-  }
-  .rt-SelectTrigger.rt-r-size-2 {
-    --select-trigger-height: 44px;
-  }
-  .rt-TextFieldRoot.rt-r-size-2 {
-    --text-field-height: 44px;
-  }
-  .radix-themes .rt-TextFieldInput,
-  .radix-themes .rt-TextAreaInput {
-    font-size: 16px;
-  }
-  .text-button,
-  .inline-deck-btn {
-    min-height: 44px;
-  }
-}

@@ -1,10 +1,5 @@
-/* Shared tokens and base rules load first so each feature's own stylesheet can refine them. */
+/* Every page shares tokens, base rules and small components. Radix Themes and product styles load in app/(product)/layout.tsx, so the landing page ships neither. */
 @import '../styles/tokens.css';
 @import '../styles/base.css';
 @import '../components/components.css';
-@import '../features/workspace/workspace.css';
-@import '../features/cards/cards.css';
-@import '../features/connections/connections.css';
-@import '../features/study/study.css';
-@import '../features/auth/auth.css';
 @import '../features/marketing/marketing.css';

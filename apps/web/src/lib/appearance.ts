@@ -1,7 +1,7 @@
 export type Appearance = 'light' | 'dark';
 
 export const APPEARANCE_STORAGE_KEY = 'recall-appearance';
-const THEME_COLORS: Record<Appearance, string> = { light: '#f1f0ef', dark: '#111110' };
+const THEME_COLORS: Record<Appearance, string> = { light: '#f1f0ef', dark: '#0a0a09' };
 
 /**
  * Runs in <head> before the first paint so a dark preference never flashes light.

@@ -1,4 +1,6 @@
 import { LandingHero } from './landing-hero';
+import { LandingNav } from './landing-nav';
+import { LandingFooter } from './landing-footer';
 import { LandingSteps } from './landing-steps';
 import { LandingStudy } from './landing-study';
 import { LandingQuestions } from './landing-questions';
@@ -11,15 +13,19 @@ import { readStarCount } from './github-repo';
 export async function LandingPage(): Promise<React.JSX.Element> {
   const stars = await readStarCount(fetch);
   return (
-    <main className="landing">
+    <div className="landing">
       <StructuredData value={landingStructuredData()} />
-      <LandingHero stars={stars} />
-      <LandingSteps />
-      <LandingStudy />
-      <LandingQuestions />
-      <LandingOpenSource stars={stars} />
-      <LandingClose />
-    </main>
+      <LandingNav stars={stars} />
+      <main>
+        <LandingHero />
+        <LandingSteps />
+        <LandingStudy />
+        <LandingQuestions />
+        <LandingOpenSource stars={stars} />
+        <LandingClose />
+      </main>
+      <LandingFooter />
+    </div>
   );
 }
 

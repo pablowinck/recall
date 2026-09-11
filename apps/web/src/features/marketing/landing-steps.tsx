@@ -22,7 +22,9 @@ export function LandingSteps(): React.JSX.Element {
       <ol className="landing-steps">
         {STEPS.map((step, index) => (
           <li key={step.title}>
-            <span className="landing-step-number">{index + 1}</span>
+            <span className="landing-step-number" aria-hidden="true">
+              {index + 1}
+            </span>
             <h3>{step.title}</h3>
             <p>{step.body}</p>
           </li>
