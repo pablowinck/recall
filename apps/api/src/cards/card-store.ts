@@ -1,6 +1,7 @@
 import type { PoolClient } from 'pg';
 import type { CardDraft, CardPage, CardUpdate, Flashcard } from '@recall/contracts';
 import { RecallError } from '../errors.js';
+import { searchWords } from './search-words.js';
 
 export interface CardSearch {
   search: string;
@@ -9,22 +10,22 @@ export interface CardSearch {
   offset: number;
 }
 
-// Search ignores case and accents and also reads tags, so "saudacao" finds "saudação" and a tag finds its cards.
-// PostgreSQL's built-in normalize() splits accents off their letters, so no extension or migration is needed.
-const SEARCHABLE_TEXT = "front || ' ' || back || ' ' || array_to_string(tags, ' ')";
-const foldForSearch = (sql: string): string =>
-  `lower(regexp_replace(normalize(${sql}, NFD), '[\\u0300-\\u036f]', '', 'g'))`;
-const CARD_FILTER = `($1 = '' or ${foldForSearch(SEARCHABLE_TEXT)} like '%' || ${foldForSearch('$1')} || '%') and ($2::uuid is null or deck_id = $2)`;
+// Search ignores case, accents and Markdown markers, reads tags as well as both sides, and needs every word somewhere
+// on the card, so "capital portugal" finds "What is the capital of Portugal?". PostgreSQL's built-in normalize()
+// splits accents off their letters, so no extension or migration is needed. Each card is folded once per query, and
+// not at all for an empty search; the words arrive folded the same way from searchWords().
+const FOLDED_CARD = `cross join lateral (select case when cardinality($1::text[]) = 0 then '' else lower(regexp_replace(normalize(regexp_replace(c.front || ' ' || c.back || ' ' || array_to_string(c.tags, ' '), '[*_\`]', '', 'g'), NFD), '[\\u0300-\\u036f]', '', 'g')) end as text) as folded`;
+const CARD_FILTER = `(select coalesce(bool_and(folded.text like '%' || word || '%'), true) from unnest($1::text[]) as word) and ($2::uuid is null or c.deck_id = $2)`;
 
 /** List paginated content under row-level security. Example: listCards(connection, query). */
 export async function listCards(connection: PoolClient, query: CardSearch): Promise<CardPage> {
-  const values = [query.search, query.deck ?? null];
+  const values = [searchWords(query.search), query.deck ?? null];
   const count = await connection.query<{ total: number }>(
-    `select count(*)::int as total from recall.cards where ${CARD_FILTER}`,
+    `select count(*)::int as total from recall.cards c ${FOLDED_CARD} where ${CARD_FILTER}`,
     values,
   );
   const result = await connection.query<{ card: Flashcard }>(
-    `select to_jsonb(c) as card from recall.cards c where ${CARD_FILTER} order by created_at desc, id limit $3 offset $4`,
+    `select to_jsonb(c) as card from recall.cards c ${FOLDED_CARD} where ${CARD_FILTER} order by created_at desc, id limit $3 offset $4`,
     [...values, query.limit, query.offset],
   );
   return { cards: result.rows.map((row) => row.card), total: count.rows[0]!.total };

@@ -656,3 +656,34 @@ test('saving a card deleted meanwhile says so and keeps the typed text', async (
     await account.cleanup();
   }
 });
+
+test('library search finds every word, whatever the spacing or formatting', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.importCards([
+      { deck_id: deck.id, front: 'What is the capital of Portugal?', back: 'Lisbon', tags: [] },
+      { deck_id: deck.id, front: 'O que significa **saudade**?', back: 'Longing', tags: [] },
+      { deck_id: deck.id, front: 'Unrelated question', back: 'Unrelated answer', tags: [] },
+    ]);
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const search = page.getByRole('textbox', { name: 'Search cards' });
+    const cards = page.locator('.library-card');
+    await search.fill('capital portugal');
+    await expect(
+      page.getByRole('heading', { name: 'What is the capital of Portugal?' }),
+    ).toBeVisible();
+    await expect(cards).toHaveCount(1);
+    await search.fill('significa saudade');
+    await expect(page.getByRole('heading', { name: 'O que significa saudade?' })).toBeVisible();
+    await expect(cards).toHaveCount(1);
+    await search.fill('portugal ');
+    await expect(
+      page.getByRole('heading', { name: 'What is the capital of Portugal?' }),
+    ).toBeVisible();
+    await expect(cards).toHaveCount(1);
+  } finally {
+    await account.cleanup();
+  }
+});
