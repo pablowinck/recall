@@ -593,3 +593,11 @@ The frontend review found that Recall's touch sizing covered only Radix's size 2
 On coarse pointers, size 3 buttons, selects and text fields now get the same 44 px height as size 2. Sizes on desktop are unchanged.
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, and the touch sizing journey now also measures the first-card button.
+
+## 2026-09-11 — UX loop 53: one word for assistants, and no stray label above a card
+
+The usability review's terminology pass found two leftovers. The dialog for revoking a connection said "The agent will lose access", while every other screen says assistant. When a study card's deck name was not known yet, the label above the card read "Recall before revealing", a phrase used nowhere else.
+
+The revoke dialog now says "The assistant using this token will lose access." The label above a card shows its deck name, and nothing while that name is unknown.
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile.

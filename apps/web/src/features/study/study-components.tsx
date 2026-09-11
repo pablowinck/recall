@@ -189,7 +189,7 @@ function StudyCardContext({
 }): React.JSX.Element {
   return (
     <div className="study-context">
-      <span className="eyebrow">{deckName ?? 'Recall before revealing'}</span>
+      <span className="eyebrow">{deckName}</span>
       <span>{tags.join(' · ')}</span>
     </div>
   );

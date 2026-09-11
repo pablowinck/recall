@@ -8,7 +8,7 @@ import type { ConnectionsModel } from './use-connections';
 const revokeCopy = {
   title: 'Revoke this connection?',
   description:
-    'The agent will lose access through this token. You can create another connection later.',
+    'The assistant using this token will lose access. You can create another connection later.',
   confirmLabel: 'Revoke connection',
   cancelLabel: 'Keep connection',
 };
