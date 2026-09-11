@@ -20,6 +20,16 @@
 .rt-BaseButton.rt-variant-soft:focus-visible {
   outline-color: var(--accent-11);
 }
+/* White on Radix red-9 reads at 3.9:1, so destructive buttons take the first red where the label reads at AA:
+   step 11 in light mode (5.2:1) and step 8 in dark mode (5.4:1). Hover keeps at least 4.7:1. */
+.rt-BaseButton.rt-variant-solid[data-accent-color='red'] {
+  --accent-9: var(--red-11);
+  --accent-10: color-mix(in oklab, var(--red-11), black 8%);
+}
+.dark .rt-BaseButton.rt-variant-solid[data-accent-color='red'] {
+  --accent-9: var(--red-8);
+  --accent-10: color-mix(in oklab, var(--red-8), white 6%);
+}
 /* Touch screens get 44px targets (Apple HIG) and 16px fields, because iOS zooms into smaller text on focus. */
 @media (pointer: coarse) {
   .rt-BaseButton.rt-r-size-2,

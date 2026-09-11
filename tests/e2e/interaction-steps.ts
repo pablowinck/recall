@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import type { TestAccount } from './fixtures';
 
@@ -38,4 +38,27 @@ export async function settleAnimations(page: Page): Promise<void> {
         .map((animation) => animation.finished.catch(() => undefined)),
     ),
   );
+}
+
+/** Measure a control's text against its own background in sRGB, as WCAG does. Example: await measureContrast(button). */
+export async function measureContrast(target: Locator): Promise<number> {
+  return target.evaluate((node) => {
+    const style = getComputedStyle(node);
+    // A canvas turns any CSS colour, display-p3 included, into the sRGB bytes the WCAG formula expects.
+    const pixel = document.createElement('canvas').getContext('2d')!;
+    const luminance = (colour: string): number => {
+      pixel.clearRect(0, 0, 1, 1);
+      pixel.fillStyle = colour;
+      pixel.fillRect(0, 0, 1, 1);
+      const [r, g, b] = Array.from(pixel.getImageData(0, 0, 1, 1).data.slice(0, 3), (byte) => {
+        const channel = byte / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+    };
+    const [lighter, darker] = [luminance(style.color), luminance(style.backgroundColor)].sort(
+      (first, second) => second - first,
+    );
+    return (lighter! + 0.05) / (darker! + 0.05);
+  });
 }

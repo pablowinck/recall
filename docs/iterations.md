@@ -785,3 +785,11 @@ The wave 3 frontend review left a study session while a rating was still saving 
 A new session now waits up to 4 seconds for ratings still on their way before it loads cards, so it shows what is really due. The conflict message no longer guesses at the cause: "This card changed since it loaded. Reload it to review the latest version." A rating that fails before it is even sent now shows the failure, instead of leaving the rating buttons disabled.
 
 Validation: format, typecheck, 137 unit tests and build pass, including new tests for a save that outlives its session and a rating that fails before it is sent. All 186 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 77: destructive buttons read at AA
+
+The wave 3 design review measured the solid red buttons that confirm a deletion or discard a draft. White on Radix red-9 reads at 3.91:1, below the 4.5:1 AA minimum for text that size, on the buttons people press at the most consequential moment.
+
+Destructive buttons now use red step 11 in light mode (5.21:1) and step 8 in dark mode (5.37:1), and their hover shade stays above 4.7:1.
+
+Validation: format, typecheck, 137 unit tests and build pass. All 194 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens a delete confirmation in light and dark mode and measures its button label at 4.5:1 or more.

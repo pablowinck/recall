@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { connectTestMcp, createTestAccount } from './fixtures';
 import { FakeCardSaveOutage } from './fake-card-save-outage';
-import { expectNoAccessibilityViolations, signInToRecall } from './interaction-steps';
+import {
+  expectNoAccessibilityViolations,
+  measureContrast,
+  settleAnimations,
+  signInToRecall,
+} from './interaction-steps';
 
 test('card save failure keeps the draft and permits one successful retry', async ({ page }) => {
   const account = await createTestAccount();
@@ -446,6 +451,37 @@ test('the library shows cards an assistant added once the person comes back to i
     }
     await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
     await expect(added).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a delete confirmation keeps a readable label in light and dark mode', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Contrast question',
+      back: 'Contrast answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.locator('.library-card').click();
+    const confirm = page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: 'Delete permanently', exact: true });
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme });
+      await expect(page.locator('html.dark')).toHaveCount(colorScheme === 'dark' ? 1 : 0);
+      await page.getByRole('button', { name: 'Delete card', exact: true }).click();
+      await expect(confirm).toBeVisible();
+      await settleAnimations(page);
+      expect(await measureContrast(confirm)).toBeGreaterThanOrEqual(4.5);
+      await page.keyboard.press('Escape');
+      await expect(confirm).toBeHidden();
+    }
   } finally {
     await account.cleanup();
   }
