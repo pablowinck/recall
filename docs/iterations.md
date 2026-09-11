@@ -1207,3 +1207,11 @@ The wave 5 Nielsen and frontend reviews rated cards, then used the browser's Bac
 Arriving at Today, the library or a review now reloads the workspace, whether through the tabs, Leave session, Back or Forward, so counts and the deck list are current. A review shows "Loading your cards…" until that reload arrives, so its total counts the cards due now. The first view after a page load uses the workspace it is already loading, and Connections, which shows nothing from it, reloads nothing.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that rates a card, goes Back to Today, checks the count there, and starts the next review from that count.
+
+## 2026-09-11 — UX loop 129: choosing a deck no longer makes the library toolbar jump
+
+The wave 5 design review chose a deck in the library and watched the toolbar row grow from 40 to 56 px, which pushed the search field down 8 px and the results 16 px; on an iPad the row grew from 44 to 60 px. Loop 119 gave the deck's delete control a 40 px square, but Radix pads ghost icon buttons around content-box dimensions, so the square rendered 16 px larger than it was set.
+
+The delete control now keeps its padding inside its square, 40 px or 44 px on touch, so choosing a deck leaves the row's height as it was.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile. The toolbar journey now chooses a deck, checks that the delete control matches the other controls' height and that the row keeps its height, and the delete target journey checks that the target is a square no larger than 44 px.

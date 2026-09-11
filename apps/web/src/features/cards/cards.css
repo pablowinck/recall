@@ -361,9 +361,12 @@
   gap: 0.25rem 0.5rem;
 }
 /* Radix pulls ghost icon buttons in with negative margins, which left 6 px between the deck filter and Delete, and
-   sizes them by padding, 33 px at size 3. The control gets its own margin and a full square, 44 px on touch. */
+   pads them around content-box dimensions, so a 40 px square rendered at 56 px and choosing a deck made the toolbar
+   row taller. The control gets its own margin and a full square with its padding inside, 44 px on touch. */
 .library-toolbar .delete-deck-trigger {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
   width: 40px;
   height: 40px;
 }

@@ -754,16 +754,26 @@ test('the library toolbar controls share one height on desktop', async ({ page }
   );
   const account = await createTestAccount();
   try {
+    await account.api.createDeck('Empty deck');
     await signInToRecall(page, account);
     await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const toolbar = page.locator('.library-toolbar');
+    const rowHeight = Math.round((await toolbar.boundingBox())?.height ?? 0);
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Empty deck', exact: true }).click();
+    const remove = page.getByRole('button', { name: 'Delete deck Empty deck', exact: true });
+    await expect(remove).toBeVisible();
     const heights = await Promise.all(
       [
         page.locator('.library-toolbar .rt-TextFieldRoot'),
         page.getByRole('combobox', { name: 'Filter by deck' }),
+        remove,
         page.getByRole('button', { name: 'New deck', exact: true }),
       ].map(async (control) => Math.round((await control.boundingBox())?.height ?? 0)),
     );
     expect(new Set(heights).size).toBe(1);
+    // The delete control that appears with a deck used to make the row 16 px taller.
+    expect(Math.round((await toolbar.boundingBox())?.height ?? 0)).toBe(rowHeight);
   } finally {
     await account.cleanup();
   }
@@ -818,7 +828,10 @@ test('deleting a deck from the library has a full-size target with a name on hov
     await page.getByRole('combobox', { name: 'Filter by deck' }).click();
     await page.getByRole('option', { name: 'Empty deck', exact: true }).click();
     const remove = page.getByRole('button', { name: 'Delete deck Empty deck', exact: true });
-    expect(Math.round((await remove.boundingBox())?.width ?? 0)).toBeGreaterThanOrEqual(40);
+    const target = (await remove.boundingBox())!;
+    expect(Math.round(target.width)).toBeGreaterThanOrEqual(40);
+    expect(Math.round(target.width)).toBeLessThanOrEqual(44);
+    expect(Math.round(target.height)).toBe(Math.round(target.width));
     if (!testInfo.project.use.hasTouch) {
       await remove.hover();
       await expect(page.getByRole('tooltip')).toContainText('Delete this empty deck');
