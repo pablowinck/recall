@@ -921,3 +921,11 @@ The wave 3 Nielsen review opened a card in the web editor while an assistant edi
 The web editor now sends the version it opened, and the API refuses a stale one with a 409. The editor then explains: "This card changed after you opened it, perhaps through your assistant. Save again to replace that change with yours, or close without saving to keep it." Saving again replaces it on purpose. MCP tools keep their version-free updates, and the study screen and the editor share one status check.
 
 Validation: format, typecheck, 144 unit tests and build pass, including the update schema and the shared status check. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that edits a card an assistant changed meanwhile, reads the explanation, checks the assistant's edit survived, then saves again.
+
+## 2026-09-11 — UX loop 94: browser Back closes the card editor instead of leaving the draft behind
+
+The wave 3 Nielsen review pressed the browser's Back button with the card editor open, as phone users do to dismiss a sheet. A probe confirmed it: with a card typed in the editor, Back changed the view beneath the open dialog from the library to Today, and a second Back left Recall with the draft lost.
+
+Opening the editor now adds a history entry at the same address, so Back asks the editor to close. A draft still gets the "Discard this card?" question, and Keep editing leaves Back ready to ask again. Closing the editor any other way removes the entry, so the history is as it was.
+
+Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that presses Back on an empty editor, then on a draft: it keeps editing once, then discards and stays on the library.

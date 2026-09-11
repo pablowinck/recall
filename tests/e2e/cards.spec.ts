@@ -603,3 +603,32 @@ test('saving a card that changed meanwhile explains the conflict before replacin
     await account.cleanup();
   }
 });
+
+test('browser Back closes the card editor and asks before discarding a draft', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page).toHaveURL(/\/app\/library$/);
+    const newCard = page.getByRole('button', { name: 'New card', exact: true }).first();
+    await newCard.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.goBack();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    await newCard.click();
+    const front = page.getByRole('textbox', { name: /^Front/ });
+    await front.fill('Typed before pressing Back');
+    await page.goBack();
+    await expect(page.getByRole('alertdialog')).toContainText('Discard this card?');
+    await page.getByRole('button', { name: 'Keep editing', exact: true }).click();
+    await expect(front).toHaveValue('Typed before pressing Back');
+    await page.goBack();
+    await page.getByRole('button', { name: 'Discard', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page).toHaveURL(/\/app\/library$/);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

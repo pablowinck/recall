@@ -7,6 +7,7 @@ import { CardEditorFields } from './card-editor-fields';
 import { CardEditorActions } from './card-editor-actions';
 import { DiscardDraftDialog } from './discard-draft-dialog';
 import { useCardEditor, type CardEditorProps, type CardEditorState } from './use-card-editor';
+import { useEditorBack } from './use-editor-back';
 import { useUnsavedDraftWarning } from './use-unsaved-draft-warning';
 
 interface EditorDismissal {
@@ -20,6 +21,7 @@ export function CardEditor(props: CardEditorProps): React.JSX.Element {
   const state = useCardEditor(props);
   const dismissal = useEditorDismissal(props, state);
   useUnsavedDraftWarning(state.hasChanges);
+  useEditorBack(dismissal.request);
   return (
     <Dialog.Root open>
       <CardEditorContent editor={props} state={state} dismissal={dismissal} />
