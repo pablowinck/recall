@@ -1215,3 +1215,11 @@ The wave 5 design review chose a deck in the library and watched the toolbar row
 The delete control now keeps its padding inside its square, 40 px or 44 px on touch, so choosing a deck leaves the row's height as it was.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile. The toolbar journey now chooses a deck, checks that the delete control matches the other controls' height and that the row keeps its height, and the delete target journey checks that the target is a square no larger than 44 px.
+
+## 2026-09-11 — UX loop 130: the account avatar stays round and the header tools stay secondary
+
+The wave 5 design review found the sidebar's account avatar squeezed into an ellipse, 23 by 35 px, whenever the email was longer than about 21 characters: the address took the row's width and the circle shrank. On phones and tablets, the theme, help and sign-out tools in the header were still accent blue and competed with the selected tab, although loop 116 had made the same tools in the desktop sidebar secondary.
+
+The avatar keeps its 35 px circle beside any email, and the header tools use the secondary ink on phones and tablets too.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that measures the avatar and compares the visible tools' colour with secondary text.

@@ -73,6 +73,8 @@
   background: var(--separator);
   width: 35px;
   height: 35px;
+  /* A long email takes the row, which squeezed the circle into an ellipse. */
+  flex-shrink: 0;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -492,8 +494,10 @@
     padding-bottom: 1.5rem;
   }
 }
-/* Theme, help and sign-out are tools, so they stay secondary instead of sharing the selected row's accent. */
-.profile-actions .rt-IconButton {
+/* Theme, help and sign-out are tools, so they stay secondary instead of sharing the selected row's accent, in the
+   sidebar and in the phone and tablet header alike. */
+.profile-actions .rt-IconButton,
+.mobile-top .rt-IconButton {
   color: var(--ink-2);
 }
 /* On a tablet the three tabs gather in the middle, where the eye and thumb expect them, instead of 242 px apart. */

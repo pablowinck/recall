@@ -425,3 +425,28 @@ test('an unknown address or a deleted deck’s review settles on what it can sho
     await account.cleanup();
   }
 });
+
+test('the account avatar stays round and the header tools stay secondary', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    // Test accounts have 33-character emails, which used to squeeze the sidebar avatar into an ellipse.
+    const avatar = page.locator('.avatar');
+    if (await avatar.isVisible()) {
+      const box = (await avatar.boundingBox())!;
+      expect(Math.round(box.width)).toBe(Math.round(box.height));
+    }
+    const [tool, secondary] = await page.evaluate(() => {
+      const tools = document.querySelectorAll<HTMLElement>(
+        ':is(.mobile-top, .profile-actions) .rt-IconButton',
+      );
+      const shown = Array.from(tools).find((button) => button.getClientRects().length > 0);
+      const text = document.querySelector('.profile-name');
+      return [shown && getComputedStyle(shown).color, text && getComputedStyle(text).color];
+    });
+    expect(tool).toBeTruthy();
+    expect(tool).toBe(secondary);
+  } finally {
+    await account.cleanup();
+  }
+});
