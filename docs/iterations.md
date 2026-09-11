@@ -673,3 +673,11 @@ The design review found two taglines competing on the sign-in and sign-up screen
 The caption under the example card is gone, so the card speaks for itself and the heading's line is the only tagline. The "Sign in" and "Create account" buttons are text only, with the same names for assistive technology.
 
 Validation: format, typecheck, 129 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including the sign-in and sign-up accessibility checks, and captures of the sign-up screen at 1440 px and 390 px in both appearances were reviewed.
+
+## 2026-09-11 — UX loop 63: llms.txt links the documents themselves
+
+After loop 46 shipped, a forced rescan passed every new discovery check but still reported that three of the five links it probed in `llms.txt` did not resolve: the MCP setup guide, the API contracts and the security model, all linked as GitHub pages. The same links answered 200 here to browsers, bots and HEAD requests, so the scanner most likely met GitHub's HTML pages under rate limits or expected Markdown.
+
+Those three links now point at the raw Markdown files on GitHub, which an agent can read directly without GitHub's page around them. The source code link still opens the repository.
+
+Validation: format, typecheck, 129 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, and the guide journey now checks that the MCP setup link is the raw Markdown file.

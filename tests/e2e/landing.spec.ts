@@ -59,6 +59,9 @@ test('assistants find a Markdown guide and lost visitors find their way', async 
   expect(guide.ok()).toBe(true);
   expect(guide.headers()['content-type']).toContain('text/markdown');
   expect(await guide.text()).toContain('## MCP tools');
+  expect(await guide.text()).toContain(
+    'https://raw.githubusercontent.com/pablowinck/recall/main/docs/mcp.md',
+  );
   const missing = await page.goto('/this-page-does-not-exist');
   expect(missing?.status()).toBe(404);
   await expect(page.getByRole('link', { name: 'What Recall is' })).toHaveAttribute('href', '/');
