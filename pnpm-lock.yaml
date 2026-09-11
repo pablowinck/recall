@@ -142,7 +142,7 @@ importers:
       '@recall/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
-      '@supabase/supabase-js':
+      '@supabase/auth-js':
         specifier: 2.116.0
         version: 2.116.0
       lucide-react:

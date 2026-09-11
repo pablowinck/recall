@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { BrowserAuth } from '@/lib/supabase-auth';
 import { describeConsent, type ConsentSummary } from './oauth-consent';
 
 export type ConsentState =
@@ -18,7 +18,7 @@ const EXPIRED = 'This request expired or was already answered. Start again from 
 const FAILED = 'Your answer couldn’t be sent. Try again from your assistant.';
 
 /** Load an authorization request and send the person's decision to Supabase Auth. Example: useOAuthConsent(auth, id). */
-export function useOAuthConsent(auth: SupabaseClient, authorizationId: string): OAuthConsent {
+export function useOAuthConsent(auth: BrowserAuth, authorizationId: string): OAuthConsent {
   const [state, setState] = useState<ConsentState>({ status: 'loading' });
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -38,9 +38,9 @@ export function useOAuthConsent(auth: SupabaseClient, authorizationId: string): 
   return { state, busy, decide };
 }
 
-async function loadConsent(auth: SupabaseClient, authorizationId: string): Promise<ConsentState> {
+async function loadConsent(auth: BrowserAuth, authorizationId: string): Promise<ConsentState> {
   if (!authorizationId) return { status: 'failed', message: MISSING };
-  const { data, error } = await auth.auth.oauth.getAuthorizationDetails(authorizationId);
+  const { data, error } = await auth.oauth.getAuthorizationDetails(authorizationId);
   if (error || !data) return { status: 'failed', message: EXPIRED };
   // A client the person already approved skips the question and returns straight away.
   if ('redirect_url' in data) return leaveFor(data.redirect_url);
@@ -48,14 +48,14 @@ async function loadConsent(auth: SupabaseClient, authorizationId: string): Promi
 }
 
 async function sendDecision(
-  auth: SupabaseClient,
+  auth: BrowserAuth,
   authorizationId: string,
   allow: boolean,
 ): Promise<ConsentState> {
   const options = { skipBrowserRedirect: true };
   const { data, error } = allow
-    ? await auth.auth.oauth.approveAuthorization(authorizationId, options)
-    : await auth.auth.oauth.denyAuthorization(authorizationId, options);
+    ? await auth.oauth.approveAuthorization(authorizationId, options)
+    : await auth.oauth.denyAuthorization(authorizationId, options);
   if (error || !data) return { status: 'failed', message: FAILED };
   return leaveFor(data.redirect_url);
 }

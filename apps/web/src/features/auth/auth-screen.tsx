@@ -1,5 +1,5 @@
 'use client';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { BrowserAuth } from '@/lib/supabase-auth';
 import { useAuthForm } from './use-auth-form';
 import { AuthLayout } from './auth-layout';
 import { AuthFields } from './auth-fields';
@@ -10,7 +10,7 @@ export function AuthScreen({
   auth,
   startSignedUp = false,
 }: {
-  auth: SupabaseClient;
+  auth: BrowserAuth;
   startSignedUp?: boolean;
 }): React.JSX.Element {
   const state = useAuthForm(auth, startSignedUp);

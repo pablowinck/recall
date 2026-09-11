@@ -72,7 +72,7 @@ function createAccountActions(
       void refresh();
     },
     signOut: () => {
-      void account.auth.auth.signOut({ scope: 'local' });
+      void account.auth.signOut({ scope: 'local' });
     },
     refresh: () => {
       void refresh();

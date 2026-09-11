@@ -1,5 +1,5 @@
 'use client';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { BrowserAuth } from '@/lib/supabase-auth';
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { RecallTheme } from '@/components/recall-theme';
 import { useRecallSession } from '@/lib/use-recall-session';
@@ -27,7 +27,7 @@ function SignedInConsent({
   auth,
   authorizationId,
 }: {
-  auth: SupabaseClient;
+  auth: BrowserAuth;
   authorizationId: string;
 }): React.JSX.Element {
   const consent = useOAuthConsent(auth, authorizationId);
@@ -46,7 +46,7 @@ function SignedInConsent({
       summary={state}
       busy={consent.busy}
       decide={consent.decide}
-      switchAccount={() => void auth.auth.signOut({ scope: 'local' })}
+      switchAccount={() => void auth.signOut({ scope: 'local' })}
     />
   );
 }

@@ -657,3 +657,11 @@ The design review noted that moving to the next card swapped the question text i
 Each card is now its own element, and it fades in over 160 ms. The fade uses opacity only, with no movement, so hours of reviews do not slide around, and the system's reduced-motion setting turns it off. Focus still lands on the new card, and rating keys work during the fade.
 
 Validation: format, typecheck, 127 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including the keyboard study journey, which now checks that the next card runs the fade and keeps focus.
+
+## 2026-09-11 — UX loop 61: the app loads only the part of Supabase it uses
+
+The frontend review found that the web app shipped the whole Supabase client, with code for the database, realtime, storage and functions, although the browser only signs people in, keeps their session and answers assistant sign-in requests. Everything else goes through Recall's API. The script chunk that carried the client weighed 87.9 KB compressed.
+
+The app now creates the Supabase Auth client directly, with the same Auth address, key and session storage name that the full client used, so people who are already signed in stay signed in after the update. Only `lib/supabase-auth.ts` imports the Auth library; the rest of the app takes the client type from there, because the library exports its client as a value. A unit test builds the full client and fails if the address or the storage name ever differ. The chunk that carries the client is now 50.1 KB compressed instead of 87.9 KB, 37.8 KB less before the app can sign anyone in.
+
+Validation: format, typecheck, 129 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including sign-up, sign-in, sign-out, switching accounts and the OAuth consent journeys.
