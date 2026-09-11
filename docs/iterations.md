@@ -777,3 +777,11 @@ The wave 3 frontend review revoked a signed-in session on the server, as signing
 When the API rejects the tab's session, Recall now signs the tab out, and the sign-in screen says "Your session ended. Sign in again to pick up where you left off." The shared API client reports rejected credentials through an optional callback, so the MCP server is unchanged.
 
 Validation: format, typecheck, 137 unit tests and build pass. All 186 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that revokes the session during study, rates the card, reads the explanation and signs in again.
+
+## 2026-09-11 — UX loop 76: leaving during a slow save no longer causes a false conflict
+
+The wave 3 frontend review left a study session while a rating was still saving over a slow connection, then started again. The new session loaded before the save landed and showed the same card. Rating it returned a conflict that said "This card was edited elsewhere", though nobody had edited it. A card already reviewed in another tab showed the same message.
+
+A new session now waits up to 4 seconds for ratings still on their way before it loads cards, so it shows what is really due. The conflict message no longer guesses at the cause: "This card changed since it loaded. Reload it to review the latest version." A rating that fails before it is even sent now shows the failure, instead of leaving the rating buttons disabled.
+
+Validation: format, typecheck, 137 unit tests and build pass, including new tests for a save that outlives its session and a rating that fails before it is sent. All 186 browser, API and MCP journeys pass on desktop, tablet and mobile.

@@ -4,7 +4,7 @@ import type { StudySessionState } from './use-study-session';
 
 /**
  * Keep the revealed answer on screen and offer the recovery that fits the failure: retry the same
- * rating (same request id, so it is idempotent) or reload a card edited elsewhere.
+ * rating (same request id, so it is idempotent) or reload a card that changed since it loaded.
  * Example: <RatingFailureNotice session={session} />.
  */
 export function RatingFailureNotice({
@@ -19,7 +19,7 @@ export function RatingFailureNotice({
       <AlertCircle size={19} />
       <span>
         {failure.conflict
-          ? 'This card was edited elsewhere. Reload it to review the latest version.'
+          ? 'This card changed since it loaded. Reload it to review the latest version.'
           : 'Your rating wasn’t saved. Check your connection and try again.'}
       </span>
       <RatingRecovery session={session} conflict={failure.conflict} />

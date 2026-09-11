@@ -20,6 +20,11 @@ interface NextBatch {
   error: string;
 }
 
+// A rating can outlive the session that sent it. Leaving during a slow save and starting again would load the card
+// before the save lands, and rating it again would conflict, so a new session waits a little for saves on their way.
+const savesInFlight = new Set<Promise<void>>();
+const SAVE_WAIT_MS = 4000;
+
 /** Refresh the queue without accepting results from a disposed session. Example: reloadStudyQueue(gateway, runtime, update). */
 export async function reloadStudyQueue(
   gateway: StudyGateway,
@@ -30,6 +35,7 @@ export async function reloadStudyQueue(
   const generation = ++runtime.generation;
   update((current) => ({ ...current, loading: true }));
   try {
+    await waitForSavesInFlight();
     const queue = await gateway.study(deck);
     if (generation !== runtime.generation) return;
     runtime.attempt = null;
@@ -47,6 +53,16 @@ export async function reloadStudyQueue(
     if (generation === runtime.generation)
       update((current) => ({ ...current, loading: false, error: describeFailure(failure) }));
   }
+}
+
+async function waitForSavesInFlight(): Promise<void> {
+  if (!savesInFlight.size) return;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, SAVE_WAIT_MS);
+  });
+  await Promise.race([Promise.all(savesInFlight), timeout]);
+  clearTimeout(timer);
 }
 
 /** The outcome of loading the next due batch. */
@@ -93,8 +109,7 @@ export async function recordStudyRating(
     error: '',
     ratingFailure: null,
   }));
-  const attempt = prepareStudyAttempt(context, current.card.id, rating);
-  await commitStudyRating(context, current, attempt);
+  await commitStudyRating(context, current, rating);
 }
 
 function prepareStudyAttempt(
@@ -109,19 +124,21 @@ function prepareStudyAttempt(
   return attempt;
 }
 
+// Everything after the ratings disable runs inside try, so no failure can leave them disabled.
 async function commitStudyRating(
   context: StudyActionContext,
   current: StudyCard,
-  attempt: StudyAttempt,
+  rating: RecallRating,
 ): Promise<void> {
   const generation = context.runtime.generation;
   try {
+    const attempt = prepareStudyAttempt(context, current.card.id, rating);
     await saveAndAdvance(context, current, attempt, generation);
   } catch (failure) {
     if (generation === context.runtime.generation)
       context.update((snapshot) => ({
         ...snapshot,
-        ratingFailure: { rating: attempt.rating, conflict: isVersionConflict(failure) },
+        ratingFailure: { rating, conflict: isVersionConflict(failure) },
       }));
   } finally {
     context.runtime.pending = false;
@@ -159,11 +176,18 @@ function sendStudyRating(
   current: StudyCard,
   attempt: StudyAttempt,
 ): Promise<Flashcard> {
-  return gateway.review(current.card.id, {
+  const request = gateway.review(current.card.id, {
     rating: attempt.rating,
     version: current.card.version,
     request_id: attempt.requestId,
   });
+  const settled = request.then(
+    () => undefined,
+    () => undefined,
+  );
+  savesInFlight.add(settled);
+  void settled.then(() => savesInFlight.delete(settled));
+  return request;
 }
 
 function acceptStudyRating(
@@ -187,8 +211,8 @@ function acceptStudyRating(
   });
 }
 
-// A 409 means the card changed elsewhere, so retrying the same version would fail again.
-// Duck-typed so the check survives separate copies of the client package.
+// A 409 means the card changed since it loaded: edited, paused or reviewed elsewhere. Retrying the same version
+// would fail again. Duck-typed so the check survives separate copies of the client package.
 function isVersionConflict(failure: unknown): boolean {
   return (
     typeof failure === 'object' && failure !== null && 'status' in failure && failure.status === 409
