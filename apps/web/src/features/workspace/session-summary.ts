@@ -12,3 +12,13 @@ export function describeDueMix(stats: Pick<WorkspaceStats, 'due' | 'fresh'>): st
   if (fresh > 0) parts.push(`${fresh} new`);
   return parts.join(' · ');
 }
+
+/**
+ * A workspace with nothing written or studied yet, where zero statistics tell the person nothing.
+ * Example: isFirstRun({ total: 0, reviewed_today: 0, streak: 0 }) === true.
+ */
+export function isFirstRun(
+  stats: Pick<WorkspaceStats, 'total' | 'reviewed_today' | 'streak'>,
+): boolean {
+  return !stats.total && !stats.reviewed_today && !stats.streak;
+}

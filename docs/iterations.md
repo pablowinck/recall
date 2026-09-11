@@ -537,3 +537,11 @@ A forced rescan on is-agentic.com confirmed that Markdown negotiation, the Markd
 The home page now declares `/llms.txt` as its Markdown alternate, both in the head and in an RFC 8288 `Link` header. `/index.md` serves the same guide. `/pricing.md` says that Recall is free with every feature and can be self-hosted under the MIT license, and `llms.txt` links to it. The sitemap entry carries the date of the deploy that built it. A request-level journey checks all of this once, instead of once per device.
 
 Validation: format, typecheck, 122 unit tests and build pass. All 166 browser, API and MCP journeys pass, including the two new agent discovery journeys.
+
+## 2026-09-10 — UX loop 45: a first visit to Today starts with the first card, not three zeros
+
+A new account's Today showed the invitation to write a first card, followed by "0 reviews today", "0 cards in your library" and "0 day streak". The zeros said nothing and pushed the decks further down on a phone.
+
+Today now leaves the statistics out until there is something to count: a card in the library, a review today or a streak. The decks keep the gap below the invitation that the statistics would have left.
+
+Validation: format, typecheck, 122 unit tests and build pass, including a new test for when a workspace counts as a first run. All 169 browser, API and MCP journeys pass, and the main journey now checks that a new account sees no statistics until its first card exists. Captures of a new account's Today at desktop and phone sizes were reviewed.

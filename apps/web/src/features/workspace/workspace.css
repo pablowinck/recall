@@ -192,6 +192,10 @@
   gap: 1rem;
   margin: 1.2rem 0 2.8rem;
 }
+/* A first visit shows no statistics, so the decks keep the gap the statistics would have left. */
+.study-invitation + .decks-section {
+  margin-top: 2.8rem;
+}
 .stat-card {
   background: var(--surface);
   border-radius: var(--r-lg);
@@ -422,6 +426,9 @@
   .stats-grid {
     gap: 0.6rem;
     margin-bottom: 2rem;
+  }
+  .study-invitation + .decks-section {
+    margin-top: 2rem;
   }
   .stat-card {
     padding: 1rem 0.8rem;

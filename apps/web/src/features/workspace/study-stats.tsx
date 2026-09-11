@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react';
 import { Check, Flame, Layers2 } from 'lucide-react';
 import type { WorkspaceStats } from '@recall/contracts';
+import { isFirstRun } from './session-summary';
 
-/** Show only statistics returned by the authenticated API. Example: <StudyStats stats={stats} />. */
-export function StudyStats({ stats }: { stats: WorkspaceStats }): React.JSX.Element {
+/** Show only statistics returned by the authenticated API, once there is something to count. Example: <StudyStats stats={stats} />. */
+export function StudyStats({ stats }: { stats: WorkspaceStats }): React.JSX.Element | null {
+  // Three zeros on a first visit say nothing next to the invitation to write a first card.
+  if (isFirstRun(stats)) return null;
   return (
     <div className="stats-grid">
       <StatCard icon={<Check size={17} />} value={stats.reviewed_today} label="reviews today" />

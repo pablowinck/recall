@@ -15,6 +15,10 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     await page.getByLabel('Password', { exact: true }).fill(account.password);
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Every memory starts with a card' }),
+    ).toBeVisible();
+    await expect(page.getByText('cards in your library', { exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: 'New card', exact: true }).click();
     await page.getByRole('textbox', { name: /^Front/ }).fill('What does stumped mean?');
     await page.getByRole('textbox', { name: /^Back/ }).fill('Unable to work out the answer.');
@@ -22,6 +26,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     await page.getByRole('button', { name: 'Create card', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByRole('status').filter({ hasText: 'Card created' })).toHaveCount(1);
+    await expect(page.getByText('cards in your library', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Library', exact: true }).click();
     await page.getByRole('heading', { name: 'What does stumped mean?', exact: true }).click();
     await page
