@@ -19,7 +19,7 @@ export interface StudySessionState extends StudySnapshot {
   reveal: () => void;
   rate: (rating: RecallRating) => Promise<void>;
   reload: () => Promise<void>;
-  refill: (options?: { silent?: boolean }) => Promise<RefillResult>;
+  refill: () => Promise<RefillResult>;
   retryRating: () => Promise<void>;
 }
 function newRequestId(): string {
@@ -56,7 +56,7 @@ function bindStudyActions(
 ): Omit<StudySessionState, keyof StudySnapshot | 'reload'> {
   const failure = context.snapshot.ratingFailure;
   return {
-    refill: (options) => refillStudyQueue(context, options),
+    refill: () => refillStudyQueue(context),
     reveal: () => revealStudyAnswer(context.update),
     rate: (rating) => recordStudyRating(context, rating),
     retryRating: () => (failure ? recordStudyRating(context, failure.rating) : Promise.resolve()),

@@ -19,8 +19,6 @@ export function StudyView(props: StudyViewProps): React.JSX.Element {
   const session = useStudySession(props.client, props.deck);
   useStudyKeyboard(session);
   if (session.loading) return <LoadingState label="Loading your cards…" />;
-  if (session.refilling && !session.queue.length)
-    return <LoadingState label="Checking for more cards…" />;
   if (!session.queue.length && !session.error)
     return <SessionComplete session={session} exit={props.exit} />;
   return <StudyScreen session={session} view={props} />;

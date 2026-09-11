@@ -62,7 +62,7 @@ function SessionCompleteActions({
   const [check, setCheck] = useState<CheckState>('idle');
   const checkNow = async (): Promise<void> => {
     setCheck('checking');
-    setCheck(await session.refill({ silent: true }));
+    setCheck(await session.refill());
   };
   return (
     <>
@@ -91,7 +91,7 @@ function useHalfMinuteClock(): Date {
 
 // "Again" brings a card back within minutes; continue the session on its own once it is due.
 function useReturningCardsResume(session: StudySessionState): void {
-  const resume = useEffectEvent(() => session.refill({ silent: true }));
+  const resume = useEffectEvent(() => session.refill());
   const returning = session.returning;
   useEffect(
     () => scheduleResume(nextReturnDelay(returning, new Date()), () => resume()),

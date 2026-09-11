@@ -14,6 +14,12 @@ type StudyRefillContext = Pick<
   'gateway' | 'runtime' | 'update' | 'now' | 'deck'
 >;
 
+/** The next due batch, or why it could not load. */
+interface NextBatch {
+  queue: StudyCard[];
+  error: string;
+}
+
 /** Refresh the queue without accepting results from a disposed session. Example: reloadStudyQueue(gateway, runtime, update). */
 export async function reloadStudyQueue(
   gateway: StudyGateway,
@@ -47,33 +53,19 @@ export async function reloadStudyQueue(
 export type RefillResult = 'loaded' | 'empty' | 'failed';
 
 /**
- * Load the next due batch when a session runs out, without the full-screen loader. Silent checks
- * (timers, "Check for more reviews") keep the completion screen in place. Example: await refillStudyQueue(context).
+ * Check for cards that came due while the completion screen is open. A failed check leaves the screen as it is
+ * and reports the outcome to the caller. Example: await refillStudyQueue(context).
  */
-export async function refillStudyQueue(
-  context: StudyRefillContext,
-  { silent = false }: { silent?: boolean } = {},
-): Promise<RefillResult> {
+export async function refillStudyQueue(context: StudyRefillContext): Promise<RefillResult> {
   const generation = context.runtime.generation;
-  if (!silent) context.update((current) => ({ ...current, refilling: true }));
   try {
     const queue = await context.gateway.study(context.deck);
     if (generation !== context.runtime.generation) return 'failed';
     acceptRefill(context, queue);
     return queue.length ? 'loaded' : 'empty';
-  } catch (failure) {
-    if (generation === context.runtime.generation) rejectRefill(context, failure, silent);
+  } catch {
     return 'failed';
   }
-}
-
-// A refill at the end of a batch must never end in "Nicely done"; silent checks keep the completion screen.
-function rejectRefill(context: StudyRefillContext, failure: unknown, silent: boolean): void {
-  context.update((current) => ({
-    ...current,
-    refilling: false,
-    error: silent ? current.error : describeFailure(failure),
-  }));
 }
 
 function acceptRefill(context: StudyRefillContext, queue: StudyCard[]): void {
@@ -82,7 +74,6 @@ function acceptRefill(context: StudyRefillContext, queue: StudyCard[]): void {
     ...current,
     queue: current.queue.length ? current.queue : queue,
     returning: pruneReturningCards(current.returning, queue, now),
-    refilling: false,
   }));
 }
 
@@ -124,12 +115,8 @@ async function commitStudyRating(
   attempt: StudyAttempt,
 ): Promise<void> {
   const generation = context.runtime.generation;
-  const lastCard = context.snapshot.queue.length === 1;
   try {
-    const updated = await sendStudyRating(context.gateway, current, attempt);
-    if (generation !== context.runtime.generation) return;
-    acceptStudyRating(context, updated);
-    if (lastCard) void refillStudyQueue(context);
+    await saveAndAdvance(context, current, attempt, generation);
   } catch (failure) {
     if (generation === context.runtime.generation)
       context.update((snapshot) => ({
@@ -140,6 +127,30 @@ async function commitStudyRating(
     context.runtime.pending = false;
     if (generation === context.runtime.generation)
       context.update((snapshot) => ({ ...snapshot, saving: false, savingRating: null }));
+  }
+}
+
+// The last card of a batch stays on screen, its rating lit, until the next batch arrives, so a long session never
+// gives way to a loader every 20 cards.
+async function saveAndAdvance(
+  context: StudyActionContext,
+  current: StudyCard,
+  attempt: StudyAttempt,
+  generation: number,
+): Promise<void> {
+  const lastCard = context.snapshot.queue.length === 1;
+  const updated = await sendStudyRating(context.gateway, current, attempt);
+  if (generation !== context.runtime.generation) return;
+  const next = lastCard ? await loadNextBatch(context) : null;
+  if (generation === context.runtime.generation) acceptStudyRating(context, updated, next);
+}
+
+// A batch that fails to load after the last card becomes an error on the study screen, never "Nicely done".
+async function loadNextBatch(context: StudyRefillContext): Promise<NextBatch> {
+  try {
+    return { queue: await context.gateway.study(context.deck), error: '' };
+  } catch (failure) {
+    return { queue: [], error: describeFailure(failure) };
   }
 }
 
@@ -155,16 +166,25 @@ function sendStudyRating(
   });
 }
 
-function acceptStudyRating(context: StudyActionContext, updated: Flashcard): void {
+function acceptStudyRating(
+  context: StudyActionContext,
+  updated: Flashcard,
+  next: NextBatch | null,
+): void {
   context.runtime.attempt = null;
   const now = context.now();
-  context.update((snapshot) => ({
-    ...snapshot,
-    queue: snapshot.queue.slice(1),
-    completed: snapshot.completed + 1,
-    revealed: false,
-    returning: trackReturningCard(snapshot.returning, updated, now),
-  }));
+  context.update((snapshot) => {
+    const returning = trackReturningCard(snapshot.returning, updated, now);
+    const queue = next ? next.queue : snapshot.queue.slice(1);
+    return {
+      ...snapshot,
+      queue,
+      completed: snapshot.completed + 1,
+      revealed: false,
+      error: next?.error ?? snapshot.error,
+      returning: next ? pruneReturningCards(returning, queue, now) : returning,
+    };
+  });
 }
 
 // A 409 means the card changed elsewhere, so retrying the same version would fail again.

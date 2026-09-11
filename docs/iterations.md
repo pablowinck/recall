@@ -761,3 +761,11 @@ The design review measured three places where Radix defaults broke Recall's desi
 In dark mode, dialogs and menus now take the raised surface. Focus rings, including the soft variant's, use the accent text colour, as the landing page does. On coarse pointers, select menu rows are 44 px tall.
 
 Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including the touch sizing journey, which now measures a deck filter row. A probe measured the dark New card dialog at rgb(42, 42, 40) above a card at rgb(33, 33, 32), and the keyboard focus ring on the Today row at rgb(58, 91, 199).
+
+## 2026-09-11 — UX loop 74: the study screen stays in place between batches
+
+Recall loads due cards 20 at a time. The wave 3 frontend review found that rating the last card of a batch swapped the header, progress bar and card for a "Checking for more cards…" loader, then brought the whole screen back with its entrance animation. A long session blinked out every 20 cards.
+
+The rated card now stays on screen, its rating lit, until the next batch arrives, and the next card follows like any other. If the next batch can't load, the study screen shows the connection error with Try again, as before. Checks from the completion screen were already quiet, so the separate loader state is gone.
+
+Validation: format, typecheck, 137 unit tests and build pass, including a new test that holds the next batch and confirms the rated card stays on screen until it arrives. All 186 browser, API and MCP journeys pass on desktop, tablet and mobile.

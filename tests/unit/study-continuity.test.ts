@@ -51,6 +51,23 @@ class FakeBatchGateway implements StudyGateway {
   }
 }
 
+/** Serves the first batch at once and holds later ones until release(), like a slow connection. */
+class FakeHeldBatchGateway extends FakeBatchGateway {
+  private loads = 0;
+  private resume: () => void = () => undefined;
+  release(): void {
+    this.resume();
+  }
+  override async study(): Promise<StudyCard[]> {
+    this.loads += 1;
+    if (this.loads > 1)
+      await new Promise<void>((resolve) => {
+        this.resume = resolve;
+      });
+    return super.study();
+  }
+}
+
 class FakeStudySession {
   value = initialStudySnapshot();
   runtime: StudyRuntime = { pending: false, attempt: null, generation: 0 };
@@ -87,7 +104,23 @@ describe('study session continuity', () => {
     const session = await rateOnlyCard([[makeCard('a')], [makeCard('b')]]);
     expect(session.value.queue.map((item) => item.card.id)).toEqual(['b']);
     expect(session.value.completed).toBe(1);
-    expect(session.value.refilling).toBe(false);
+    expect(session.value.saving).toBe(false);
+  });
+
+  it('keeps the rated card on screen until the next batch arrives', async () => {
+    const gateway = new FakeHeldBatchGateway();
+    gateway.batches = [[makeCard('a')], [makeCard('b')]];
+    const session = new FakeStudySession();
+    await reloadStudyQueue(gateway, session.runtime, session.update);
+    revealStudyAnswer(session.update);
+    const rating = recordStudyRating(session.context(gateway), 3);
+    await settle();
+    expect(session.value.queue.map((item) => item.card.id)).toEqual(['a']);
+    expect(session.value.saving).toBe(true);
+    gateway.release();
+    await rating;
+    expect(session.value.queue.map((item) => item.card.id)).toEqual(['b']);
+    expect(session.value.saving).toBe(false);
   });
 
   it('remembers a card that comes back within the hour when nothing else is due', async () => {
@@ -117,7 +150,7 @@ describe('study session continuity', () => {
     const gateway = new FakeBatchGateway();
     gateway.batches = [[makeCard('late')]];
     const session = new FakeStudySession();
-    const refill = refillStudyQueue(session.context(gateway), { silent: true });
+    const refill = refillStudyQueue(session.context(gateway));
     session.runtime.generation += 1;
     await refill;
     expect(session.value.queue).toHaveLength(0);
@@ -147,19 +180,15 @@ describe('refill outcomes', () => {
     expect(session.value.error).toBe('Can’t reach Recall. Check your connection and try again.');
   });
 
-  it('reports silent check outcomes without replacing the completion screen', async () => {
+  it('reports check outcomes without replacing the completion screen', async () => {
     const offline = new FakeOfflineAfterFirstBatch();
     offline.calls = 1;
     const session = new FakeStudySession();
-    await expect(refillStudyQueue(session.context(offline), { silent: true })).resolves.toBe(
-      'failed',
-    );
+    await expect(refillStudyQueue(session.context(offline))).resolves.toBe('failed');
     expect(session.value.error).toBe('');
     const online = new FakeBatchGateway();
     online.batches = [[]];
-    await expect(refillStudyQueue(session.context(online), { silent: true })).resolves.toBe(
-      'empty',
-    );
+    await expect(refillStudyQueue(session.context(online))).resolves.toBe('empty');
   });
 
   it('keeps the same returning list when a check prunes nothing', () => {
