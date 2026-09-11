@@ -1,6 +1,8 @@
 import { Button } from '@radix-ui/themes';
 import { LockKeyhole } from 'lucide-react';
+import type { MouseEvent } from 'react';
 import { ErrorNotice } from '@/components/feedback';
+import { ALREADY_REGISTERED } from './auth-errors';
 import type { AuthFormState } from './use-auth-form';
 
 /** Explain the current account action. Example: <AuthHeading signup={false} sessionEnded={false} />. */
@@ -30,6 +32,16 @@ export function AuthFeedback({ state }: { state: AuthFormState }): React.JSX.Ele
   return (
     <>
       {state.error && <ErrorNotice message={state.error} />}
+      {state.error === ALREADY_REGISTERED && (
+        <button
+          type="button"
+          className="text-button"
+          data-recovery
+          onClick={(event) => switchToSignIn(event, state)}
+        >
+          Sign in instead
+        </button>
+      )}
       {state.notice && <p role="status">{state.notice}</p>}
     </>
   );
@@ -51,4 +63,11 @@ export function AuthActions({ state }: { state: AuthFormState }): React.JSX.Elem
       </span>
     </>
   );
+}
+
+// The fields stay in place across modes, so the email is kept and the cursor waits in the password field.
+function switchToSignIn(event: MouseEvent<HTMLButtonElement>, state: AuthFormState): void {
+  const form = event.currentTarget.form;
+  state.toggle();
+  form?.querySelector<HTMLInputElement>('input[name="password"]')?.focus();
 }

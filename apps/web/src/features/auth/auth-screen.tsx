@@ -33,12 +33,15 @@ export function AuthScreen({
   );
 }
 
-// The submit button disables while a request runs, which drops focus; a failure gives focus back to it, so trying
-// again is one key away.
+// The submit button disables while a request runs, which drops focus; a failure gives focus to the recovery the
+// error offers, such as Sign in instead, or back to the button, so trying again is one key away.
 function useFocusAfterFailure(error: string): RefObject<HTMLFormElement | null> {
   const form = useRef<HTMLFormElement>(null);
   useEffect(() => {
-    if (error) form.current?.querySelector<HTMLButtonElement>('button[type="submit"]')?.focus();
+    if (error)
+      form.current
+        ?.querySelector<HTMLButtonElement>('[data-recovery], button[type="submit"]')
+        ?.focus();
   }, [error]);
   return form;
 }

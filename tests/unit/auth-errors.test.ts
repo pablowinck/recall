@@ -10,7 +10,7 @@ describe('what an authentication failure says', () => {
 
   it('points a returning account at signing in', () => {
     expect(describeAuthFailure('User already registered')).toBe(
-      'That email already has an account. Sign in instead.',
+      'That email already has an account.',
     );
   });
 

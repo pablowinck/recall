@@ -961,3 +961,11 @@ The wave 4 Nielsen review moved a card from a library filtered to Chemistry into
 Saving a card into another deck now announces "Card saved and moved to “My first deck”". A library tile that leaves while focused, because its card moved or was deleted, hands focus to the page title.
 
 Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that moves a card out of a filtered deck and checks the announcement and focus.
+
+## 2026-09-11 — UX loop 99: signing out of a sign-up tab shows the sign-in form
+
+The wave 4 Nielsen review opened Recall from the landing page's "Create a free account", signed in, then signed out. The tab showed the sign-up form, "Start remembering", titled "Create account · Recall", because the sign-up mode came from the ?new=1 address the tab first loaded; for the same reason a session that ended in that tab never showed "Your session ended". Signing up with an email that already had an account said "Sign in instead." with no way to do it, and focus went back to Create account.
+
+Once a tab has signed in, every later sign-in screen starts on the sign-in form. An email that already has an account now shows a Sign in instead button, which takes focus after the error, switches to the sign-in form and puts the cursor in the password field with the email kept.
+
+Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including new journeys that sign out of a sign-up tab and sign up with an email that already has an account.

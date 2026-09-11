@@ -311,3 +311,45 @@ test('the sign-in screen names its tab for signing in and for creating an accoun
   await page.getByRole('button', { name: 'Create a new account', exact: true }).click();
   await expect(page).toHaveTitle('Create account · Recall');
 });
+
+test('signing out of a tab opened for sign-up shows the sign-in form', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await page.goto('/app?new=1');
+    await expect(page.getByRole('heading', { name: 'Start remembering' })).toBeVisible();
+    await page.getByRole('button', { name: 'I already have an account', exact: true }).click();
+    await fillSignInForm(page, account);
+    await page
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .filter({ visible: true })
+      .click();
+    await page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .click();
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+    await expect(page).toHaveTitle('Sign in · Recall');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('an email that already has an account offers Sign in instead', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await page.goto('/app?new=1');
+    await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
+    await page.getByLabel(/^Password/).fill('a long enough password');
+    await page.getByRole('button', { name: 'Create account', exact: true }).click();
+    const signInInstead = page.getByRole('button', { name: 'Sign in instead', exact: true });
+    await expect(signInInstead).toBeFocused();
+    await signInInstead.click();
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+    await expect(page.getByLabel('Password', { exact: true })).toBeFocused();
+    await expect(page.getByRole('textbox', { name: 'Email', exact: true })).toHaveValue(
+      account.email,
+    );
+  } finally {
+    await account.cleanup();
+  }
+});

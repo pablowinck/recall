@@ -44,12 +44,13 @@ function SessionGate(
   props: AuthenticatedWorkspaceProps & { startSignedUp: boolean },
 ): React.JSX.Element {
   const initialView = useStartingView(props.account, props.initialView);
+  const hadSession = useHadSession(props.account);
   if (props.account.loading) return <LoadingState />;
   if (!props.account.session)
     return (
       <AuthScreen
         auth={props.account.auth}
-        startSignedUp={props.startSignedUp}
+        startSignedUp={props.startSignedUp && !hadSession}
         sessionEnded={props.account.ended}
       />
     );
@@ -67,4 +68,12 @@ function useStartingView(account: RecallAccount, requested: WorkspaceView): Work
   const [signedInHere, setSignedInHere] = useState(false);
   if (!account.loading && !account.session && !signedInHere) setSignedInHere(true);
   return signedInHere && requested === 'study' ? 'today' : requested;
+}
+
+// The landing page's "Create a free account" opens sign-up, but once this tab has signed in, signing out or an ended
+// session should show the sign-in form.
+function useHadSession(account: RecallAccount): boolean {
+  const [hadSession, setHadSession] = useState(false);
+  if (account.session && !hadSession) setHadSession(true);
+  return hadSession;
 }
