@@ -400,3 +400,21 @@ test('deleting a deck can take its cards with it', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('the card editor names a tag limit before saving', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    await page.getByRole('textbox', { name: /^Front/ }).fill('How many tags fit on a card?');
+    await page.getByRole('textbox', { name: /^Back/ }).fill('Twelve.');
+    const thirteen = Array.from({ length: 13 }, (_, index) => `tag ${index + 1}`).join(', ');
+    await page.getByRole('textbox', { name: /^Tags/ }).fill(thirteen);
+    await page.getByRole('button', { name: 'Create card', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('Use up to 12 tags.');
+    await expect(page.getByRole('textbox', { name: /^Tags/ })).toHaveValue(thirteen);
+    expect((await account.api.cards()).total).toBe(0);
+  } finally {
+    await account.cleanup();
+  }
+});

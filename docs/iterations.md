@@ -633,3 +633,11 @@ The usability review noted that choosing a view in the navigation, or going Back
 After the first view, every switch now moves focus to the new view's title, whether it came from the navigation or from Back and Forward. A screen reader reads where the person landed, and the next Tab starts inside that view. The first view after sign-in leaves focus where the page starts, and a study session keeps its own focus on the card.
 
 Validation: format, typecheck, 127 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks that the Library title takes focus after a click in the navigation and after Back.
+
+## 2026-09-11 — UX loop 58: the card editor says which tag limit a card breaks
+
+The usability review found that a card with too many tags, or with a tag that was too long, came back from the server as "Check the fields you entered.", without naming the field or the limit. The field's hint mentions twelve tags but not their length.
+
+The editor now checks the tags before saving and says "Use up to 12 tags." or "Keep each tag to 40 characters or fewer.", keeping everything the person typed. The limits live next to the editor rather than coming from the shared schema, which would ship the validation library to the browser, and a unit test fails if the two ever disagree.
+
+Validation: format, typecheck, 127 unit tests and build pass, including tests for both messages and for the limits against the shared schema. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including a journey that tries thirteen tags and gets the message without creating a card.

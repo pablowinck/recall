@@ -2,6 +2,10 @@ import type { CardDraft, Flashcard } from '@recall/contracts';
 
 type OriginalCard = Pick<Flashcard, 'deck_id' | 'front' | 'back' | 'tags'>;
 
+// The shared card schema allows 12 tags of up to 40 characters. Importing it here would ship the schema library
+// to the browser, so the numbers live here and a unit test fails if they ever disagree.
+export const TAG_LIMITS = { count: 12, length: 40 } as const;
+
 /** Preserve learning text while normalizing tag separators. Example: buildCardDraft(fields, deckId). */
 export function buildCardDraft(fields: FormData, deckId: string): CardDraft {
   return {
@@ -13,6 +17,14 @@ export function buildCardDraft(fields: FormData, deckId: string): CardDraft {
       .map((tag) => tag.trim())
       .filter(Boolean),
   };
+}
+
+/** Say which tag limit a card breaks before the server rejects it, or null. Example: describeTagProblem(tags). */
+export function describeTagProblem(tags: string[]): string | null {
+  if (tags.length > TAG_LIMITS.count) return `Use up to ${TAG_LIMITS.count} tags.`;
+  if (tags.some((tag) => tag.length > TAG_LIMITS.length))
+    return `Keep each tag to ${TAG_LIMITS.length} characters or fewer.`;
+  return null;
 }
 
 /**
