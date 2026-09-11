@@ -21,7 +21,9 @@ export function StudyProgress({
   exit,
 }: StudyProgressProps): React.JSX.Element {
   // Cards load 20 at a time; Today's due count keeps "3 of 26" honest from the first card.
-  const total = Math.max(expectedTotal, session.completed + session.queue.length);
+  // A last card waiting for the next batch was already counted, so it no longer adds to the total.
+  const onScreen = session.awaitingBatch ? 0 : session.queue.length;
+  const total = Math.max(expectedTotal, session.completed + onScreen);
   const pct = total ? (session.completed / total) * 100 : 0;
   return (
     <>

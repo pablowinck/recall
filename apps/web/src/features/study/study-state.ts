@@ -19,6 +19,8 @@ export interface StudySnapshot {
   loading: boolean;
   saving: boolean;
   savingRating: RecallRating | null;
+  /** The last card of a batch is saved and counted, and the next batch is still loading. */
+  awaitingBatch: boolean;
   error: string;
   returning: ReturningCard[];
   ratingFailure: RatingFailure | null;
@@ -57,6 +59,7 @@ export function initialStudySnapshot(): StudySnapshot {
     loading: true,
     saving: false,
     savingRating: null,
+    awaitingBatch: false,
     error: '',
     returning: [],
     ratingFailure: null,

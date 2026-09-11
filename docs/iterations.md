@@ -1135,3 +1135,11 @@ The wave 4 Nielsen review filtered the library to an empty deck. Its delete cont
 The delete control is now a full-size 40 px icon button, with its own margin away from the filter, and hovering names it: "Delete this empty deck", or "Delete deck" when the deck has cards and a confirmation follows. Touch screens get a 44 px target. Radix sizes ghost icon buttons by their padding, so the square is set in CSS, and the control now passes on the props a tooltip hands it, which it used to drop, so the name appears.
 
 Validation: format, typecheck, 153 unit tests and build pass. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that measures the delete target and, with a mouse, reads its name.
+
+## 2026-09-11 — UX loop 120: a slow next batch counts the rating and says it is loading
+
+Since loop 74, the last card of a batch stays on screen, its rating lit, until the next batch arrives. The wave 4 frontend review loaded that batch over a slow network, 6 seconds, and the screen looked frozen: the header still said "19 of 22", one rating stayed lit, nothing was announced, and keys were ignored.
+
+The rating now counts as soon as it is saved, so the header moves on at once. While the next batch loads, the rating section says "Loading more cards…", announced to screen readers and shown only if the load takes longer than 0.8 seconds.
+
+Validation: format, typecheck, 153 unit tests and build pass, and the held batch test now checks the count and the loading state. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that delays the next batch and checks the count and the message.

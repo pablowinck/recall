@@ -427,3 +427,12 @@
 .dark .rating-2 strong {
   color: var(--orange-11);
 }
+/* Shown only when the next batch takes a moment, so a quick load never flashes a message. */
+.batch-status {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+.batch-status:not(:empty) {
+  animation: appear 0.2s ease-out 0.8s both;
+}

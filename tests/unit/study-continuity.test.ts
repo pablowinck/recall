@@ -117,10 +117,14 @@ describe('study session continuity', () => {
     await settle();
     expect(session.value.queue.map((item) => item.card.id)).toEqual(['a']);
     expect(session.value.saving).toBe(true);
+    expect(session.value.completed).toBe(1);
+    expect(session.value.awaitingBatch).toBe(true);
     gateway.release();
     await rating;
     expect(session.value.queue.map((item) => item.card.id)).toEqual(['b']);
     expect(session.value.saving).toBe(false);
+    expect(session.value.completed).toBe(1);
+    expect(session.value.awaitingBatch).toBe(false);
   });
 
   it('remembers a card that comes back within the hour when nothing else is due', async () => {

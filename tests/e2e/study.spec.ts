@@ -656,3 +656,29 @@ test('the review context and deck rows tell screen readers what they are', async
     await account.cleanup();
   }
 });
+
+test('a slow next batch counts the rating at once and says it is loading', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Last card of the batch',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.route('**/v1/study**', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      await route.continue();
+    });
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(page.getByText('1 of 1 reviewed')).toBeVisible();
+    await expect(page.getByText('Loading more cards…')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

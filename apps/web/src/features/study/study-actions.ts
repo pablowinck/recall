@@ -48,6 +48,7 @@ export async function reloadStudyQueue(
       error: '',
       saving: false,
       savingRating: null,
+      awaitingBatch: false,
       ratingFailure: null,
     }));
   } catch (failure) {
@@ -154,7 +155,14 @@ async function saveAndAdvance(
   const lastCard = context.snapshot.queue.length === 1;
   const updated = await sendStudyRating(context.gateway, current, attempt);
   if (generation !== context.runtime.generation) return;
-  const next = lastCard ? await loadNextBatch(context) : null;
+  if (!lastCard) return acceptStudyRating(context, updated, null);
+  // The rating counts as soon as it is saved; the card stays, and says so, while a slow next batch loads.
+  context.update((snapshot) => ({
+    ...snapshot,
+    completed: snapshot.completed + 1,
+    awaitingBatch: true,
+  }));
+  const next = await loadNextBatch(context);
   if (generation === context.runtime.generation) acceptStudyRating(context, updated, next);
 }
 
@@ -198,7 +206,9 @@ function acceptStudyRating(
     return {
       ...snapshot,
       queue,
-      completed: snapshot.completed + 1,
+      // The last card of a batch was counted when its rating saved.
+      completed: next ? snapshot.completed : snapshot.completed + 1,
+      awaitingBatch: false,
       revealed: false,
       ratingFailure: null,
       error: next?.error ?? snapshot.error,

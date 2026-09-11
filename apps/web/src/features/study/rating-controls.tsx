@@ -17,6 +17,10 @@ export function RatingControls({ session }: { session: StudySessionState }): Rea
         ))}
       </div>
       <RatingFailureNotice session={session} />
+      {/* Always mounted, so the message is announced when it appears. */}
+      <div className="batch-status" role="status">
+        {session.awaitingBatch ? 'Loading more cards…' : ''}
+      </div>
       <span className="keyboard-hint">
         Use keys 1–4 · Take your time and rate your recall honestly.
       </span>
