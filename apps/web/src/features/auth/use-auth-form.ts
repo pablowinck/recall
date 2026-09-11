@@ -42,8 +42,9 @@ async function authenticate(
     email: String(fields.get('email')).trim(),
     password: String(fields.get('password')),
   };
+  // Confirming the email returns to this page, so a sign-up on the consent screen resumes the assistant's request.
   const result = signup
-    ? await auth.auth.signUp(credentials)
+    ? await auth.auth.signUp({ ...credentials, options: { emailRedirectTo: window.location.href } })
     : await auth.auth.signInWithPassword(credentials);
   if (result.error) throw new Error(describeAuthFailure(result.error.message));
   return signup && !result.data.session ? 'Check your email to confirm your account.' : '';

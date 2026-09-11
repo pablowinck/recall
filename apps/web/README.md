@@ -1,6 +1,6 @@
 # Recall web
 
-Next.js App Router with Radix Themes and plain CSS. `app/page.tsx` is the static landing page (`features/marketing`): it renders without Radix Themes and styles itself from product tokens only. `app/app/[[...view]]/page.tsx` renders `features/workspace/recall-workspace.tsx`, which shows sign-in or the signed-in workspace; every view has its own address under `/app` (`features/workspace/workspace-url.ts`), so Back and Forward move between views instead of leaving the app.
+Next.js App Router with Radix Themes and plain CSS. `app/page.tsx` is the static landing page (`features/marketing`): it renders without Radix Themes and styles itself from product tokens only. `app/app/[[...view]]/page.tsx` renders `features/workspace/recall-workspace.tsx`, which shows sign-in or the signed-in workspace; every view has its own address under `/app` (`features/workspace/workspace-url.ts`), so Back and Forward move between views instead of leaving the app. Assistants that connect through OAuth ask for access at `app/oauth/consent/page.tsx` (`features/auth/oauth-consent-screen.tsx`).
 
 ## Where things live
 

@@ -44,3 +44,44 @@ test('MCP reports a gateway outage without rejecting a valid-looking token as ex
     await closeLocalServer(upstream.server);
   }
 });
+
+async function listenMcp(
+  discovery?: Parameters<typeof createMcpApp>[1],
+): Promise<{ server: Server; base: string }> {
+  const server = createMcpApp('http://127.0.0.1:9', discovery).listen(0, '127.0.0.1');
+  return { server, base: await listenLocally(server) };
+}
+
+test('an unauthenticated MCP request tells an OAuth client where to sign in', async () => {
+  const { server, base } = await listenMcp({
+    authIssuer: 'https://auth.example.test/auth/v1',
+    publicUrl: 'https://mcp.example.test',
+  });
+  try {
+    const rejected = await fetch(`${base}/mcp`, { method: 'POST', body: '{}' });
+    expect(rejected.status).toBe(401);
+    expect(rejected.headers.get('www-authenticate')).toBe(
+      'Bearer resource_metadata="https://mcp.example.test/.well-known/oauth-protected-resource/mcp"',
+    );
+    const metadata = await fetch(`${base}/.well-known/oauth-protected-resource/mcp`);
+    expect(await metadata.json()).toMatchObject({
+      resource: 'https://mcp.example.test/mcp',
+      authorization_servers: ['https://auth.example.test/auth/v1'],
+      bearer_methods_supported: ['header'],
+    });
+  } finally {
+    await closeLocalServer(server);
+  }
+});
+
+test('without an issuer the MCP server stays token-only', async () => {
+  const { server, base } = await listenMcp();
+  try {
+    const rejected = await fetch(`${base}/mcp`, { method: 'POST', body: '{}' });
+    expect(rejected.status).toBe(401);
+    expect(rejected.headers.get('www-authenticate')).toBeNull();
+    expect((await fetch(`${base}/.well-known/oauth-protected-resource/mcp`)).status).toBe(404);
+  } finally {
+    await closeLocalServer(server);
+  }
+});

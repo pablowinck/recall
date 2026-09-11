@@ -29,6 +29,8 @@ The web and MCP apps share HTTP contracts. Only the API accesses application dat
 | A feature's styles           | `apps/web/src/features/<feature>/<feature>.css`                                                                              |
 | Landing page, SEO metadata   | `apps/web/src/features/marketing/`, `apps/web/src/app/page.tsx`, `apps/web/src/app/robots.ts`, `apps/web/src/app/sitemap.ts` |
 | Workspace addresses and Back | `apps/web/src/features/workspace/workspace-url.ts`, `apps/web/src/features/workspace/use-workspace-history.ts`               |
+| Assistant OAuth consent      | `apps/web/src/features/auth/oauth-consent-screen.tsx`, `apps/web/src/app/oauth/consent/page.tsx`                             |
+| MCP OAuth discovery          | `apps/mcp/src/protected-resource.ts`, ADR 0004                                                                               |
 | Design tokens / base styles  | `apps/web/src/styles/`, imported in order by `app/globals.css`                                                               |
 | Shared HTTP calls            | `packages/client/src/index.ts`                                                                                               |
 | HTTP endpoint for a feature  | `apps/api/src/<feature>/<feature>-routes.ts` + `<feature>-store.ts`                                                          |
