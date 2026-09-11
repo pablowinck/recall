@@ -343,6 +343,8 @@
 @media (max-width: 768px) {
   :root {
     --mobile-nav-height: calc(3.75rem + max(0.55rem, env(safe-area-inset-bottom)));
+    /* Keyboard focus scrolls controls clear of the fixed tab bar instead of leaving them beneath it. */
+    scroll-padding-bottom: var(--mobile-nav-height);
   }
   .app-shell.is-studying .mobile-top {
     display: none;
@@ -478,5 +480,18 @@
 @media (max-width: 600px) {
   .app-shell.is-studying .page-content {
     padding-bottom: 0;
+  }
+}
+/* At 200% or 400% zoom a laptop screen is short, and the fixed tab bar would cover a fifth of it. With a mouse or
+   trackpad the bar returns to the page flow; a phone held sideways keeps it fixed within the thumb's reach. */
+@media (max-width: 768px) and (max-height: 480px) and (pointer: fine) {
+  :root {
+    scroll-padding-bottom: 0;
+  }
+  .sidebar {
+    position: static;
+  }
+  .page-content {
+    padding-bottom: 1.5rem;
   }
 }

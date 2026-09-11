@@ -381,3 +381,23 @@ test('forced colours keep the edges of the library, fields and dialogs', async (
     await account.cleanup();
   }
 });
+
+test('the tab bar never covers the focused control when zoomed in', async ({ page }, testInfo) => {
+  test.skip(
+    Boolean(testInfo.project.use.hasTouch),
+    'Touch screens keep the tab bar fixed within reach.',
+  );
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.setViewportSize({ width: 720, height: 600 });
+    const padding = await page.evaluate(
+      () => getComputedStyle(document.documentElement).scrollPaddingBottom,
+    );
+    expect(Number.parseFloat(padding)).toBeGreaterThan(40);
+    await page.setViewportSize({ width: 360, height: 225 });
+    await expect(page.locator('.sidebar')).toHaveCSS('position', 'static');
+  } finally {
+    await account.cleanup();
+  }
+});

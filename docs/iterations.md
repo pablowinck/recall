@@ -1025,3 +1025,11 @@ The wave 4 frontend review turned on forced colours, as Windows high contrast th
 In forced colours, cards, panels, dialogs and menus now get outlines the system paints, fields, selects and buttons get borders, and the current navigation item gets a border in the system highlight colour. Nothing changes in the normal themes.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens the library and the card editor in forced colours and checks their edges and the current view.
+
+## 2026-09-11 — UX loop 107: the tab bar never covers the focused control when zoomed in
+
+The wave 4 frontend review zoomed the app to 200% and 400%. The layout switched to the phone tab bar, fixed at the bottom and 72 px tall, which covered 18 to 28% of the viewport. Tabbing left deck rows, the deck filter, New deck and Create personal connection at least half beneath it, against WCAG's rule that focus is never hidden.
+
+Keyboard focus now scrolls controls clear of the fixed tab bar. Viewports 480 px tall or shorter with a mouse or trackpad, the zoomed ones, put the tab bar back in the page flow, while a phone held sideways keeps it fixed within reach.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new desktop journey that checks the scroll padding at 200% and the tab bar's place at 400%.
