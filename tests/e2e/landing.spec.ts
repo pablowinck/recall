@@ -142,3 +142,18 @@ test('on wide screens the questions line up with the second step', async ({ page
   expect(step && questions).toBeTruthy();
   expect(Math.abs(step!.x - questions!.x)).toBeLessThan(2);
 });
+
+test('coming back to the app reuses one Supabase Auth client', async ({ page }) => {
+  const warnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.text().includes('Multiple GoTrueClient instances')) warnings.push(message.text());
+  });
+  await page.goto('/');
+  for (let visit = 0; visit < 3; visit += 1) {
+    await page.getByRole('link', { name: 'Sign in', exact: true }).first().click();
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+    await page.goBack();
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Recall makes them stick');
+  }
+  expect(warnings).toEqual([]);
+});

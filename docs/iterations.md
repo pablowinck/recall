@@ -729,3 +729,11 @@ The usability review imported cards through MCP while the library was open. Five
 The library now refreshes when the tab comes back or the network returns, as Today does, and reloads the decks for its filter at the same time. It does not refresh on a timer, so a list someone is reading never shifts under them.
 
 Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including a journey in which an assistant creates a card while the library is open and the card appears once the page is visible again.
+
+## 2026-09-11 — UX loop 70: one Supabase Auth client per tab
+
+The frontend review found that every visit to the app created a new Supabase Auth client and never stopped it. After three trips between the landing page and the app, the landing page still ran three token refresh timers, three broadcast channels and three visibility listeners, and the console warned about multiple Auth clients each time. A missing public Supabase setting also failed deep inside the client.
+
+The browser now creates one Auth client for the tab and reuses it, while a server render still gets a throwaway client that no request shares. A missing `NEXT_PUBLIC_SUPABASE_URL` or key fails with a message that names the setting.
+
+Validation: format, typecheck, 133 unit tests and build pass, including a test for the missing-setting message. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including the OAuth consent journeys and a journey that goes from the landing page to sign-in and back three times without an Auth client warning.

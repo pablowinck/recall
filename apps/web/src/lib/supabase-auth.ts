@@ -29,3 +29,33 @@ export function createBrowserAuth(projectUrl: string, publishableKey: string): B
     detectSessionInUrl: true,
   });
 }
+
+let tabAuth: BrowserAuth | null = null;
+
+/**
+ * The one Auth client for this browser tab. A client per mount kept refresh timers, broadcast channels and
+ * listeners running after every visit to the app. A server render gets a throwaway client that no request shares.
+ * Example: const auth = browserAuth().
+ */
+export function browserAuth(): BrowserAuth {
+  const url = requirePublicSetting(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    'NEXT_PUBLIC_SUPABASE_URL',
+  );
+  const key = requirePublicSetting(
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  );
+  if (typeof window === 'undefined') return createBrowserAuth(url, key);
+  tabAuth ??= createBrowserAuth(url, key);
+  return tabAuth;
+}
+
+// Next inlines a public setting only where it is written as process.env.NAME, so callers pass the value in.
+function requirePublicSetting(value: string | undefined, name: string): string {
+  if (!value)
+    throw new Error(
+      `${name} is not set. A fresh worktree needs apps/web/.env.local (see AGENTS.md).`,
+    );
+  return value;
+}

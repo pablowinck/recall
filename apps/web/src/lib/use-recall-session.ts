@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { RecallClient } from '@recall/client';
-import { createBrowserAuth, type BrowserAuth, type Session } from './supabase-auth';
+import { browserAuth, type BrowserAuth, type Session } from './supabase-auth';
 
 interface SessionSnapshot {
   session: Session | null;
@@ -12,14 +12,9 @@ interface RecallSession extends SessionSnapshot {
   client: RecallClient;
 }
 
-/** Maintain one Auth session per workspace instance. Example: useRecallSession(). */
+/** Follow the tab's Auth session for one workspace instance. Example: useRecallSession(). */
 export function useRecallSession(): RecallSession {
-  const [auth] = useState(() =>
-    createBrowserAuth(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    ),
-  );
+  const [auth] = useState(browserAuth);
   const [snapshot, setSnapshot] = useState<SessionSnapshot>({ session: null, loading: true });
   useEffect(() => subscribeToAuth(auth, setSnapshot), [auth]);
   const client = useMemo(() => createSessionClient(auth), [auth]);
