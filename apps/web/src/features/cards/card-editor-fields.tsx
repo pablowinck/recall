@@ -168,6 +168,7 @@ function submitOnlyWithModifier(event: KeyboardEvent<HTMLInputElement>): void {
 function FrontField({ value }: { value?: string }): React.JSX.Element {
   const attributes: ComponentProps<typeof TextArea> = {
     name: 'front',
+    dir: 'auto',
     defaultValue: value,
     placeholder: 'What would you like to remember?',
     required: true,
@@ -187,6 +188,7 @@ function FrontField({ value }: { value?: string }): React.JSX.Element {
 function BackField({ value }: { value?: string }): React.JSX.Element {
   const attributes: ComponentProps<typeof TextArea> = {
     name: 'back',
+    dir: 'auto',
     defaultValue: value,
     placeholder: 'Write the answer, with an example if it helps.',
     required: true,

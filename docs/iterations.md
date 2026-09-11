@@ -801,3 +801,11 @@ The wave 3 design review measured the bar that holds Reveal answer and the ratin
 Beyond phone widths the bar now has exactly the card's width, with its buttons where they were. Phones keep the edge-to-edge bar.
 
 Validation: format, typecheck, 137 unit tests and build pass. All 194 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that compares the bar with the card before and after revealing the answer on desktop and tablet.
+
+## 2026-09-11 — UX loop 79: Arabic, Hebrew and Persian cards read right to left
+
+The wave 3 Nielsen review found that card text had no direction of its own. A card written in Arabic, Hebrew or Persian was set in a left-to-right paragraph, so it started at the left edge, and punctuation at the end of a sentence moved to the wrong side.
+
+Card text now takes its direction from its own letters: the question, each paragraph and list of the answer, the library previews and the editor's Front and Back fields. An Arabic sentence with a Latin translation reads each paragraph in its own direction, and library previews stretch to the card's width, so right-to-left text starts at the right edge.
+
+Validation: format, typecheck, 137 unit tests and build pass. All 194 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies an Arabic card and checks the direction of the question and of each answer paragraph.

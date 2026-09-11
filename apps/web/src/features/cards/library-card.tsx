@@ -20,13 +20,13 @@ export function LibraryCard({
         <span className={`card-status ${status.tone}`}>{status.label}</span>
         {deckName && <span className="card-deck-badge">{deckName}</span>}
       </div>
-      <h2>
+      <h2 dir="auto">
         {/* The button covers the whole card, but its name is only the question, not every word on it. */}
         <button className="card-open" onClick={edit} aria-label={summarizeFront(card.front)}>
           <CardInline text={card.front} />
         </button>
       </h2>
-      <p>
+      <p dir="auto">
         <CardInline text={card.back} />
       </p>
       <LibraryTags tags={card.tags} />

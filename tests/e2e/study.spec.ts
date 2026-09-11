@@ -347,3 +347,33 @@ async function expectSameWidth(expected: Locator, actual: Locator): Promise<void
   const [target, measured] = await Promise.all([expected.boundingBox(), actual.boundingBox()]);
   expect(Math.round(measured?.width ?? 0)).toBe(Math.round(target?.width ?? -1));
 }
+
+test('right-to-left card text reads right to left beside a translation', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'ما معنى كلمة ذاكرة؟',
+      back: 'Memory.\n\nالذاكرة هي القدرة على التذكر.',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    const question = page.locator('.review-card h2');
+    await expect(question).toBeVisible();
+    expect(await readDirection(question)).toBe('rtl');
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    const paragraphs = page.locator('.review-answer .card-body p');
+    await expect(paragraphs).toHaveCount(2);
+    expect(await readDirection(paragraphs.nth(0))).toBe('ltr');
+    expect(await readDirection(paragraphs.nth(1))).toBe('rtl');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+/** Read the direction the browser resolved for an element, dir="auto" included. Example: await readDirection(heading). */
+async function readDirection(target: Locator): Promise<'rtl' | 'ltr'> {
+  return target.evaluate((node) => (node.matches(':dir(rtl)') ? 'rtl' : 'ltr'));
+}

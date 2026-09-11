@@ -87,7 +87,7 @@ export function ReviewContent({
         onClick={isClickable ? onReveal : undefined}
       >
         <span className="eyebrow">Front</span>
-        <h2 className={frontSizeClass(current.card.front)}>
+        <h2 className={frontSizeClass(current.card.front)} dir="auto">
           <CardInline text={current.card.front} />
         </h2>
         {revealed && <ReviewAnswer answer={current.card.back} focusRef={focus.answer} />}
