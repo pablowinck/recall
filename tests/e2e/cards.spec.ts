@@ -487,6 +487,9 @@ test('a delete confirmation keeps a readable label in light and dark mode', asyn
       await expect(confirm).toBeVisible();
       await settleAnimations(page);
       expect(await measureContrast(confirm)).toBeGreaterThanOrEqual(4.5);
+      await page.keyboard.press('Tab');
+      await expect(confirm).toBeFocused();
+      expect(await measureContrast(confirm, 'ring')).toBeGreaterThanOrEqual(3);
       await page.keyboard.press('Escape');
       await expect(confirm).toBeHidden();
     }

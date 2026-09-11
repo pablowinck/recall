@@ -40,25 +40,38 @@ export async function settleAnimations(page: Page): Promise<void> {
   );
 }
 
-/** Measure a control's text against its own background in sRGB, as WCAG does. Example: await measureContrast(button). */
-export async function measureContrast(target: Locator): Promise<number> {
-  return target.evaluate((node) => {
-    const style = getComputedStyle(node);
+/**
+ * Measure a control's text against its background, or its focus ring against the surface behind it, in sRGB as
+ * WCAG does. Example: await measureContrast(button, 'ring').
+ */
+export async function measureContrast(
+  target: Locator,
+  part: 'label' | 'ring' = 'label',
+): Promise<number> {
+  return target.evaluate((node, measured) => {
     // A canvas turns any CSS colour, display-p3 included, into the sRGB bytes the WCAG formula expects.
     const pixel = document.createElement('canvas').getContext('2d')!;
-    const luminance = (colour: string): number => {
+    const bytes = (colour: string): number[] => {
       pixel.clearRect(0, 0, 1, 1);
       pixel.fillStyle = colour;
       pixel.fillRect(0, 0, 1, 1);
-      const [r, g, b] = Array.from(pixel.getImageData(0, 0, 1, 1).data.slice(0, 3), (byte) => {
+      return Array.from(pixel.getImageData(0, 0, 1, 1).data);
+    };
+    const luminance = (colour: string): number => {
+      const [r, g, b] = bytes(colour).map((byte) => {
         const channel = byte / 255;
         return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
       });
       return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
     };
-    const [lighter, darker] = [luminance(style.color), luminance(style.backgroundColor)].sort(
-      (first, second) => second - first,
-    );
+    // A ring is drawn outside the control, over the nearest ancestor that paints a background.
+    let surface: Element | null = measured === 'ring' ? node.parentElement : node;
+    while (surface && bytes(getComputedStyle(surface).backgroundColor)[3] === 0)
+      surface = surface.parentElement;
+    const background = surface ? getComputedStyle(surface).backgroundColor : 'white';
+    const style = getComputedStyle(node);
+    const foreground = measured === 'ring' ? style.outlineColor : style.color;
+    const [lighter, darker] = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
     return (lighter! + 0.05) / (darker! + 0.05);
-  });
+  }, part);
 }

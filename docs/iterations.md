@@ -969,3 +969,11 @@ The wave 4 Nielsen review opened Recall from the landing page's "Create a free a
 Once a tab has signed in, every later sign-in screen starts on the sign-in form. An email that already has an account now shows a Sign in instead button, which takes focus after the error, switches to the sign-in form and puts the cursor in the password field with the email kept.
 
 Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including new journeys that sign out of a sign-up tab and sign up with an email that already has an account.
+
+## 2026-09-11 — UX loop 100: red buttons keep a visible focus ring
+
+The wave 4 Nielsen review tabbed to the Delete deck and Delete card buttons. Their keyboard rings measured 2.1:1 and 2.39:1 against the surface behind them, under the 3:1 WCAG asks of a focus indicator. Loop 73 had moved rings to the accent text colour on the theme root, but Radix sets its focus scale again on every element with its own accent colour, which is exactly what a red button is.
+
+The focus scale now follows the accent text colour on every element that sets an accent colour. The contrast helper used by the journeys can measure a ring against the surface behind a control.
+
+Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, and the delete confirmation journey now tabs to Delete permanently in light and dark mode and measures its ring at 3:1 or more.

@@ -11,6 +11,11 @@
   --focus-ring: var(--accent-11);
   --focus-8: var(--accent-11);
 }
+/* Radix sets the focus scale again on every element with its own accent colour, such as a red Delete button, which
+   brought its ring back to about 2:1. */
+[data-accent-color] {
+  --focus-8: var(--accent-11);
+}
 .dark .radix-themes {
   --color-overlay: rgba(0, 0, 0, 0.5);
   /* Dialogs and menus sit above cards, so in dark mode they take the raised surface, not a panel darker than the card. */
