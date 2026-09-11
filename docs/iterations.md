@@ -1076,7 +1076,7 @@ Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, A
 
 ## 2026-09-11 — UX loop 113: editor fields have short names, hints on the label's row, and tags ignore case repeats
 
-The wave 4 frontend review listened to the card editor: each hint sat inside its label, so the Back field was named "Back The answer · **bold**, *italic*, `code`, - lists", Markdown markers included. The design review measured the same fields as three rows, label, hint and control, with the editor's description at 14 px against 16 px in every other dialog. The Nielsen review saved "Portuguese" and "portuguese" as two tags on one card, and the Tags field capitalised its first letter on phones and ignored right-to-left text.
+The wave 4 frontend review listened to the card editor: each hint sat inside its label, so the Back field was named "Back The answer · **bold**, _italic_, `code`, - lists", Markdown markers included. The design review measured the same fields as three rows, label, hint and control, with the editor's description at 14 px against 16 px in every other dialog. The Nielsen review saved "Portuguese" and "portuguese" as two tags on one card, and the Tags field capitalised its first letter on phones and ignored right-to-left text.
 
 Each field is now named by its label alone and described by its hint, which shares the label's row. The editor's description uses the size of the other dialogs. The Tags field reads its direction from its text and doesn't capitalise, and tags that differ only in case are kept once, in the first spelling.
 
