@@ -1,5 +1,7 @@
 /* The landing page renders without Radix Themes, so it styles itself from the product tokens alone. */
 .landing {
+  /* One scale for the headline and the example card beside it, so the card never outranks the headline. */
+  --hero-title: clamp(2.3rem, 1.2rem + 2.6vw, 3.2rem);
   color: var(--ink);
   line-height: 1.5;
   letter-spacing: -0.011em;
@@ -41,7 +43,7 @@
   margin-bottom: 1.1rem;
 }
 .landing h1 {
-  font-size: clamp(2.3rem, 1.2rem + 2.6vw, 3.2rem);
+  font-size: var(--hero-title);
   line-height: 1.07;
   letter-spacing: -0.032em;
   margin-bottom: 1.4rem;
@@ -353,10 +355,16 @@
   display: block;
   text-wrap: balance;
 }
+.landing-hero .sample-card {
+  padding: clamp(2rem, 2.6vw, 2.5rem);
+}
+.landing-hero .sample-card-front {
+  font-size: calc(var(--hero-title) * 0.76);
+}
 /* Beside the copy from 960px, under it on smaller screens; a fixed card width keeps the layout from shifting. */
 @media (min-width: 960px) {
   .landing-hero {
-    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    grid-template-columns: minmax(0, 1fr) clamp(280px, 26vw, 380px);
     column-gap: 4rem;
     align-items: center;
   }

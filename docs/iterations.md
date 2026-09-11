@@ -521,3 +521,11 @@ The design review found that screen readers met the example card on the landing 
 The card is now a figure captioned "Example card", and its two sides carry visually hidden "Front:" and "Back:" labels, so it is announced as an example with both sides named. The figure's default margins are reset, so the card keeps its size and place on both pages.
 
 Validation: format, typecheck, 122 unit tests and build pass. All 166 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing and sign-in accessibility checks and a new journey that finds the card as a figure with both sides named.
+
+## 2026-09-10 — UX loop 44: the headline outranks the example card at every width
+
+On a phone, the example card's front was set at 42 px while the headline was 37 px, so the sample text read as the page's title. At 960 px the card took so much room that the headline's sentences wrapped and the lead ran six lines.
+
+The headline and the card's front now share one scale: the front is three quarters of the headline's size at every width, and the card's padding shrinks with the window. From 960 px the card's column is 26% of the window, between 280 and 380 px, which the design review measured as one line per headline sentence.
+
+Validation: format, typecheck, 122 unit tests and build pass. All 166 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check, and captures at 1440 px and 390 px in both appearances show the headline above the card with no horizontal overflow.
