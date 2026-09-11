@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { createTestAccount } from './fixtures';
+import { connectTestMcp, createTestAccount } from './fixtures';
 import { FakeCardSaveOutage } from './fake-card-save-outage';
 import { expectNoAccessibilityViolations, signInToRecall } from './interaction-steps';
 
@@ -414,6 +414,38 @@ test('the card editor names a tag limit before saving', async ({ page }) => {
     await expect(page.getByRole('alert')).toContainText('Use up to 12 tags.');
     await expect(page.getByRole('textbox', { name: /^Tags/ })).toHaveValue(thirteen);
     expect((await account.api.cards()).total).toBe(0);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('the library shows cards an assistant added once the person comes back to it', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const added = page.getByRole('heading', { name: 'Added by an assistant', exact: true });
+    await expect(added).toHaveCount(0);
+    const { token } = await account.api.createToken('Library freshness');
+    const mcp = await connectTestMcp(token);
+    try {
+      const deck = (await account.api.workspace()).decks[0]!;
+      await mcp.callTool({
+        name: 'create_flashcard',
+        arguments: {
+          deck_id: deck.id,
+          front: 'Added by an assistant',
+          back: 'While the library was open',
+          tags: [],
+        },
+      });
+    } finally {
+      await mcp.close();
+    }
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await expect(added).toBeVisible();
   } finally {
     await account.cleanup();
   }

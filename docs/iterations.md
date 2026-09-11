@@ -721,3 +721,11 @@ The wave 3 usability review found that a numbered list restarted at 1 after a ne
 Card text now keeps the number a numbered list starts from, and a list line indented by two spaces or a tab sits under the item before it, so the outer numbering carries on after a sub-step. Card text is still parsed into elements and never rendered as HTML.
 
 Validation: format, typecheck, 133 unit tests and build pass, including new tests for start numbers and nested steps. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 69: the library catches up with cards an assistant adds
+
+The usability review imported cards through MCP while the library was open. Five seconds later, and after returning to the tab, it still said "0 cards", and the new deck was missing from the filter until the person switched views.
+
+The library now refreshes when the tab comes back or the network returns, as Today does, and reloads the decks for its filter at the same time. It does not refresh on a timer, so a list someone is reading never shifts under them.
+
+Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including a journey in which an assistant creates a card while the library is open and the card appears once the page is visible again.

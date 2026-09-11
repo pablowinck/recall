@@ -30,6 +30,8 @@ export function useWorkspaceModel(
     ...createViewActions(update, remote.refresh),
     ...createAccountActions(account, update, remote.refresh),
   };
+  // Cards an assistant adds show up when the person returns to the library; no timer shifts the list mid-read.
+  useWorkspaceFreshness(state.view === 'library', actions.updated, { everyMinute: false });
   return {
     ...state,
     workspace: remote.workspace,
