@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { AlertDialog, Button, IconButton, RadioGroup, Select } from '@radix-ui/themes';
+import { useState, type ComponentProps } from 'react';
+import { AlertDialog, Button, IconButton, RadioGroup, Select, Tooltip } from '@radix-ui/themes';
 import { Trash2 } from 'lucide-react';
 import type { RecallClient } from '@recall/client';
 import type { Deck, DeckRemoval } from '@recall/contracts';
@@ -31,11 +31,13 @@ export function DeleteDeckButton(props: DeleteDeckProps): React.JSX.Element | nu
   if (!others.length) return null;
   if (!deck.card_count)
     return (
-      <DeleteDeckTrigger
-        deck={deck}
-        busy={action.busy}
-        onClick={() => void remove({ cards: 'delete' })}
-      />
+      <Tooltip content="Delete this empty deck">
+        <DeleteDeckTrigger
+          deck={deck}
+          busy={action.busy}
+          onClick={() => void remove({ cards: 'delete' })}
+        />
+      </Tooltip>
     );
   return <DeckRemovalDialog deck={deck} others={others} action={action} remove={remove} />;
 }
@@ -57,22 +59,25 @@ function useDeckRemoval(
   return { action, remove };
 }
 
+// Tooltips and dialog triggers hand their event handlers and ref to this component, so it passes every other prop to
+// the button; dropping them left the tooltip without the pointer events that open it.
 function DeleteDeckTrigger({
   deck,
   busy,
-  onClick,
-}: {
-  deck: Deck;
-  busy: boolean;
-  onClick?: () => void;
-}): React.JSX.Element {
+  ...button
+}: { deck: Deck; busy: boolean } & Omit<
+  ComponentProps<typeof IconButton>,
+  'children'
+>): React.JSX.Element {
   return (
     <IconButton
+      {...button}
+      className="delete-deck-trigger"
+      size="3"
       variant="ghost"
       color="red"
       aria-label={`Delete deck ${deck.name}`}
       loading={busy}
-      onClick={onClick}
     >
       <Trash2 size={17} />
     </IconButton>
@@ -104,9 +109,12 @@ function DeckRemovalDialog({
   };
   return (
     <AlertDialog.Root open={open} onOpenChange={(next) => !action.busy && setOpen(next)}>
-      <AlertDialog.Trigger>
-        <DeleteDeckTrigger deck={deck} busy={false} />
-      </AlertDialog.Trigger>
+      {/* Radix passes tooltip props to its content, so the tooltip sits outside the dialog trigger. */}
+      <Tooltip content="Delete deck">
+        <AlertDialog.Trigger>
+          <DeleteDeckTrigger deck={deck} busy={false} />
+        </AlertDialog.Trigger>
+      </Tooltip>
       <AlertDialog.Content maxWidth="460px">
         <AlertDialog.Title>Delete “{deck.name}”?</AlertDialog.Title>
         <AlertDialog.Description>{describeDeckCards(deck)}</AlertDialog.Description>

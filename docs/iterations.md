@@ -1127,3 +1127,11 @@ The wave 4 Nielsen review listened to Recall with a screen reader. Above a card,
 The review context now labels its parts for screen readers, "Deck:" and "Tags:". Each deck row ends with what it does, "start a review" when cards are due and "open in the library" otherwise. Nothing changes on screen.
 
 Validation: format, typecheck, 153 unit tests and build pass. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that checks a deck row's action and the review context's labels.
+
+## 2026-09-11 — UX loop 119: deleting a deck has a full-size, named target
+
+The wave 4 Nielsen review filtered the library to an empty deck. Its delete control was a 29 by 29 px trash icon, 6 px from the deck filter, with no name on hover, and for an empty deck one press deletes at once.
+
+The delete control is now a full-size 40 px icon button, with its own margin away from the filter, and hovering names it: "Delete this empty deck", or "Delete deck" when the deck has cards and a confirmation follows. Touch screens get a 44 px target. Radix sizes ghost icon buttons by their padding, so the square is set in CSS, and the control now passes on the props a tooltip hands it, which it used to drop, so the name appears.
+
+Validation: format, typecheck, 153 unit tests and build pass. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that measures the delete target and, with a mouse, reads its name.

@@ -360,3 +360,16 @@
   align-items: baseline;
   gap: 0.25rem 0.5rem;
 }
+/* Radix pulls ghost icon buttons in with negative margins, which left 6 px between the deck filter and Delete, and
+   sizes them by padding, 33 px at size 3. The control gets its own margin and a full square, 44 px on touch. */
+.library-toolbar .delete-deck-trigger {
+  margin: 0;
+  width: 40px;
+  height: 40px;
+}
+@media (pointer: coarse) {
+  .library-toolbar .delete-deck-trigger {
+    width: 44px;
+    height: 44px;
+  }
+}

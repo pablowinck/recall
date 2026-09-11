@@ -806,3 +806,24 @@ test('editor fields are named by their labels and described by their hints', asy
     await account.cleanup();
   }
 });
+
+test('deleting a deck from the library has a full-size target with a name on hover', async ({
+  page,
+}, testInfo) => {
+  const account = await createTestAccount();
+  try {
+    await account.api.createDeck('Empty deck');
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Empty deck', exact: true }).click();
+    const remove = page.getByRole('button', { name: 'Delete deck Empty deck', exact: true });
+    expect(Math.round((await remove.boundingBox())?.width ?? 0)).toBeGreaterThanOrEqual(40);
+    if (!testInfo.project.use.hasTouch) {
+      await remove.hover();
+      await expect(page.getByRole('tooltip')).toContainText('Delete this empty deck');
+    }
+  } finally {
+    await account.cleanup();
+  }
+});
