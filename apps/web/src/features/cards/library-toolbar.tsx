@@ -118,6 +118,7 @@ function LibraryDeckFilter({
 }): React.JSX.Element {
   return (
     <Select.Root
+      size="3"
       value={state.query.deck || 'all'}
       onValueChange={(val) => state.selectDeck(val === 'all' ? '' : val)}
     >

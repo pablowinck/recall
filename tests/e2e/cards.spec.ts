@@ -743,3 +743,25 @@ test('moving a card out of the filtered deck says where it went and keeps focus'
     await account.cleanup();
   }
 });
+
+test('the library toolbar controls share one height on desktop', async ({ page }, testInfo) => {
+  test.skip(
+    Boolean(testInfo.project.use.hasTouch),
+    'Touch layouts already raise every control to 44 px.',
+  );
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const heights = await Promise.all(
+      [
+        page.locator('.library-toolbar .rt-TextFieldRoot'),
+        page.getByRole('combobox', { name: 'Filter by deck' }),
+        page.getByRole('button', { name: 'New deck', exact: true }),
+      ].map(async (control) => Math.round((await control.boundingBox())?.height ?? 0)),
+    );
+    expect(new Set(heights).size).toBe(1);
+  } finally {
+    await account.cleanup();
+  }
+});

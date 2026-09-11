@@ -1009,3 +1009,11 @@ The wave 4 design review studied an Arabic card after loop 79. The question ende
 The measure now sits on each answer paragraph and list, and a right-to-left one moves to its own reading edge. Card lists indent on the side they are read from. A first version used `:dir(rtl)`, which the CSS build rewrites as right-to-left `:lang()` selectors that never match card text marked only with `dir="auto"`; an end margin, which follows each block's own direction, now places answers and questions alike, and AGENTS.md records the rewrite.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the right-to-left journey now checks that the Arabic answer paragraph ends where the question ends.
+
+## 2026-09-11 — UX loop 105: library tags sit on the card, and the toolbar uses one control size
+
+The wave 4 design review looked at the library in both appearances. In dark mode, tags and deck badges were filled with the canvas colour, near-black on the card's #212120, so they looked like holes punched in it. On desktop, the toolbar set a 40 px search field beside a 32 px deck filter and a 32 px New deck button.
+
+Tags and deck badges now use the secondary fill, lighter than the card in dark mode, with their text at 5.77:1 in dark and 5.20:1 in light. The deck filter and New deck button use the search field's size, so the toolbar reads as one row.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new desktop journey that checks the three toolbar controls share one height.

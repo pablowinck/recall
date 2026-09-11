@@ -7,7 +7,7 @@ import type { DeckDialogState } from './use-deck-dialog';
 export function DeckDialogTrigger(): React.JSX.Element {
   return (
     <Dialog.Trigger>
-      <Button variant="soft" color="gray">
+      <Button size="3" variant="soft" color="gray">
         <FolderPlus size={17} />
         New deck
       </Button>

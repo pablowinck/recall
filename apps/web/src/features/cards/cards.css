@@ -80,7 +80,8 @@
   font-size: 0.72rem;
   font-weight: 500;
   color: var(--ink-2);
-  background: var(--canvas);
+  /* A secondary fill sits lighter than the card in dark mode; the canvas colour read as a hole. */
+  background: var(--fill-2);
   border: 1px solid var(--separator);
   padding: 0.15rem 0.55rem;
   border-radius: var(--r-pill);
@@ -164,7 +165,7 @@
 .tag-list > span {
   font-size: 0.72rem;
   font-weight: 500;
-  background: var(--canvas);
+  background: var(--fill-2);
   padding: 0.2rem 0.55rem;
   border: 1px solid var(--separator);
   border-radius: var(--r-pill);
