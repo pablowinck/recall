@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   // Absolute, because the layout's "%s · Recall" template would repeat the brand in this title.
   title: { absolute: TITLE },
   description: DESCRIPTION,
-  alternates: { canonical: '/' },
+  // The Markdown twin is the llms.txt guide, which agents also get here by asking for text/markdown.
+  alternates: { canonical: '/', types: { 'text/markdown': '/llms.txt' } },
   openGraph: {
     type: 'website',
     url: '/',

@@ -32,6 +32,7 @@ export default defineConfig({
         '**/mcp-availability.spec.ts',
         '**/mcp-oauth.spec.ts',
         '**/token-query.spec.ts',
+        '**/agent-discovery.spec.ts',
       ],
     },
     {

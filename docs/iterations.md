@@ -529,3 +529,11 @@ On a phone, the example card's front was set at 42 px while the headline was 37 
 The headline and the card's front now share one scale: the front is three quarters of the headline's size at every width, and the card's padding shrinks with the window. From 960 px the card's column is 26% of the window, between 280 and 380 px, which the design review measured as one line per headline sentence.
 
 Validation: format, typecheck, 122 unit tests and build pass. All 166 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check, and captures at 1440 px and 390 px in both appearances show the headline above the card with no horizontal overflow.
+
+## 2026-09-10 — UX loop 46: agents find the Markdown twin, the price and a dated sitemap
+
+A forced rescan on is-agentic.com confirmed that Markdown negotiation, the Markdown 404, the agent instructions, the structured data and the metadata now pass. It also listed cheap discovery gaps: no page advertised its Markdown twin in a link tag or a `Link` header, `/index.md` did not return Markdown, there was no machine-readable price, and the sitemap entry had no date.
+
+The home page now declares `/llms.txt` as its Markdown alternate, both in the head and in an RFC 8288 `Link` header. `/index.md` serves the same guide. `/pricing.md` says that Recall is free with every feature and can be self-hosted under the MIT license, and `llms.txt` links to it. The sitemap entry carries the date of the deploy that built it. A request-level journey checks all of this once, instead of once per device.
+
+Validation: format, typecheck, 122 unit tests and build pass. All 166 browser, API and MCP journeys pass, including the two new agent discovery journeys.

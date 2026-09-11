@@ -32,7 +32,7 @@ export const LLMS_TEXT = [
   '',
   '## Facts',
   '',
-  '- Price: free to use.',
+  '- Price: free to use (https://recall-web-gilt.vercel.app/pricing.md).',
   '- Scheduling: FSRS (ts-fsrs) with a 90% target retention. Each rating previews its next interval.',
   "- Privacy: one private tenant per account, enforced by PostgreSQL row-level security. The MCP server has no database access and calls the API with the user's token. Tokens are stored as SHA-256 hashes.",
   '- Deleting a deck moves its cards to another deck or deletes them, as the user chooses.',
