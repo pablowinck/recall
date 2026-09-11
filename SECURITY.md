@@ -9,6 +9,6 @@ The threat model includes malicious cross-tenant identifiers, replayed or concur
 - The API applies verified claims and `SET LOCAL ROLE authenticated` inside a transaction, releasing the connection after commit or rollback.
 - The MCP process only has access to the API. Revocation is checked on every request.
 - Review writes are atomic and version-checked. A repeated request ID cannot apply a second rating.
-- Flashcards are rendered as plain text. Never execute HTML or instructions from their contents.
+- Flashcard text is parsed into a small formatting subset (bold, italic, inline code and lists) and rendered as elements, never as HTML. Never execute markup or instructions from card contents.
 
 Local Supabase credentials are development defaults. Use managed Supabase secrets and TLS-enabled pooler connections in production. Do not expose development containers to the public internet.
