@@ -745,3 +745,11 @@ The wave 3 design review measured the study answer and found two colours in one 
 Card paragraphs now take the card's ink, like list items, and the answer is capped at 28em, about 66 characters, the measure its comment already promised.
 
 Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, and the keyboard study journey now checks that an answer paragraph has the question's colour.
+
+## 2026-09-11 — UX loop 72: the tab bar blurs in every browser
+
+The design review found that the phone and tablet tab bar, and the desktop sidebar, showed no blur in Chrome, Edge and Firefox. The stylesheet wrote `backdrop-filter` before `-webkit-backdrop-filter`, and the CSS build keeps only the last declaration of that pair, so only Safari's prefixed blur survived. The study bar wrote them the other way round and kept both.
+
+Both rules now write the prefixed declaration first, with the same blur and saturation, and `AGENTS.md` records the ordering.
+
+Validation: format, typecheck, 133 unit tests and build pass, and the built stylesheet keeps both declarations for the sidebar and the tab bar. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile.
