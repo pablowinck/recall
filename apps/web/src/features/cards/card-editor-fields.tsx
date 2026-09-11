@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react';
 import { useState, type ComponentProps, type KeyboardEvent } from 'react';
 import type { Deck } from '@recall/contracts';
 import { ErrorNotice } from '@/components/feedback';
+import { isCommandEnter, isSaveShortcut } from './editor-keys';
 import type { CardEditorProps, CardEditorState } from './use-card-editor';
 
 /** Keep card fields independent of request state. Example: <CardEditorFields editor={props} state={state} />. */
@@ -91,14 +92,16 @@ function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Ele
   };
   // Escape is handled by the editor dialog, which closes this inline form before the editor itself.
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key !== 'Enter') return;
+    if (!isCommandEnter(e)) return;
     e.preventDefault();
     void submitInline();
   };
   return (
     <div className="inline-deck-box">
       <div className="deck-field-header">
-        <span className="deck-field-label">New deck name</span>
+        <label htmlFor="inline-deck-name" className="deck-field-label">
+          New deck name
+        </label>
         <button
           type="button"
           className="inline-deck-btn"
@@ -110,6 +113,7 @@ function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Ele
       </div>
       <div className="inline-deck-inputs">
         <TextField.Root
+          id="inline-deck-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={onKeyDown}
@@ -134,7 +138,7 @@ function InlineDeckCreator({ state }: { state: CardEditorState }): React.JSX.Ele
 }
 
 function handleEditorKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
-  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+  if (isSaveShortcut(event)) {
     event.preventDefault();
     event.currentTarget.form?.requestSubmit();
   }
@@ -142,9 +146,9 @@ function handleEditorKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
 
 // A plain Enter in the last field used to save and close the editor by surprise; Cmd/Ctrl+Enter saves.
 function submitOnlyWithModifier(event: KeyboardEvent<HTMLInputElement>): void {
-  if (event.key !== 'Enter') return;
+  if (!isCommandEnter(event)) return;
   event.preventDefault();
-  if (event.metaKey || event.ctrlKey) event.currentTarget.form?.requestSubmit();
+  if (isSaveShortcut(event)) event.currentTarget.form?.requestSubmit();
 }
 
 function FrontField({ value }: { value?: string }): React.JSX.Element {

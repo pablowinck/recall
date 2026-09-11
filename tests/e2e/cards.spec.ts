@@ -106,7 +106,11 @@ test('creates a new deck inline from the card editor without discarding entered 
     await page.getByPlaceholder('Write the answer, with an example if it helps.').fill('Roma.');
 
     await page.getByRole('button', { name: 'New deck', exact: true }).click();
-    const inlineInput = page.getByPlaceholder('e.g. Spanish Vocabulary');
+    const inlineInput = page.getByRole('textbox', { name: 'New deck name' });
+    await inlineInput.fill('日本語');
+    // The Enter that confirms an input method's word is text input, so it must not create the deck.
+    await inlineInput.dispatchEvent('keydown', { key: 'Enter', keyCode: 229, isComposing: true });
+    await expect(inlineInput).toHaveValue('日本語');
     await inlineInput.fill('Italian Language');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     await expect(inlineInput).toHaveCount(0);

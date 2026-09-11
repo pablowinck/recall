@@ -577,3 +577,11 @@ The design review found the questions section built from thirteen separate cards
 The questions now sit on one surface with hairlines between them, questions that wrap on a phone keep room above and below, and the focus ring stays inside each row. From 1024 px, the questions and the open-source section put their heading in the first column and their content under the second and third steps. The "Star on GitHub" button uses a soft fill with the page's ink, so the blue button stays the strongest call to action.
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check and a new check that the questions line up with the second step on wide screens. Captures at 1440 px and 390 px in both appearances were reviewed, and the landing journeys passed again after the rows gained that vertical padding.
+
+## 2026-09-10 — UX loop 51: the inline deck field has a name, and Enter respects input methods
+
+The frontend review found that the field for a new deck's name, inside the card editor, had no accessible name. Its "New deck name" text was a plain span, so screen readers announced an unlabeled text field. Enter also acted as a command while an input method was still composing text, so someone typing a Japanese or Chinese deck name who pressed Enter to confirm a word created the deck from half-composed text, and the Tags field treated that Enter like any other.
+
+The text is now the field's label. The editor's Enter rules live in one small module: while an input method is composing, Enter belongs to it; otherwise Enter creates the inline deck, and Cmd or Ctrl+Enter saves the card. Safari's composing keystrokes are recognised by their key code, 229.
+
+Validation: format, typecheck, 125 unit tests and build pass, including three new tests for the Enter rules. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks that the inline field is named and that a composing Enter creates no deck.
