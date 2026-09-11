@@ -26,7 +26,13 @@ export function StudyProgress({
   return (
     <>
       <StudyProgressHeader completed={session.completed} total={total} exit={exit} />
-      <Progress aria-label="Session progress" value={pct} size="2" />
+      <Progress
+        aria-label="Session progress"
+        value={pct}
+        size="2"
+        // A percentage says less than the header beside the bar, so the bar reads the same words.
+        getValueLabel={() => `${session.completed} of ${total} reviewed`}
+      />
     </>
   );
 }

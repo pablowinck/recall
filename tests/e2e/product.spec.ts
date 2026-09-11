@@ -56,6 +56,10 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     await expect(page.getByRole('heading', { name: 'MCP card: knew' })).toBeVisible();
     await page.getByRole('button', { name: 'Today', exact: true }).click();
     await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.getByRole('progressbar', { name: 'Session progress' })).toHaveAttribute(
+      'aria-valuetext',
+      '0 of 2 reviewed',
+    );
     await expect(page.getByRole('heading', { name: 'What does stumped mean?' })).toBeVisible();
     await expect(
       page.getByText('Unable to work out the answer to a question.', { exact: true }),

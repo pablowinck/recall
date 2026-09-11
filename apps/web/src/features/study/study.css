@@ -162,8 +162,14 @@
   margin-top: 0.35rem;
   border-radius: var(--r-pill);
 }
+/* Radix fills the bar with scaleX, so easing the transform is what makes progress glide instead of jump. */
 .rt-ProgressIndicator {
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rt-ProgressIndicator {
+    transition: none !important;
+  }
 }
 .rating-section {
   margin-top: 0.6rem;

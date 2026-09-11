@@ -561,3 +561,11 @@ The design review measured the hero's lead paragraph, the page's largest content
 The lead is now two short sentences: "A free, open-source flashcard app for people who study for hours. Your AI assistant turns what you learn into cards, and Recall brings each one back before you're likely to forget it." The assistants are still named in the note below the buttons, in the questions and in the page's metadata.
 
 Validation: format, typecheck, 122 unit tests and build pass. All 169 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check, and a capture at 390 px shows the shorter lead.
+
+## 2026-09-10 — UX loop 49: the study progress bar glides and says what it counts
+
+The frontend review found that the progress bar under the study header never animated. Radix fills it with a transform, but Recall's stylesheet replaced that transition with one on width, which never changes, so the bar jumped at every rating. Screen readers heard only a percentage, while the header beside the bar says "3 of 26 reviewed".
+
+The bar now eases its transform and stops animating when the system asks for reduced motion. Its value text matches the header, so a screen reader hears "Session progress, 3 of 26 reviewed".
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, and the main journey now checks the progress bar's value text.
