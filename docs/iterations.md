@@ -1017,3 +1017,11 @@ The wave 4 design review looked at the library in both appearances. In dark mode
 Tags and deck badges now use the secondary fill, lighter than the card in dark mode, with their text at 5.77:1 in dark and 5.20:1 in light. The deck filter and New deck button use the search field's size, so the toolbar reads as one row.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new desktop journey that checks the three toolbar controls share one height.
+
+## 2026-09-11 — UX loop 106: forced colours keep the app's edges, not only the study screen's
+
+The wave 4 frontend review turned on forced colours, as Windows high contrast themes do, across the app. Loop 87 had fixed the study screen, but elsewhere the browser dropped the shadows that were the only edges: the card editor dialog floated without an edge or backdrop, fields, selects and buttons lost their outlines, library cards and Today's deck list had no border, and the current view in the navigation differed only by font weight.
+
+In forced colours, cards, panels, dialogs and menus now get outlines the system paints, fields, selects and buttons get borders, and the current navigation item gets a border in the system highlight colour. Nothing changes in the normal themes.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens the library and the card editor in forced colours and checks their edges and the current view.

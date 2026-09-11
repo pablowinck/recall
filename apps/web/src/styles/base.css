@@ -169,3 +169,29 @@ label {
   font-weight: 400;
   font-size: 0.8125rem;
 }
+/* Forced colours drop shadows and backgrounds, which are the only edges of Recall's cards, panels, fields, buttons and
+   dialogs. The system paints transparent outlines and borders in its own colours, so they become those edges, and
+   the current view gets a highlight border instead of a tint. */
+@media (forced-colors: active) {
+  .library-card,
+  .deck-list,
+  .stat-card,
+  .study-invitation,
+  .new-secret,
+  .consent-card {
+    outline: 1px solid transparent;
+  }
+  /* Radix sets outline: none on its dialog content, so these rules need the theme's scope to win. */
+  .radix-themes :is(.rt-BaseDialogContent, .rt-SelectContent) {
+    outline: 1px solid transparent;
+  }
+  .rt-BaseButton,
+  .rt-TextFieldRoot,
+  .rt-TextAreaRoot,
+  .rt-SelectTrigger {
+    border: 1px solid transparent;
+  }
+  .nav-item[aria-current='page'] {
+    border: 2px solid Highlight;
+  }
+}

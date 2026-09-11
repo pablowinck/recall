@@ -353,3 +353,31 @@ test('an email that already has an account offers Sign in instead', async ({ pag
     await account.cleanup();
   }
 });
+
+test('forced colours keep the edges of the library, fields and dialogs', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Forced colours question',
+      back: 'Forced colours answer',
+      tags: [],
+    });
+    await page.emulateMedia({ forcedColors: 'active' });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).first().click();
+    await expect(page.locator('.library-card')).toHaveCSS('outline-style', 'solid');
+    await expect(page.locator('.library-toolbar .rt-TextFieldRoot')).toHaveCSS(
+      'border-top-style',
+      'solid',
+    );
+    await expect(
+      page.locator('.nav-item[aria-current="page"]').filter({ visible: true }),
+    ).toHaveCSS('border-top-style', 'solid');
+    await page.locator('.library-card').click();
+    await expect(page.locator('.rt-DialogContent')).toHaveCSS('outline-style', 'solid');
+  } finally {
+    await account.cleanup();
+  }
+});
