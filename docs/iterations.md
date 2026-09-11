@@ -585,3 +585,11 @@ The frontend review found that the field for a new deck's name, inside the card 
 The text is now the field's label. The editor's Enter rules live in one small module: while an input method is composing, Enter belongs to it; otherwise Enter creates the inline deck, and Cmd or Ctrl+Enter saves the card. Safari's composing keystrokes are recognised by their key code, 229.
 
 Validation: format, typecheck, 125 unit tests and build pass, including three new tests for the Enter rules. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks that the inline field is named and that a composing Enter creates no deck.
+
+## 2026-09-11 — UX loop 52: larger controls reach 44 px on touch screens too
+
+The frontend review found that Recall's touch sizing covered only Radix's size 2 controls. The size 3 buttons, such as "Create your first card", "Start reviewing" and "Back to Today", and the library's search field stayed 40 px tall on phones and tablets, below the 44 px that Apple recommends for fingers.
+
+On coarse pointers, size 3 buttons, selects and text fields now get the same 44 px height as size 2. Sizes on desktop are unchanged.
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, and the touch sizing journey now also measures the first-card button.

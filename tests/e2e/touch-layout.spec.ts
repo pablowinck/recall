@@ -17,6 +17,7 @@ test('touch screens get controls at least 44px tall', async ({ page }, testInfo)
     const controls = [
       page.getByRole('button', { name: 'Use dark theme', exact: true }).filter({ visible: true }),
       page.getByRole('button', { name: 'New card', exact: true }).first(),
+      page.getByRole('button', { name: 'Create your first card' }),
     ];
     for (const control of controls) {
       const box = await control.boundingBox();
