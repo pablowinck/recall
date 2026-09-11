@@ -32,12 +32,12 @@ export const recallToolDefinitions = {
   },
   createCard: {
     description:
-      'Create a plain-text flashcard. Use source_key for safe retries without duplication.',
+      'Create a flashcard. Front and back may use **bold**, *italic*, `code` and "- " lists; other Markdown shows as typed. Use source_key for safe retries without duplication.',
     inputSchema: cardDraftSchema.shape,
   },
   importCards: {
     description:
-      'Import 1–100 flashcards atomically. Stable source_key values preserve existing cards and review history on repeat imports.',
+      'Import 1–100 flashcards atomically, with the same formatting as create_flashcard. Stable source_key values preserve existing cards and review history on repeat imports.',
     inputSchema: importCardsSchema.shape,
   },
   updateCard: {

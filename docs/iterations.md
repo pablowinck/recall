@@ -417,3 +417,11 @@ Per-view addresses gave Back something to do, but every entry in the browser's h
 Each view now sets the document title — "Today · Recall", "Library · Recall", "Connections · Recall", "Review session · Recall" — right after its history entry is pushed, so the title names the new entry instead of renaming the one being left. Moving to another view starts it at the top. `workspace-url.ts` keeps the titles beside the paths.
 
 Validation: format, typecheck, the unit suite and build pass, including the view titles. The journey that moves through three views, goes Back, reloads and opens `/app/library` directly now also reads the title of each view; all 144 browser and API journeys pass on desktop, tablet and mobile, and the UX tour reports no overflow or axe violations.
+
+## 2026-09-10 — UX loop 31: assistants learn which formatting cards render
+
+The app renders bold, italic, code and lists in card text, but the MCP tool that creates cards still described them as "plain-text", so an assistant writing cards had every reason to leave the emphasis out.
+
+`create_flashcard` and `import_flashcards` now name the formatting Recall renders — `**bold**`, `*italic*`, `` `code` `` and "- " lists — and say that other Markdown shows as typed.
+
+Validation: format, typecheck, the unit suite and build pass, and the MCP journeys pass unchanged.
