@@ -70,6 +70,7 @@ function CardEditorContent({
       maxWidth="640px"
       className="card-editor"
       {...createDismissHandlers(state, dismissal)}
+      onOpenAutoFocus={focusQuestion}
       onCloseAutoFocus={(event) => restoreFocus(event, opener, state.removed.current)}
     >
       <CardEditorHeader hasCard={Boolean(editor.card)} />
@@ -85,6 +86,22 @@ function CardEditorContent({
       </form>
     </Dialog.Content>
   );
+}
+
+// A new card's question takes focus as the editor opens. Editing had none, so Radix focused the first control, "New
+// deck", which Enter or Space would act on and a screen reader read before the card. Editing starts in the question
+// with the cursor at its end; on a touch screen the dialog takes focus instead, so no keyboard slides over the card
+// before the person chooses what to change.
+function focusQuestion(event: Event): void {
+  const question = document.getElementById('card-front');
+  if (!(question instanceof HTMLTextAreaElement)) return;
+  event.preventDefault();
+  if (matchMedia('(pointer: fine)').matches) {
+    question.focus();
+    question.setSelectionRange(question.value.length, question.value.length);
+  } else {
+    (event.target as HTMLElement | null)?.focus();
+  }
 }
 
 type OutsideEvent = Event & { detail: { originalEvent: MouseEvent } };

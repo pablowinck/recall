@@ -1239,3 +1239,11 @@ Loop 94 let browser Back close the card editor. The wave 5 Nielsen review presse
 Every dialog now works the same way: New deck, deleting a deck, the confirmations for signing out, deleting a card and revoking a connection, and the question before discarding a draft. An open dialog adds a history entry at the same address, and Back closes only the dialog in front; the discard question takes Back the way it takes Escape, and the draft stays. Dialogs that close by themselves, or together, such as a confirmation and the editor behind it, remove their entries, so the next Back goes where it would have gone.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including the editor's Back journey and a new journey that presses Back with New deck and "Sign out?" open, then checks that one more Back returns to Today.
+
+## 2026-09-11 — UX loop 133: editing a card starts in its question
+
+The wave 5 Nielsen review opened a card for editing with the keyboard and a screen reader. Focus landed on the editor's "New deck" button, so Enter or Space started a new deck instead of editing, and a screen reader announced a button before anything about the card. A new card already started in its question; an existing one had no starting point, and Radix focused the first control.
+
+Opening a card for editing now puts the cursor at the end of its question when there is a mouse or keyboard. On a touch screen the editor itself takes focus instead, so the on-screen keyboard does not cover the card before the person chooses a field.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens a card for editing and checks where focus and the cursor land.

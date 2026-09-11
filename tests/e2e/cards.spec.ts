@@ -973,3 +973,30 @@ test('browser Back closes the dialog in front and nothing behind it', async ({ p
     await account.cleanup();
   }
 });
+
+test('editing a card starts in its question, not on New deck', async ({ page }, testInfo) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const front = 'Where editing starts';
+    await account.api.createCard({ deck_id: deck.id, front, back: 'Answer', tags: [] });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('button', { name: front, exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: 'Edit card' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'New deck' })).not.toBeFocused();
+    if (testInfo.project.use.hasTouch) {
+      await expect(dialog).toBeFocused();
+      return;
+    }
+    const question = dialog.getByRole('textbox', { name: 'Front' });
+    await expect(question).toBeFocused();
+    const cursor = await question.evaluate(
+      (field) => (field as HTMLTextAreaElement).selectionStart,
+    );
+    expect(cursor).toBe(front.length);
+  } finally {
+    await account.cleanup();
+  }
+});
