@@ -11,7 +11,11 @@ export function GitHubStars({ stars }: { stars: number | null }): React.JSX.Elem
       href={REPOSITORY_URL}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={count ? `Recall on GitHub, ${count} stars` : 'Star Recall on GitHub'}
+      aria-label={
+        count
+          ? `Recall on GitHub, ${count} stars (opens in a new tab)`
+          : 'Star Recall on GitHub (opens in a new tab)'
+      }
     >
       <GitHubMark />
       <span aria-hidden="true">{count ? `★ ${count}` : 'Star'}</span>

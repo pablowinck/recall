@@ -33,7 +33,7 @@ test('the landing page points to the source and to contributing', async ({ page 
   const github = page.getByRole('link', { name: /on GitHub/ }).first();
   await expect(github).toHaveAttribute('href', 'https://github.com/pablowinck/recall');
   await expect(github).toHaveAttribute('rel', /noopener/);
-  await expect(page.getByRole('link', { name: 'How to contribute' })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /How to contribute/ })).toHaveAttribute(
     'href',
     'https://github.com/pablowinck/recall/blob/main/CONTRIBUTING.md',
   );

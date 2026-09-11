@@ -19,6 +19,7 @@ export function LandingOpenSource({ stars }: { stars: number | null }): React.JS
         >
           <GitHubMark />
           {stars ? `Star on GitHub · ${formatStars(stars)}` : 'Star on GitHub'}
+          <span className="visually-hidden"> (opens in a new tab)</span>
         </a>
         <a
           className="landing-secondary"
@@ -26,7 +27,7 @@ export function LandingOpenSource({ stars }: { stars: number | null }): React.JS
           target="_blank"
           rel="noopener noreferrer"
         >
-          How to contribute
+          How to contribute<span className="visually-hidden"> (opens in a new tab)</span>
         </a>
       </div>
     </section>
