@@ -833,3 +833,11 @@ The wave 3 Nielsen review found two dead ends for keyboard and screen reader use
 Closing the token panel now moves focus to the page title. Revoking moves focus to "Your connections" and announces "Connection Cursor revoked". The shared confirmation dialog takes an optional place to send focus after a confirmation, for triggers that leave with what they removed.
 
 Validation: format, typecheck, 138 unit tests and build pass. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, and the connection journeys now check focus after closing the token panel both ways and after a revoke, and the revoke announcement.
+
+## 2026-09-11 — UX loop 83: card search ignores accents and finds tags
+
+The wave 3 Nielsen review found that search matched accents exactly and never read tags. People typing on a phone often skip accents, so "saudacao" found no card about "saudação", and searching a tag's name found none of its cards.
+
+Search now ignores accents as well as case, and it matches tags as well as both sides of a card. The API folds accents with PostgreSQL's built-in normalize(), so it needs no database extension or migration. The MCP search tool calls the same endpoint, so assistants search the same way.
+
+Validation: format, typecheck, 138 unit tests and build pass. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that finds a card without typing its accents and another by an accented tag typed in capitals.

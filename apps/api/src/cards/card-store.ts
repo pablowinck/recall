@@ -9,17 +9,22 @@ export interface CardSearch {
   offset: number;
 }
 
+// Search ignores case and accents and also reads tags, so "saudacao" finds "saudação" and a tag finds its cards.
+// PostgreSQL's built-in normalize() splits accents off their letters, so no extension or migration is needed.
+const SEARCHABLE_TEXT = "front || ' ' || back || ' ' || array_to_string(tags, ' ')";
+const foldForSearch = (sql: string): string =>
+  `lower(regexp_replace(normalize(${sql}, NFD), '[\\u0300-\\u036f]', '', 'g'))`;
+const CARD_FILTER = `($1 = '' or ${foldForSearch(SEARCHABLE_TEXT)} like '%' || ${foldForSearch('$1')} || '%') and ($2::uuid is null or deck_id = $2)`;
+
 /** List paginated content under row-level security. Example: listCards(connection, query). */
 export async function listCards(connection: PoolClient, query: CardSearch): Promise<CardPage> {
-  const filter =
-    "($1 = '' or front ilike '%' || $1 || '%' or back ilike '%' || $1 || '%') and ($2::uuid is null or deck_id = $2)";
   const values = [query.search, query.deck ?? null];
   const count = await connection.query<{ total: number }>(
-    `select count(*)::int as total from recall.cards where ${filter}`,
+    `select count(*)::int as total from recall.cards where ${CARD_FILTER}`,
     values,
   );
   const result = await connection.query<{ card: Flashcard }>(
-    `select to_jsonb(c) as card from recall.cards c where ${filter} order by created_at desc, id limit $3 offset $4`,
+    `select to_jsonb(c) as card from recall.cards c where ${CARD_FILTER} order by created_at desc, id limit $3 offset $4`,
     [...values, query.limit, query.offset],
   );
   return { cards: result.rows.map((row) => row.card), total: count.rows[0]!.total };

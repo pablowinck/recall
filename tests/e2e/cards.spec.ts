@@ -520,3 +520,26 @@ test('a library card says when it is due, counts extra tags and keeps line break
     await account.cleanup();
   }
 });
+
+test('library search ignores accents and finds cards by tag', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.importCards([
+      { deck_id: deck.id, front: 'Como se diz saudação?', back: 'Greeting', tags: [] },
+      { deck_id: deck.id, front: 'Pão de queijo', back: 'Cheese bread', tags: ['culinária'] },
+      { deck_id: deck.id, front: 'Unrelated question', back: 'Unrelated answer', tags: [] },
+    ]);
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const search = page.getByRole('textbox', { name: 'Search cards' });
+    await search.fill('saudacao');
+    await expect(page.getByRole('heading', { name: 'Como se diz saudação?' })).toBeVisible();
+    await expect(page.locator('.library-card')).toHaveCount(1);
+    await search.fill('CULINARIA');
+    await expect(page.getByRole('heading', { name: 'Pão de queijo' })).toBeVisible();
+    await expect(page.locator('.library-card')).toHaveCount(1);
+  } finally {
+    await account.cleanup();
+  }
+});
