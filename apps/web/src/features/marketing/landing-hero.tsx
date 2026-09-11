@@ -12,9 +12,9 @@ export function LandingHero(): React.JSX.Element {
           <span className="landing-h1-line">Recall makes them stick.</span>
         </h1>
         <p className="landing-lead">
-          Recall is a free, open-source flashcard app for people who study for hours. Ask Claude
-          Code, Codex, Cursor or another MCP assistant to turn what you’re learning into cards, and
-          Recall schedules every review so each one comes back before you’re likely to forget it.
+          A free, open-source flashcard app for people who study for hours. Your AI assistant turns
+          what you learn into cards, and Recall brings each one back before you’re likely to forget
+          it.
         </p>
         <div className="landing-actions">
           <Link className="landing-cta" href="/app?new=1">

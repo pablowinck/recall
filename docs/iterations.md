@@ -553,3 +553,11 @@ The frontend review listed three announcement problems. Revealing an answer move
 The answer no longer has a live region, so moving focus to it reads it once. A copy now says "Setup copied" or "Token copied" through the workspace's status region. Each revoke button's name ends with its token prefix, which the row already shows.
 
 Validation: format, typecheck, 122 unit tests and build pass. All 169 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that copies the setup and hears it announced.
+
+## 2026-09-10 — UX loop 48: a shorter lead under the headline
+
+The design review measured the hero's lead paragraph, the page's largest contentful element, at seven lines on a phone. It repeated the assistants that the note under the buttons now lists, and its second sentence carried three clauses.
+
+The lead is now two short sentences: "A free, open-source flashcard app for people who study for hours. Your AI assistant turns what you learn into cards, and Recall brings each one back before you're likely to forget it." The assistants are still named in the note below the buttons, in the questions and in the page's metadata.
+
+Validation: format, typecheck, 122 unit tests and build pass. All 169 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check, and a capture at 390 px shows the shorter lead.
