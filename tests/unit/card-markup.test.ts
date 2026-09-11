@@ -59,4 +59,33 @@ describe('paragraphs and lists in card text', () => {
     const blocks = parseCardMarkup('1. first\n2. second\n- loose');
     expect(blocks.map((block) => block.kind === 'list' && block.ordered)).toEqual([true, false]);
   });
+
+  it('keeps the number a numbered list starts from', () => {
+    expect(parseCardMarkup('4. Conclude\n5. Review')).toEqual([
+      {
+        kind: 'list',
+        ordered: true,
+        start: 4,
+        items: [
+          { content: [{ kind: 'text', text: 'Conclude' }], children: [] },
+          { content: [{ kind: 'text', text: 'Review' }], children: [] },
+        ],
+      },
+    ]);
+  });
+
+  it('nests an indented bullet under the step before it and keeps counting after it', () => {
+    const [list] = parseCardMarkup('1. Plan\n2. Act\n   - check the result\n3. Review');
+    const items = list?.kind === 'list' ? list.items : [];
+    expect(list).toMatchObject({ kind: 'list', ordered: true, start: 1 });
+    expect(items.map((item) => item.content[0]?.text)).toEqual(['Plan', 'Act', 'Review']);
+    expect(items[1]?.children).toEqual([
+      {
+        kind: 'list',
+        ordered: false,
+        start: 1,
+        items: [{ content: [{ kind: 'text', text: 'check the result' }], children: [] }],
+      },
+    ]);
+  });
 });

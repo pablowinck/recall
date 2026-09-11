@@ -13,9 +13,19 @@ export function CardBody({ text }: { text: string }): React.JSX.Element {
 function renderBlock(block: CardBlock, index: number): React.JSX.Element {
   if (block.kind === 'paragraph') return <p key={index}>{block.content.map(renderInline)}</p>;
   const items = block.items.map((item, position) => (
-    <li key={position}>{item.map(renderInline)}</li>
+    <li key={position}>
+      {item.content.map(renderInline)}
+      {item.children.map(renderBlock)}
+    </li>
   ));
-  return block.ordered ? <ol key={index}>{items}</ol> : <ul key={index}>{items}</ul>;
+  // A list that starts at 4 in the text starts at 4 here, so learners memorize the steps as they were written.
+  return block.ordered ? (
+    <ol key={index} start={block.start}>
+      {items}
+    </ol>
+  ) : (
+    <ul key={index}>{items}</ul>
+  );
 }
 
 function renderInline(node: InlineNode, index: number): React.JSX.Element {

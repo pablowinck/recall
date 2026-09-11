@@ -713,3 +713,11 @@ The wave 3 frontend review found that the rating buttons appear where "Reveal an
 A rating now ignores the second click of a double click or double tap, which browsers count as click 2. Single clicks, taps, the keyboard and the number keys rate at once. A first attempt made pointer clicks wait 400 ms after the ratings appeared, but it also swallowed deliberate quick ratings, and five study journeys failed on all three layouts.
 
 Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that double-clicks Reveal answer and confirms no review was saved.
+
+## 2026-09-11 — UX loop 68: numbered steps keep their numbers
+
+The wave 3 usability review found that a numbered list restarted at 1 after a nested bullet, so an assistant's "4. Conclude" showed as "1. Conclude" and learners would memorize the wrong step. The nesting was flattened, and a list that began at 4 in the text also began at 1 on screen.
+
+Card text now keeps the number a numbered list starts from, and a list line indented by two spaces or a tab sits under the item before it, so the outer numbering carries on after a sub-step. Card text is still parsed into elements and never rendered as HTML.
+
+Validation: format, typecheck, 133 unit tests and build pass, including new tests for start numbers and nested steps. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile.
