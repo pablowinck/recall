@@ -5,9 +5,11 @@ const THEME_COLORS: Record<Appearance, string> = { light: '#f1f0ef', dark: '#0a0
 
 /**
  * Runs in <head> before the first paint so a dark preference never flashes light.
- * It follows the OS setting until the person explicitly toggles. Example: <script>{appearanceBootstrapScript}</script>.
+ * It follows the OS setting until the person explicitly toggles. A saved choice also adds a theme-color tag ahead
+ * of the system ones, which browsers read first and React 19 skips when it hydrates the head.
+ * Example: <script>{appearanceBootstrapScript}</script>.
  */
-export const appearanceBootstrapScript = `(function(){try{var s=localStorage.getItem('${APPEARANCE_STORAGE_KEY}');var d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;var r=document.documentElement;r.classList.toggle('dark',d);r.style.colorScheme=d?'dark':'light';}catch(e){}})();`;
+export const appearanceBootstrapScript = `(function(){try{var s=localStorage.getItem('${APPEARANCE_STORAGE_KEY}');var d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;var r=document.documentElement;r.classList.toggle('dark',d);r.style.colorScheme=d?'dark':'light';if(s){var m=document.createElement('meta');m.name='theme-color';m.content=d?'${THEME_COLORS.dark}':'${THEME_COLORS.light}';document.head.prepend(m);}}catch(e){}})();`;
 
 /** Read the appearance applied to the document. Example: readAppearance() === 'dark'. */
 export function readAppearance(): Appearance {

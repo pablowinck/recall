@@ -617,3 +617,11 @@ The usability review found two controls for the same job in the card editor: a "
 The deck list now only chooses a deck, and the "New deck" button is the one way to add one. The form's cancel button is named "Cancel new deck" for assistive technology, while it still reads "Cancel" on screen.
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks that the deck list offers no create item and that the form's cancel button has its own name.
+
+## 2026-09-11 — UX loop 56: the browser toolbar follows the appearance you chose
+
+The frontend review found that a saved appearance changed the page but not the browser's toolbar. Recall colours the toolbar with two theme-color tags, one for a light system and one for a dark system, so someone who chose dark on a phone set to light got a dark page under a light toolbar.
+
+When a choice is saved, the script that applies it before the first paint now also adds a theme-color tag for that choice ahead of the system tags. Browsers use the first matching tag, and React 19 skips extra tags in the head when it hydrates, so the page and the toolbar match from the first frame on every page, including the landing page. Following the system still uses the two original tags.
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including checks of the toolbar colour with a saved dark choice on a light system and after the choice is cleared.

@@ -166,9 +166,13 @@ test('appearance follows a saved choice or the system before the app hydrates', 
   await page.evaluate(() => localStorage.setItem('recall-appearance', 'dark'));
   await page.reload({ waitUntil: 'domcontentloaded' });
   expect(await isDark()).toBe(true);
+  // Browsers colour their toolbar from the first matching theme-color tag.
+  const toolbarColor = page.locator('meta[name="theme-color"]').first();
+  await expect(toolbarColor).toHaveAttribute('content', '#0a0a09');
   await page.evaluate(() => localStorage.removeItem('recall-appearance'));
   await page.reload({ waitUntil: 'domcontentloaded' });
   expect(await isDark()).toBe(false);
+  await expect(toolbarColor).toHaveAttribute('content', '#f1f0ef');
 });
 
 test('serves the brand icons used by browsers and home screens', async ({ request }) => {
