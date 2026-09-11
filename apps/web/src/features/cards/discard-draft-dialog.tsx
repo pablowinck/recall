@@ -4,6 +4,7 @@ interface DiscardDraftDialogProps {
   open: boolean;
   editing: boolean;
   keepEditing: () => void;
+  returnFocus: () => HTMLElement | null;
   discard: () => void;
 }
 
@@ -11,7 +12,10 @@ interface DiscardDraftDialogProps {
 export function DiscardDraftDialog(props: DiscardDraftDialogProps): React.JSX.Element {
   return (
     <AlertDialog.Root open={props.open} onOpenChange={(next) => !next && props.keepEditing()}>
-      <AlertDialog.Content maxWidth="400px">
+      <AlertDialog.Content
+        maxWidth="400px"
+        onCloseAutoFocus={(event) => restoreEditingFocus(event, props.returnFocus())}
+      >
         <AlertDialog.Title>
           {props.editing ? 'Discard changes?' : 'Discard this card?'}
         </AlertDialog.Title>
@@ -39,4 +43,12 @@ function DiscardDraftActions({ discard }: { discard: () => void }): React.JSX.El
       </AlertDialog.Action>
     </div>
   );
+}
+
+// The question opens without a trigger, so Radix would return focus to the page; Keep editing goes back to the field
+// that was being typed in. After Discard the field leaves with the editor, which restores focus itself.
+function restoreEditingFocus(event: Event, field: HTMLElement | null): void {
+  if (!field?.isConnected) return;
+  event.preventDefault();
+  field.focus();
 }

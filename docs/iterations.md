@@ -1049,3 +1049,11 @@ The wave 4 frontend review let Today's background refresh fail, then started rev
 The refresh error now shows only on Today and the library, whose decks and stats it concerns. A review and Connections stay clear of it.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that fails Today's refresh, checks the message, starts a review and checks that it is gone.
+
+## 2026-09-11 — UX loop 110: Keep editing returns to the field being typed in
+
+The wave 4 frontend review pressed Escape in the card editor with a draft typed, then chose Keep editing, with the button and with Escape. Both sent focus to the page, so the next keystroke went nowhere and the person had to click back into the field.
+
+Keep editing now returns focus to the field that had it when the discard question opened. After Discard, the editor closes and restores focus as before. The editor also ignores an Escape the discard question has already handled, so closing the question with Escape can no longer ask it again from the editor behind it.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that keeps editing with the button and with Escape and checks the Front field has focus each time.

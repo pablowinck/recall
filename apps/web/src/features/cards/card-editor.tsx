@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Dialog } from '@radix-ui/themes';
 import { ErrorNotice } from '@/components/feedback';
 import { focusPageHeading } from '@/components/page-heading';
@@ -14,6 +14,8 @@ interface EditorDismissal {
   confirming: boolean;
   request: () => void;
   keepEditing: () => void;
+  /** The field that had focus when the discard question opened. */
+  returnFocus: () => HTMLElement | null;
 }
 
 /** Use one editor to create and update cards without losing typed text. Example: <CardEditor {...props} />. */
@@ -29,6 +31,7 @@ export function CardEditor(props: CardEditorProps): React.JSX.Element {
         open={dismissal.confirming}
         editing={Boolean(props.card)}
         keepEditing={dismissal.keepEditing}
+        returnFocus={dismissal.returnFocus}
         discard={props.close}
       />
     </Dialog.Root>
@@ -37,12 +40,19 @@ export function CardEditor(props: CardEditorProps): React.JSX.Element {
 
 function useEditorDismissal(props: CardEditorProps, state: CardEditorState): EditorDismissal {
   const [confirming, setConfirming] = useState(false);
+  const focused = useRef<HTMLElement | null>(null);
   const request = (): void => {
     if (state.action.busy) return;
-    if (state.hasChanges()) setConfirming(true);
-    else props.close();
+    if (!state.hasChanges()) return props.close();
+    focused.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setConfirming(true);
   };
-  return { confirming, request, keepEditing: () => setConfirming(false) };
+  return {
+    confirming,
+    request,
+    keepEditing: () => setConfirming(false),
+    returnFocus: () => focused.current,
+  };
 }
 
 function CardEditorContent({
@@ -88,6 +98,8 @@ function createDismissHandlers(
 } {
   return {
     onEscapeKeyDown: (event) => {
+      // The discard question above may have handled this Escape already; asking again as it closes would reopen it.
+      if (event.defaultPrevented) return;
       event.preventDefault();
       // Radix handles Escape before the inline deck field sees it, so close that form first.
       if (state.creatingDeck) state.setCreatingDeck(false);

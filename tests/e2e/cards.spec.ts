@@ -765,3 +765,24 @@ test('the library toolbar controls share one height on desktop', async ({ page }
     await account.cleanup();
   }
 });
+
+test('Keep editing returns to the field that was being typed in', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    const front = page.getByRole('textbox', { name: /^Front/ });
+    await front.fill('A draft worth keeping');
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'Keep editing', exact: true }).click();
+    await expect(front).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('alertdialog')).toBeVisible();
+    await settleAnimations(page);
+    await page.getByRole('button', { name: 'Keep editing', exact: true }).press('Escape');
+    await expect(page.getByRole('alertdialog')).toHaveCount(0);
+    await expect(front).toBeFocused();
+  } finally {
+    await account.cleanup();
+  }
+});
