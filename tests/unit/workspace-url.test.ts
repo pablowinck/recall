@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { viewFromPath, workspacePath } from '../../apps/web/src/features/workspace/workspace-url';
+import {
+  viewFromPath,
+  workspacePath,
+  workspaceTitle,
+} from '../../apps/web/src/features/workspace/workspace-url';
 
 describe('workspace addresses', () => {
   it('gives every view its own path', () => {
@@ -17,5 +21,10 @@ describe('workspace addresses', () => {
   it('falls back to Today for an unknown address', () => {
     expect(viewFromPath('/app/nowhere')).toBe('today');
     expect(viewFromPath('/')).toBe('today');
+  });
+
+  it('names each view for tabs and the history menu', () => {
+    expect(workspaceTitle('library')).toBe('Library · Recall');
+    expect(workspaceTitle('study')).toBe('Review session · Recall');
   });
 });

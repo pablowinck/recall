@@ -242,6 +242,7 @@ test('each view has its own address and Back stays inside the app', async ({ pag
     await expect(page).toHaveURL(/\/app$/);
     await page.getByRole('button', { name: 'Library', exact: true }).click();
     await expect(page).toHaveURL(/\/app\/library$/);
+    await expect(page).toHaveTitle('Library · Recall');
     await page.getByRole('button', { name: 'Connections', exact: true }).click();
     await expect(page).toHaveURL(/\/app\/connections$/);
     await page.goBack();
@@ -249,6 +250,7 @@ test('each view has its own address and Back stays inside the app', async ({ pag
     await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
     await page.goBack();
     await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await expect(page).toHaveTitle('Today · Recall');
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
     await page.goto('/app/library');

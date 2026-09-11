@@ -8,6 +8,18 @@ const VIEW_PATHS: Record<WorkspaceView, string> = {
   study: `${WORKSPACE_ROOT}/study`,
 };
 
+const VIEW_TITLES: Record<WorkspaceView, string> = {
+  today: 'Today',
+  library: 'Library',
+  connections: 'Connections',
+  study: 'Review session',
+};
+
+/** Name a view for browser tabs and the history menu. Example: workspaceTitle('library'). */
+export function workspaceTitle(view: WorkspaceView): string {
+  return `${VIEW_TITLES[view]} · Recall`;
+}
+
 /** The address of a workspace view. Example: workspacePath('library') === '/app/library'. */
 export function workspacePath(view: WorkspaceView): string {
   return VIEW_PATHS[view];

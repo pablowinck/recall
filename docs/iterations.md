@@ -409,3 +409,11 @@ The workspace now lives under `/app`, and each view has an address: `/app`, `/ap
 `/` is a first landing page, rendered statically without Radix Themes so it ships almost no JavaScript. Following the owner's choices it is free to use, its call to action creates an account, and its hero leads with the assistant: "Your AI writes the cards. Recall makes them stick." It explains the three-step loop, the qualities of long study sessions and how cards stay private, and it carries `SoftwareApplication` structured data, canonical and Open Graph metadata, `robots.txt` that keeps `/app` out of search and a sitemap. Product tokens gained `--font-sans`, `--brand`, `--brand-soft` and `--brand-text`, so pages outside Radix share the same type and colour; the dark `theme-color` now matches the dark canvas.
 
 Validation: format, typecheck, 109 unit tests and build pass, including view-to-path mapping. All 130 E2E journeys pass on desktop, tablet and mobile, among them the landing page's call to action opening account creation with no accessibility violations, `robots.txt` and the sitemap, and a journey that moves through three views, goes Back twice, reloads, and opens `/app/library` directly. The UX tour reports no overflow or axe violations, and captures of the landing page at 1440 px and 390 px in both appearances were reviewed.
+
+## 2026-09-10 — UX loop 30: every view names itself
+
+Per-view addresses gave Back something to do, but every entry in the browser's history menu still read "Recall", and moving from a scrolled Today to Library kept the old scroll position, so the new view opened halfway down the page.
+
+Each view now sets the document title — "Today · Recall", "Library · Recall", "Connections · Recall", "Review session · Recall" — right after its history entry is pushed, so the title names the new entry instead of renaming the one being left. Moving to another view starts it at the top. `workspace-url.ts` keeps the titles beside the paths.
+
+Validation: format, typecheck, the unit suite and build pass, including the view titles. The journey that moves through three views, goes Back, reloads and opens `/app/library` directly now also reads the title of each view; all 144 browser and API journeys pass on desktop, tablet and mobile, and the UX tour reports no overflow or axe violations.
