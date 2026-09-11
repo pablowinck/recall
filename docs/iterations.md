@@ -1143,3 +1143,11 @@ Since loop 74, the last card of a batch stays on screen, its rating lit, until t
 The rating now counts as soon as it is saved, so the header moves on at once. While the next batch loads, the rating section says "Loading more cards…", announced to screen readers and shown only if the load takes longer than 0.8 seconds.
 
 Validation: format, typecheck, 153 unit tests and build pass, and the held batch test now checks the count and the loading state. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that delays the next batch and checks the count and the message.
+
+## 2026-09-11 — UX loop 121: the app loads only the Radix colours it uses
+
+The wave 4 frontend review measured the product routes' first load. The layout imported Radix's full stylesheet, with all 31 colour scales in both appearances, as render-blocking CSS on every app route; about 5% of it was used, and a throttled phone took 2.8 s to paint signed-out /app.
+
+The product layout now imports Radix's base tokens, the seven colour scales Recall uses (indigo, sand, gray, red, amber, green and orange), its components and its utilities. In the local production build, the stylesheet that carries the Radix components fell from 82.1 KB to 29.1 KB gzipped. A unit test scans the web app for Radix colours in props and CSS variables and fails if one lacks its scale, and AGENTS.md says where a new colour goes.
+
+Validation: format, typecheck, 154 unit tests and build pass, including the colour import guard. All 283 browser, API and MCP journeys pass on desktop, tablet and mobile, including the contrast journeys for red buttons and a new journey that checks the four rating labels keep four distinct colours.

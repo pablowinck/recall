@@ -682,3 +682,25 @@ test('a slow next batch counts the rating at once and says it is loading', async
     await account.cleanup();
   }
 });
+
+test('each rating keeps its own colour', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Colour question',
+      back: 'Colour answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    const colours = await page
+      .locator('.rating-button strong')
+      .evaluateAll((labels) => labels.map((label) => getComputedStyle(label).color));
+    expect(new Set(colours).size).toBe(4);
+  } finally {
+    await account.cleanup();
+  }
+});
