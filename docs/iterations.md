@@ -737,3 +737,11 @@ The frontend review found that every visit to the app created a new Supabase Aut
 The browser now creates one Auth client for the tab and reuses it, while a server render still gets a throwaway client that no request shares. A missing `NEXT_PUBLIC_SUPABASE_URL` or key fails with a message that names the setting.
 
 Validation: format, typecheck, 133 unit tests and build pass, including a test for the missing-setting message. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including the OAuth consent journeys and a journey that goes from the landing page to sign-in and back three times without an Auth client warning.
+
+## 2026-09-11 — UX loop 71: answers read in full ink
+
+The wave 3 design review measured the study answer and found two colours in one card. Paragraphs used the muted interface grey, 5.93:1 against the card in light mode, while list items used the card's ink at 16.02:1. The answer was capped at 66ch, which the review measured at up to 83 characters a line, because a ch is only as wide as a digit.
+
+Card paragraphs now take the card's ink, like list items, and the answer is capped at 28em, about 66 characters, the measure its comment already promised.
+
+Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, and the keyboard study journey now checks that an answer paragraph has the question's colour.

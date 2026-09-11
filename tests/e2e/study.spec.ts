@@ -20,6 +20,8 @@ test('study keys leave focused controls alone and keep focus on the card', async
     await expect(card).toBeFocused();
     await page.keyboard.press('Space');
     await expect(page.locator('.review-answer')).toBeFocused();
+    const ink = await card.locator('h2').evaluate((node) => getComputedStyle(node).color);
+    await expect(page.locator('.review-answer .card-body p').first()).toHaveCSS('color', ink);
     await page.keyboard.press('3');
     await expect(page.getByText('1 of 2 reviewed')).toBeVisible();
     await expect(card).toHaveCSS('animation-name', 'card-in');

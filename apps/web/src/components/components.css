@@ -86,6 +86,8 @@
 /* Card text brings its own emphasis; the markers are parsed, never rendered as markup. */
 .card-body p {
   margin: 0 0 0.75rem;
+  /* Card paragraphs read in the card's ink, like its list items; the muted paragraph colour is for interface copy. */
+  color: inherit;
 }
 .card-body ul,
 .card-body ol {

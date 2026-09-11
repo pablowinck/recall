@@ -114,8 +114,9 @@
   white-space: pre-wrap;
   font-size: clamp(1.05rem, 0.55vw + 0.92rem, 1.2rem);
   line-height: 1.75;
-  /* Around 66 characters per line: the eye finds the next line without effort for hours. */
-  max-width: 66ch;
+  /* About 66 characters per line, so the eye finds the next line without effort for hours. A ch is a narrow
+     digit, and 66ch let lines reach 83 characters, so the measure is in em. */
+  max-width: 28em;
   overflow-wrap: break-word;
   text-wrap: pretty;
   margin-top: 0.85rem;
