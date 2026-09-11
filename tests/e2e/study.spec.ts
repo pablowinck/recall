@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { createTestAccount, revokeSession } from './fixtures';
 import { fillSignInForm, signInToRecall } from './interaction-steps';
 
@@ -319,3 +319,31 @@ test('a session revoked elsewhere returns to sign-in and says why', async ({ pag
     await account.cleanup();
   }
 });
+
+test('the reveal and rating bar lines up with the card beyond phone widths', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) <= 600, 'Phones bleed the bar to the screen edges.');
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Aligned question',
+      back: 'Aligned answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    const card = page.locator('.review-card');
+    await expectSameWidth(card, page.locator('.reveal-action'));
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await expectSameWidth(card, page.locator('.rating-section'));
+  } finally {
+    await account.cleanup();
+  }
+});
+
+/** Compare two rendered widths to the pixel. Example: await expectSameWidth(card, bar). */
+async function expectSameWidth(expected: Locator, actual: Locator): Promise<void> {
+  const [target, measured] = await Promise.all([expected.boundingBox(), actual.boundingBox()]);
+  expect(Math.round(measured?.width ?? 0)).toBe(Math.round(target?.width ?? -1));
+}

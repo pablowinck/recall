@@ -793,3 +793,11 @@ The wave 3 design review measured the solid red buttons that confirm a deletion 
 Destructive buttons now use red step 11 in light mode (5.21:1) and step 8 in dark mode (5.37:1), and their hover shade stays above 4.7:1.
 
 Validation: format, typecheck, 137 unit tests and build pass. All 194 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens a delete confirmation in light and dark mode and measures its button label at 4.5:1 or more.
+
+## 2026-09-11 — UX loop 78: the study bar lines up with the card
+
+The wave 3 design review measured the bar that holds Reveal answer and the ratings. On desktop it was 860 px wide under an 820 px card, and on an iPad Mini 768 px under a 728 px card, so its top rule stuck out 20 px past each side of the card. The bar kept negative margins meant for phones, where it runs from edge to edge like a toolbar.
+
+Beyond phone widths the bar now has exactly the card's width, with its buttons where they were. Phones keep the edge-to-edge bar.
+
+Validation: format, typecheck, 137 unit tests and build pass. All 194 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that compares the bar with the card before and after revealing the answer on desktop and tablet.

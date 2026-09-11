@@ -145,6 +145,14 @@
   backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 0 -1px 0 var(--separator);
 }
+/* Beyond phone widths the bar lines up with the card; phones bleed it to the screen edges, like a toolbar. */
+@media (min-width: 601px) {
+  .reveal-action,
+  .rating-section {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
 .reveal-action button {
   min-width: 250px;
 }
