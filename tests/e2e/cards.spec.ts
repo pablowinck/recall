@@ -827,3 +827,47 @@ test('deleting a deck from the library has a full-size target with a name on hov
     await account.cleanup();
   }
 });
+
+test('a reload keeps the library’s search, deck and page', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = await account.api.createDeck('Address deck');
+    await account.api.importCards(
+      Array.from({ length: 30 }, (_, index) => ({
+        deck_id: deck.id,
+        front: `Address question ${index + 1}`,
+        back: 'Address answer',
+        tags: [],
+      })),
+    );
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Address deck', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Search cards' }).fill('address question');
+    await expect(page.locator('.result-label')).toHaveText('30 cards · Page 1 of 2');
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await expect(page.locator('.result-label')).toHaveText('30 cards · Page 2 of 2');
+    await expect(page).toHaveURL(
+      new RegExp(`/app/library\\?q=address\\+question&deck=${deck.id}&page=2$`),
+    );
+    await page.reload();
+    await expect(page.getByRole('textbox', { name: 'Search cards' })).toHaveValue(
+      'address question',
+    );
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText(
+      'Address deck',
+    );
+    await expect(page.locator('.result-label')).toHaveText('30 cards · Page 2 of 2');
+    // Filters replace the library's history entry, so Back from another view returns to the same results.
+    await page.getByRole('button', { name: 'Today', exact: true }).click();
+    await page.goBack();
+    await expect(page.locator('.result-label')).toHaveText('30 cards · Page 2 of 2');
+    // A deck deleted since its address was saved shows every deck from the first page.
+    await page.goto(`/app/library?deck=${crypto.randomUUID()}&page=2`);
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText('All decks');
+    await expect(page.locator('.result-label')).toContainText('Page 1 of');
+  } finally {
+    await account.cleanup();
+  }
+});

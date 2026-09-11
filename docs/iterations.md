@@ -1151,3 +1151,11 @@ The wave 4 frontend review measured the product routes' first load. The layout i
 The product layout now imports Radix's base tokens, the seven colour scales Recall uses (indigo, sand, gray, red, amber, green and orange), its components and its utilities. In the local production build, the stylesheet that carries the Radix components fell from 82.1 KB to 29.1 KB gzipped. A unit test scans the web app for Radix colours in props and CSS variables and fails if one lacks its scale, and AGENTS.md says where a new colour goes.
 
 Validation: format, typecheck, 154 unit tests and build pass, including the colour import guard. All 283 browser, API and MCP journeys pass on desktop, tablet and mobile, including the contrast journeys for red buttons and a new journey that checks the four rating labels keep four distinct colours.
+
+## 2026-09-11 — UX loop 122: the library keeps its search, deck and page in its address
+
+The wave 4 Nielsen review searched and filtered the library, moved to another page, then reloaded: the search, the deck filter and the page were gone, and the library started over at every card.
+
+The library's address now holds its search, deck and page, as in `/app/library?q=capital&deck=…&page=2`, so a reload opens the same results. A new filter replaces the history entry instead of adding one, so Back still leaves the library, and the address follows a search once typing pauses, because Safari refuses more than 100 history changes in 30 seconds. An address naming a deck that no longer exists shows every deck, and the search field stops at the 200 characters the API accepts.
+
+Validation: format, typecheck, 156 unit tests and build pass, including tests that write library addresses and read back only what they can use. All 286 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reloads a searched, filtered second page, returns to it with Back, and opens an address for a deck that does not exist.

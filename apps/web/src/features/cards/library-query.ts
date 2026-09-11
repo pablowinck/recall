@@ -1,9 +1,13 @@
 export const LIBRARY_PAGE_SIZE = 24;
+/** The longest search the API accepts. */
+export const LIBRARY_SEARCH_LIMIT = 200;
 export interface LibraryQuery {
   search: string;
   deck: string;
   page: number;
 }
+/** Every card: no search, every deck, the first page. */
+export const EMPTY_LIBRARY_QUERY: LibraryQuery = { search: '', deck: '', page: 0 };
 
 /** Encode filters without exposing SQL or trusting raw query fragments. Example: encodeLibraryQuery(query). */
 export function encodeLibraryQuery(query: LibraryQuery): string {

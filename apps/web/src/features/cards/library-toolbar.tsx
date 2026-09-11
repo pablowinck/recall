@@ -5,6 +5,7 @@ import type { Deck } from '@recall/contracts';
 import type { LibraryViewProps, LibraryViewState } from './library-types';
 import { DeleteDeckButton } from './delete-deck';
 import { NewDeckDialog } from './new-deck-dialog';
+import { LIBRARY_SEARCH_LIMIT } from './library-query';
 
 interface FilterRefocus {
   trigger: RefObject<HTMLButtonElement | null>;
@@ -97,6 +98,7 @@ function LibrarySearch({ state }: { state: LibraryViewState }): React.JSX.Elemen
       aria-label="Search cards"
       placeholder="Search a word, question, or answer…"
       value={state.query.search}
+      maxLength={LIBRARY_SEARCH_LIMIT}
       onChange={(event) => state.search(event.target.value)}
       size="3"
     >

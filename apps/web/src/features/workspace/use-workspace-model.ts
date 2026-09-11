@@ -1,34 +1,35 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { signOutOnRequest } from '@/lib/use-recall-session';
+import { EMPTY_LIBRARY_QUERY } from '../cards/library-query';
 import { useWorkspace } from './use-workspace';
 import { useWorkspaceFreshness } from './use-workspace-freshness';
 import { useWorkspaceHistory } from './use-workspace-history';
-import type { WorkspaceView } from './navigation-types';
 import type {
   RecallAccount,
   WorkspaceActions,
   WorkspaceModel,
   WorkspaceUiState,
 } from './workspace-model';
+import type { WorkspaceAddress } from './workspace-url';
 
 type UpdateWorkspaceUi = Dispatch<SetStateAction<WorkspaceUiState>>;
 
-/** Separate navigation commands from presentation. Example: useWorkspaceModel(account, 'library'). */
+/** Separate navigation commands from presentation. Example: useWorkspaceModel(account, workspaceAddressFrom(path, query)). */
 export function useWorkspaceModel(
   account: RecallAccount,
-  initialView: WorkspaceView,
-  initialStudyDeck?: string,
+  initialAddress: WorkspaceAddress,
 ): WorkspaceModel {
   const [state, update] = useState<WorkspaceUiState>({
-    view: initialView,
-    studyDeck: initialStudyDeck,
+    view: initialAddress.view,
+    studyDeck: initialAddress.studyDeck,
     editing: undefined,
     revision: 0,
-    libraryQuery: { search: '', deck: '', page: 0 },
+    libraryQuery: initialAddress.library,
   });
   const remote = useWorkspace(account.client);
-  useWorkspaceHistory(state.view, state.studyDeck, (view, studyDeck) =>
-    update((current) => ({ ...current, view, studyDeck })),
+  useWorkspaceHistory(
+    { view: state.view, studyDeck: state.studyDeck, library: state.libraryQuery },
+    (address) => update((current) => followAddress(current, address)),
   );
   useWorkspaceFreshness(state.view === 'today', () => void remote.refresh());
   const actions = {
@@ -47,6 +48,14 @@ export function useWorkspaceModel(
   };
 }
 
+// Back and Forward move between views. The library's filters come from the address only on returning to the library,
+// so a trip through another view keeps them, as the tabs do; an entry for the same view is the card editor's.
+function followAddress(current: WorkspaceUiState, address: WorkspaceAddress): WorkspaceUiState {
+  if (address.view === current.view) return current;
+  const libraryQuery = address.view === 'library' ? address.library : current.libraryQuery;
+  return { ...current, view: address.view, studyDeck: address.studyDeck, libraryQuery };
+}
+
 function createViewActions(
   update: UpdateWorkspaceUi,
   refresh: () => Promise<void>,
@@ -61,7 +70,7 @@ function createViewActions(
       update((current) => ({
         ...current,
         view: 'library',
-        libraryQuery: { search: '', deck: deck ?? '', page: 0 },
+        libraryQuery: { ...EMPTY_LIBRARY_QUERY, deck: deck ?? '' },
       })),
     setLibraryQuery: (libraryQuery) => update((current) => ({ ...current, libraryQuery })),
     edit: (editing, editorDeck) => update((current) => ({ ...current, editing, editorDeck })),

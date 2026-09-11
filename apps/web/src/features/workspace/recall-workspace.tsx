@@ -5,7 +5,7 @@ import { useAppearance } from '@/lib/use-appearance';
 import { LoadingState } from '@/components/feedback';
 import { RecallTheme } from '@/components/recall-theme';
 import { AuthScreen } from '../auth/auth-screen';
-import type { WorkspaceView } from './navigation-types';
+import type { WorkspaceAddress } from './workspace-url';
 import type { RecallAccount } from './workspace-model';
 import {
   AuthenticatedWorkspace,
@@ -13,15 +13,13 @@ import {
 } from './authenticated-workspace';
 
 interface RecallWorkspaceProps {
-  initialView: WorkspaceView;
-  initialStudyDeck?: string;
+  initialAddress: WorkspaceAddress;
   startSignedUp?: boolean;
 }
 
-/** Reset workspace state by identity to prevent cross-account content reuse. Example: <RecallWorkspace initialView="today" />. */
+/** Reset workspace state by identity to prevent cross-account content reuse. Example: <RecallWorkspace initialAddress={address} />. */
 export function RecallWorkspace({
-  initialView,
-  initialStudyDeck,
+  initialAddress,
   startSignedUp = false,
 }: RecallWorkspaceProps): React.JSX.Element {
   const account = useRecallSession();
@@ -32,8 +30,7 @@ export function RecallWorkspace({
         account={account}
         dark={appearance === 'dark'}
         toggleTheme={toggleTheme}
-        initialView={initialView}
-        initialStudyDeck={initialStudyDeck}
+        initialAddress={initialAddress}
         startSignedUp={startSignedUp}
       />
     </RecallTheme>
@@ -43,7 +40,7 @@ export function RecallWorkspace({
 function SessionGate(
   props: AuthenticatedWorkspaceProps & { startSignedUp: boolean },
 ): React.JSX.Element {
-  const initialView = useStartingView(props.account, props.initialView);
+  const initialAddress = useStartingAddress(props.account, props.initialAddress);
   const hadSession = useHadSession(props.account);
   if (props.account.loading) return <LoadingState />;
   if (!props.account.session)
@@ -58,16 +55,17 @@ function SessionGate(
     <AuthenticatedWorkspace
       key={props.account.session.user.id}
       {...props}
-      initialView={initialView}
+      initialAddress={initialAddress}
     />
   );
 }
 
 // A reload resumes a review, but signing in starts on Today: nobody signs in to land in the middle of a session.
-function useStartingView(account: RecallAccount, requested: WorkspaceView): WorkspaceView {
+function useStartingAddress(account: RecallAccount, requested: WorkspaceAddress): WorkspaceAddress {
   const [signedInHere, setSignedInHere] = useState(false);
   if (!account.loading && !account.session && !signedInHere) setSignedInHere(true);
-  return signedInHere && requested === 'study' ? 'today' : requested;
+  if (!signedInHere || requested.view !== 'study') return requested;
+  return { ...requested, view: 'today', studyDeck: undefined };
 }
 
 // The landing page's "Create a free account" opens sign-up, but once this tab has signed in, signing out or an ended

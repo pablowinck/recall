@@ -1,7 +1,8 @@
 import { StatusAnnouncer } from '@/components/status-announcer';
 import { IssuedConnectionProvider } from '../connections/issued-connection';
-import type { NavigationProps, WorkspaceView } from './navigation-types';
+import type { NavigationProps } from './navigation-types';
 import type { RecallAccount } from './workspace-model';
+import type { WorkspaceAddress } from './workspace-url';
 import { useWorkspaceModel } from './use-workspace-model';
 import { WorkspaceShell } from './workspace-shell';
 import { WorkspaceContent } from './workspace-content';
@@ -10,9 +11,8 @@ export interface AuthenticatedWorkspaceProps {
   account: RecallAccount;
   dark: boolean;
   toggleTheme: () => void;
-  initialView: WorkspaceView;
-  /** The deck a reloaded review address named. */
-  initialStudyDeck?: string;
+  /** Where the page's address pointed: a view, a review's deck, or the library's search, deck and page. */
+  initialAddress: WorkspaceAddress;
 }
 
 /** Keep identity-scoped state below the keyed authentication gate. Example: <AuthenticatedWorkspace {...props} />. */
@@ -20,10 +20,9 @@ export function AuthenticatedWorkspace({
   account,
   dark,
   toggleTheme,
-  initialView,
-  initialStudyDeck,
+  initialAddress,
 }: AuthenticatedWorkspaceProps): React.JSX.Element {
-  const model = useWorkspaceModel(account, initialView, initialStudyDeck);
+  const model = useWorkspaceModel(account, initialAddress);
   const navigation: NavigationProps = {
     view: model.view,
     email: model.email,

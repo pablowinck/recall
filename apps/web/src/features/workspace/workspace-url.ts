@@ -1,3 +1,8 @@
+import {
+  EMPTY_LIBRARY_QUERY,
+  LIBRARY_SEARCH_LIMIT,
+  type LibraryQuery,
+} from '../cards/library-query';
 import type { WorkspaceView } from './navigation-types';
 
 export const WORKSPACE_ROOT = '/app';
@@ -8,7 +13,7 @@ const VIEW_PATHS: Record<WorkspaceView, string> = {
   study: `${WORKSPACE_ROOT}/study`,
 };
 
-// Only a deck id travels from an address to the API; anything else opens a review of every deck.
+// Only a deck id travels from an address to the API; anything else means every deck.
 const DECK_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const VIEW_TITLES: Record<WorkspaceView, string> = {
@@ -18,25 +23,63 @@ const VIEW_TITLES: Record<WorkspaceView, string> = {
   study: 'Review session',
 };
 
+/** What an address holds: a view, the deck a review covers, and the library's search, deck and page. */
+export interface WorkspaceAddress {
+  view: WorkspaceView;
+  studyDeck?: string;
+  library: LibraryQuery;
+}
+
 /** Name a view for browser tabs and the history menu. Example: workspaceTitle('library'). */
 export function workspaceTitle(view: WorkspaceView): string {
   return `${VIEW_TITLES[view]} · Recall`;
 }
 
-/** The address of a workspace view; a deck review keeps its deck. Example: workspacePath('study', deckId). */
-export function workspacePath(view: WorkspaceView, studyDeck?: string): string {
-  const path = VIEW_PATHS[view];
-  return view === 'study' && studyDeck ? `${path}?deck=${studyDeck}` : path;
+/** The address of a place in the workspace. Example: workspacePath({ view: 'study', studyDeck, library }). */
+export function workspacePath({ view, studyDeck, library }: WorkspaceAddress): string {
+  const query = new URLSearchParams();
+  if (view === 'study' && studyDeck) query.set('deck', studyDeck);
+  if (view === 'library') writeLibraryQuery(query, library);
+  const encoded = query.toString();
+  return encoded ? `${VIEW_PATHS[view]}?${encoded}` : VIEW_PATHS[view];
 }
 
-/** The deck a review address names, when it is a deck id. Example: studyDeckFrom(query.get('deck')). */
-export function studyDeckFrom(value: string | null | undefined): string | undefined {
-  return value && DECK_ID.test(value) ? value : undefined;
+/**
+ * The place an address opens; a part it cannot use falls back to Today, every deck or the first page.
+ * Example: workspaceAddressFrom('/app/library', new URLSearchParams('q=verbs&page=2')).
+ */
+export function workspaceAddressFrom(path: string, query: URLSearchParams): WorkspaceAddress {
+  const view = viewFromPath(path);
+  return {
+    view,
+    studyDeck: view === 'study' ? deckIdFrom(query.get('deck')) : undefined,
+    library: view === 'library' ? libraryQueryFrom(query) : EMPTY_LIBRARY_QUERY,
+  };
 }
 
-/** The view an address opens, defaulting to Today. Example: viewFromPath('/app/library'). */
-export function viewFromPath(path: string): WorkspaceView {
+function viewFromPath(path: string): WorkspaceView {
   const [segment] = path.replace(WORKSPACE_ROOT, '').split('/').filter(Boolean);
   const views = Object.keys(VIEW_PATHS) as WorkspaceView[];
   return views.find((view) => view === segment) ?? 'today';
+}
+
+// People count pages from 1, so an address does too; the library counts from 0.
+function writeLibraryQuery(query: URLSearchParams, library: LibraryQuery): void {
+  if (library.search) query.set('q', library.search);
+  if (library.deck) query.set('deck', library.deck);
+  if (library.page > 0) query.set('page', String(library.page + 1));
+}
+
+// A page past the end settles on the last page once the cards load.
+function libraryQueryFrom(query: URLSearchParams): LibraryQuery {
+  const page = Number(query.get('page'));
+  return {
+    search: (query.get('q') ?? '').slice(0, LIBRARY_SEARCH_LIMIT),
+    deck: deckIdFrom(query.get('deck')) ?? '',
+    page: Number.isSafeInteger(page) && page > 1 ? page - 1 : 0,
+  };
+}
+
+function deckIdFrom(value: string | null): string | undefined {
+  return value && DECK_ID.test(value) ? value : undefined;
 }

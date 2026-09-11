@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { RecallClient } from '@recall/client';
 import { useLibrary, type LibraryLoad } from './use-library';
-import { lastLibraryPage, type LibraryQuery } from './library-query';
+import { EMPTY_LIBRARY_QUERY, lastLibraryPage, type LibraryQuery } from './library-query';
 import type { LibraryViewState } from './library-types';
 
 interface LibraryViewInput {
@@ -30,7 +30,7 @@ export function useLibraryView({
     search: (search) => update({ search, page: 0 }),
     selectDeck: (deck) => update({ deck, page: 0 }),
     goToPage: (page) => update({ page }),
-    clear: () => changeQuery({ search: '', deck: '', page: 0 }),
+    clear: () => changeQuery(EMPTY_LIBRARY_QUERY),
   };
 }
 

@@ -1,6 +1,8 @@
+import type { Deck } from '@recall/contracts';
 import { ErrorNotice, ErrorState, LoadingState } from '@/components/feedback';
 import { CardEditor } from '../cards/card-editor';
 import { LibraryView } from '../cards/library-view';
+import type { LibraryQuery } from '../cards/library-query';
 import { StudyView } from '../study/study-view';
 import { ConnectionsView } from '../connections/connections-view';
 import { TodayView } from './today-view';
@@ -61,12 +63,13 @@ function TodayWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX.E
 }
 
 function LibraryWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX.Element {
+  const decks = model.workspace.decks;
   return (
     <LibraryView
       client={model.client}
-      decks={model.workspace.decks}
+      decks={decks}
       revision={model.revision}
-      query={model.libraryQuery}
+      query={withKnownDeck(model.libraryQuery, decks)}
       changeQuery={model.actions.setLibraryQuery}
       create={(preferredDeckId) => model.actions.edit(null, preferredDeckId)}
       edit={model.actions.edit}
@@ -114,4 +117,11 @@ function WorkspaceEditor({ model }: { model: LoadedWorkspaceModel }): React.JSX.
 // A failed refresh of decks and stats concerns Today and the library; a review and Connections work without it.
 function showsWorkspaceData(view: WorkspaceView): boolean {
   return view === 'today' || view === 'library';
+}
+
+// A deck deleted since its library address was saved, perhaps by an assistant, would filter to nothing, so the library
+// shows every deck instead.
+function withKnownDeck(query: LibraryQuery, decks: Deck[]): LibraryQuery {
+  if (!query.deck || decks.some((deck) => deck.id === query.deck)) return query;
+  return { ...query, deck: '', page: 0 };
 }
