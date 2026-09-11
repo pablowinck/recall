@@ -665,3 +665,11 @@ The frontend review found that the web app shipped the whole Supabase client, wi
 The app now creates the Supabase Auth client directly, with the same Auth address, key and session storage name that the full client used, so people who are already signed in stay signed in after the update. Only `lib/supabase-auth.ts` imports the Auth library; the rest of the app takes the client type from there, because the library exports its client as a value. A unit test builds the full client and fails if the address or the storage name ever differ. The chunk that carries the client is now 50.1 KB compressed instead of 87.9 KB, 37.8 KB less before the app can sign anyone in.
 
 Validation: format, typecheck, 129 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including sign-up, sign-in, sign-out, switching accounts and the OAuth consent journeys.
+
+## 2026-09-11 — UX loop 62: the sign-in screen says one thing at a time
+
+The design review found two taglines competing on the sign-in and sign-up screen: the line under the heading, such as "Create an account and save what you want to learn.", and a second, poetic caption under the example card, "A small discovery today. Something you remember tomorrow." The main button also carried an arrow, which Apple's sign-in buttons do not use and which added one more shape beside the text.
+
+The caption under the example card is gone, so the card speaks for itself and the heading's line is the only tagline. The "Sign in" and "Create account" buttons are text only, with the same names for assistive technology.
+
+Validation: format, typecheck, 129 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including the sign-in and sign-up accessibility checks, and captures of the sign-up screen at 1440 px and 390 px in both appearances were reviewed.

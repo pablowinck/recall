@@ -1,5 +1,5 @@
 import { Button } from '@radix-ui/themes';
-import { ArrowRight, LockKeyhole } from 'lucide-react';
+import { LockKeyhole } from 'lucide-react';
 import { ErrorNotice } from '@/components/feedback';
 import type { AuthFormState } from './use-auth-form';
 
@@ -33,7 +33,6 @@ export function AuthActions({ state }: { state: AuthFormState }): React.JSX.Elem
     <>
       <Button size="3" type="submit" loading={state.busy}>
         {state.signup ? 'Create account' : 'Sign in'}
-        <ArrowRight size={18} />
       </Button>
       <button type="button" className="text-button" onClick={state.toggle} disabled={state.busy}>
         {state.signup ? 'I already have an account' : 'Create a new account'}

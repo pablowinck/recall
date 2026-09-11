@@ -39,11 +39,6 @@
   background: var(--canvas);
   padding: 3rem;
 }
-.preview-caption {
-  text-align: center;
-  font-size: 0.875rem;
-  line-height: 1.8;
-}
 @media (max-width: 900px) {
   .auth-left {
     padding-inline: 2rem;

@@ -19,11 +19,6 @@ function AuthPreview(): React.JSX.Element {
   return (
     <div className="auth-preview">
       <ExampleCard />
-      <p className="preview-caption">
-        A small discovery today.
-        <br />
-        Something you remember tomorrow.
-      </p>
     </div>
   );
 }
