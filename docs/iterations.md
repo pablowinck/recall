@@ -881,3 +881,11 @@ The wave 2 frontend backlog left F-06 half open: focus dropped after issuing a t
 Focus now moves to the panel's title when a token appears, which scrolls it into view and reads "Connect Cursor" to screen readers. Coming back to Connections with a token still waiting focuses the page title, as every view change does.
 
 Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, and the connection journey now checks that the new token's title is focused and in view.
+
+## 2026-09-11 — UX loop 89: at 400% zoom the study bar stops covering the answer
+
+The wave 3 frontend review zoomed the study screen to 400%, as people with low vision do. A 1080p screen at that zoom is 480 by 270 CSS pixels, and the bar holding Reveal answer and the ratings stayed pinned to the bottom, covering most of the answer.
+
+Viewports 480 px tall or shorter now let the bar scroll with the card, below the answer. Taller screens keep the pinned bar.
+
+Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies at 480 by 270 and checks that neither bar is pinned.

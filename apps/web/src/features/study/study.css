@@ -145,6 +145,14 @@
   backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 0 -1px 0 var(--separator);
 }
+/* At 400% zoom a 1080p screen is 480 by 270 CSS pixels, and a pinned bar would cover most of the answer, so short
+   viewports let the bar scroll with the card. */
+@media (max-height: 480px) {
+  .reveal-action,
+  .rating-section {
+    position: static;
+  }
+}
 /* Beyond phone widths the bar lines up with the card; phones bleed it to the screen edges, like a toolbar. */
 @media (min-width: 601px) {
   .reveal-action,

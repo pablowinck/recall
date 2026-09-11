@@ -431,3 +431,26 @@ test('the study screen keeps its edges in forced colours', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('at 400% zoom the study bar scrolls with the answer instead of covering it', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Zoomed question',
+      back: 'Zoomed answer, first line.\nZoomed answer, second line.',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.setViewportSize({ width: 480, height: 270 });
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.locator('.reveal-action')).toHaveCSS('position', 'static');
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await expect(page.locator('.rating-section')).toHaveCSS('position', 'static');
+  } finally {
+    await account.cleanup();
+  }
+});
