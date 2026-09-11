@@ -841,3 +841,11 @@ The wave 3 Nielsen review found that search matched accents exactly and never re
 Search now ignores accents as well as case, and it matches tags as well as both sides of a card. The API folds accents with PostgreSQL's built-in normalize(), so it needs no database extension or migration. The MCP search tool calls the same endpoint, so assistants search the same way.
 
 Validation: format, typecheck, 138 unit tests and build pass. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that finds a card without typing its accents and another by an accented tag typed in capitals.
+
+## 2026-09-11 — UX loop 84: sign-in says when Recall can't be reached
+
+The wave 3 reviews signed in with the network cut. The form said "We couldn’t complete that. Please try again.", which reads like a wrong password or a broken service, and focus fell to the top of the page, because the Sign in button disables while it works.
+
+A sign-in or sign-up that never reaches the service now says "Can’t reach Recall. Check your connection and try again.", the same words as the rest of the app, whether the browser reports it the Chrome, Firefox or Safari way. After any failure, focus returns to the button, so trying again is one key away.
+
+Validation: format, typecheck, 142 unit tests and build pass, including the three browsers' network failure wording. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that signs in with the auth service unreachable, checks the message and the focus, then signs in once it is back.

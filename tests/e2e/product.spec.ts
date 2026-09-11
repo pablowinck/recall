@@ -276,3 +276,26 @@ test('each view has its own address and Back stays inside the app', async ({ pag
     await account.cleanup();
   }
 });
+
+test('signing in while Recall is unreachable says so and keeps focus on Sign in', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await page.goto('/app');
+    await page.route('**/auth/v1/token**', (route) => route.abort());
+    await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
+    await page.getByLabel('Password', { exact: true }).fill(account.password);
+    const submit = page.getByRole('button', { name: 'Sign in', exact: true });
+    await submit.click();
+    await expect(
+      page.getByText('Can’t reach Recall. Check your connection and try again.'),
+    ).toBeVisible();
+    await expect(submit).toBeFocused();
+    await page.unroute('**/auth/v1/token**');
+    await submit.click();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

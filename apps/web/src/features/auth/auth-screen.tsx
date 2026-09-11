@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useRef, type RefObject } from 'react';
 import type { BrowserAuth } from '@/lib/supabase-auth';
 import { useAuthForm } from './use-auth-form';
 import { AuthLayout } from './auth-layout';
@@ -17,9 +18,10 @@ export function AuthScreen({
   sessionEnded?: boolean;
 }): React.JSX.Element {
   const state = useAuthForm(auth, startSignedUp);
+  const form = useFocusAfterFailure(state.error);
   return (
     <AuthLayout>
-      <form onSubmit={state.submit} className="auth-form">
+      <form ref={form} onSubmit={state.submit} className="auth-form">
         <AuthHeading signup={state.signup} sessionEnded={sessionEnded} />
         <AuthFields signup={state.signup} busy={state.busy} />
         <AuthFeedback state={state} />
@@ -27,4 +29,14 @@ export function AuthScreen({
       </form>
     </AuthLayout>
   );
+}
+
+// The submit button disables while a request runs, which drops focus; a failure gives focus back to it, so trying
+// again is one key away.
+function useFocusAfterFailure(error: string): RefObject<HTMLFormElement | null> {
+  const form = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (error) form.current?.querySelector<HTMLButtonElement>('button[type="submit"]')?.focus();
+  }, [error]);
+  return form;
 }

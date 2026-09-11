@@ -1,3 +1,4 @@
+const UNREACHABLE = 'Can’t reach Recall. Check your connection and try again.';
 const KNOWN_FAILURES: [needle: string, message: string][] = [
   ['Invalid login', 'Incorrect email or password. Check your details and try again.'],
   ['Email not confirmed', 'Confirm your email first: the link is in your inbox.'],
@@ -6,6 +7,10 @@ const KNOWN_FAILURES: [needle: string, message: string][] = [
   ['Unable to validate email address', 'That email address doesn’t look right.'],
   ['For security purposes', 'Too many attempts just now. Wait a moment and try again.'],
   ['rate limit', 'Too many attempts just now. Wait a moment and try again.'],
+  // A request that never reaches the service fails in the browser’s own words: Chrome, Firefox, then Safari.
+  ['Failed to fetch', UNREACHABLE],
+  ['NetworkError', UNREACHABLE],
+  ['Load failed', UNREACHABLE],
 ];
 
 /**

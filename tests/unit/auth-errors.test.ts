@@ -26,3 +26,14 @@ describe('what an authentication failure says', () => {
     );
   });
 });
+
+it('says Recall is unreachable when the request never arrives, in each browser’s wording', () => {
+  for (const wording of [
+    'Failed to fetch',
+    'NetworkError when attempting to fetch resource.',
+    'Load failed',
+  ])
+    expect(describeAuthFailure(wording)).toBe(
+      'Can’t reach Recall. Check your connection and try again.',
+    );
+});
