@@ -905,3 +905,11 @@ The wave 2 frontend backlog still had part of F-06 open: cancelling the card edi
 Cancelling now returns focus to "New deck", and adding a deck moves focus to the deck list, which reads the new deck as the choice.
 
 Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, and the inline deck journey now checks focus after Cancel and after Add.
+
+## 2026-09-11 — UX loop 92: a failed load after the last card puts focus on Try again
+
+The wave 3 frontend review rated the last card of a batch with the connection down. The error and its Try again button appeared, but the rated card and its buttons had left the screen, so focus fell to the page and a keyboard user had to hunt for the button.
+
+When a failure leaves no card on the study screen, Try again now takes focus. An error shown beside a card leaves focus where it is.
+
+Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, and the failed batch journey now checks that Try again is focused.

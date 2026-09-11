@@ -19,16 +19,19 @@ export function LoadingState({
 export function ErrorNotice({
   message,
   retry,
+  focusRetry = false,
 }: {
   message: string;
   retry?: () => void;
+  /** Focus Try again, for failures that removed the control the person was using. */
+  focusRetry?: boolean;
 }): React.JSX.Element {
   return (
     <div className="error-notice" role="alert">
       <AlertCircle size={19} />
       <span>{message}</span>
       {retry && (
-        <Button variant="soft" color="gray" onClick={retry}>
+        <Button variant="soft" color="gray" onClick={retry} autoFocus={focusRetry}>
           Try again
         </Button>
       )}

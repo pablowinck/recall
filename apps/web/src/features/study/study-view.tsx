@@ -42,7 +42,14 @@ function StudyScreen({
         revealed={session.revealed}
         onReveal={session.reveal}
       />
-      {session.error && <ErrorNotice message={session.error} retry={() => void session.reload()} />}
+      {session.error && (
+        // With no card left, the rating button the person pressed is gone, so Try again takes focus.
+        <ErrorNotice
+          message={session.error}
+          retry={() => void session.reload()}
+          focusRetry={!current}
+        />
+      )}
       <StudyActions session={session} />
     </section>
   );

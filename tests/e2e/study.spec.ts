@@ -102,6 +102,7 @@ test('a failed check at the end of a batch never claims the session is done', as
     await expect(
       page.getByText('Can’t reach Recall. Check your connection and try again.'),
     ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Try again', exact: true })).toBeFocused();
     await expect(page.getByRole('heading', { name: 'Nicely done' })).toHaveCount(0);
     await page.unroute('**/v1/study**');
     await page.getByRole('button', { name: 'Try again', exact: true }).click();
