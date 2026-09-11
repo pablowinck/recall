@@ -649,3 +649,11 @@ The frontend review counted functions well past the project's twenty-line guidel
 The inline deck form is now a small hook for the name, its submit and its Enter rule, a header with the label and the cancel button, and the form that composes them. The study session hook hands its actions to a separate function that binds them to the current snapshot, and the request id helper lost a temporary variable. Nothing changes on screen or in behaviour.
 
 Validation: format, typecheck, 127 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including the inline deck, input method and rating retry journeys that exercise both pieces.
+
+## 2026-09-11 — UX loop 60: the next study card fades in
+
+The design review noted that moving to the next card swapped the question text in place, inside the same card, so a new card looked like the old one changing its words. Over a long session, that makes it easy to miss that the card changed.
+
+Each card is now its own element, and it fades in over 160 ms. The fade uses opacity only, with no movement, so hours of reviews do not slide around, and the system's reduced-motion setting turns it off. Focus still lands on the new card, and rating keys work during the fade.
+
+Validation: format, typecheck, 127 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, including the keyboard study journey, which now checks that the next card runs the fade and keeps focus.

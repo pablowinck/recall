@@ -79,6 +79,8 @@ export function ReviewContent({
     <>
       <StudyCardContext deckName={deckName} tags={current.card.tags} />
       <article
+        // A new element per card lets the next card fade in instead of swapping its text in place.
+        key={current.card.id}
         ref={focus.card}
         tabIndex={-1}
         className={`review-card ${revealed ? 'is-revealed' : ''} ${isClickable ? 'is-clickable' : ''}`}

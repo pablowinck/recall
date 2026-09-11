@@ -356,3 +356,15 @@
     display: none;
   }
 }
+/* Each card fades in over 160 ms, opacity only, so hours of reviews never slide; reduced motion turns it off in base.css. */
+.review-card {
+  animation: card-in 0.16s ease-out both;
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
