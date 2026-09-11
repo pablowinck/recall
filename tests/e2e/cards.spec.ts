@@ -632,3 +632,27 @@ test('browser Back closes the card editor and asks before discarding a draft', a
     await account.cleanup();
   }
 });
+
+test('saving a card deleted meanwhile says so and keeps the typed text', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const card = await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Card deleted while open',
+      back: 'Original answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.locator('.library-card').click();
+    await account.api.deleteCard(card.id);
+    const back = page.getByRole('textbox', { name: /^Back/ });
+    await back.fill('Text worth keeping');
+    await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await expect(page.getByText(/^This card was deleted after you opened it/)).toBeVisible();
+    await expect(back).toHaveValue('Text worth keeping');
+  } finally {
+    await account.cleanup();
+  }
+});

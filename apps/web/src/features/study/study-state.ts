@@ -5,10 +5,12 @@ export interface ReturningCard {
   id: string;
   dueAt: string;
 }
-/** A rating the server did not save; a version conflict needs a reload instead of a retry. */
+/** Why a rating was not saved: an unsaved rating can be retried; a changed or deleted card needs a reload. */
+export type RatingFailureReason = 'unsaved' | 'changed' | 'deleted';
+/** A rating the server did not save, and why. */
 export interface RatingFailure {
   rating: RecallRating;
-  conflict: boolean;
+  reason: RatingFailureReason;
 }
 export interface StudySnapshot {
   queue: StudyCard[];

@@ -3,6 +3,7 @@ import { hasStatus } from '../../lib/api-status';
 import { describeFailure } from '../../lib/error-message';
 import { pruneReturningCards, trackReturningCard } from './returning-cards';
 import type {
+  RatingFailureReason,
   StudyActionContext,
   StudyAttempt,
   StudyGateway,
@@ -103,12 +104,13 @@ export async function recordStudyRating(
   if (!current || !context.snapshot.revealed || context.snapshot.loading || context.runtime.pending)
     return;
   context.runtime.pending = true;
+  // A failure notice stays while its retry runs, so the Retry button keeping keyboard focus is not removed from
+  // under it; a saved rating or a new failure replaces the notice.
   context.update((snapshot) => ({
     ...snapshot,
     saving: true,
     savingRating: rating,
     error: '',
-    ratingFailure: null,
   }));
   await commitStudyRating(context, current, rating);
 }
@@ -139,8 +141,7 @@ async function commitStudyRating(
     if (generation === context.runtime.generation)
       context.update((snapshot) => ({
         ...snapshot,
-        // A 409 means the card changed since it loaded: edited, paused or reviewed elsewhere.
-        ratingFailure: { rating, conflict: hasStatus(failure, 409) },
+        ratingFailure: { rating, reason: describeRatingFailure(failure) },
       }));
   } finally {
     context.runtime.pending = false;
@@ -207,8 +208,17 @@ function acceptStudyRating(
       queue,
       completed: snapshot.completed + 1,
       revealed: false,
+      ratingFailure: null,
       error: next?.error ?? snapshot.error,
       returning: next ? pruneReturningCards(returning, queue, now) : returning,
     };
   });
+}
+
+// A 409 means the card changed since it loaded, edited, paused or reviewed elsewhere; a 404 means it was deleted,
+// perhaps by an assistant. Neither succeeds on a retry, so both lead to a reload.
+function describeRatingFailure(failure: unknown): RatingFailureReason {
+  if (hasStatus(failure, 404)) return 'deleted';
+  if (hasStatus(failure, 409)) return 'changed';
+  return 'unsaved';
 }

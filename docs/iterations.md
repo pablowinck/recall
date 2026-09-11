@@ -929,3 +929,11 @@ The wave 3 Nielsen review pressed the browser's Back button with the card editor
 Opening the editor now adds a history entry at the same address, so Back asks the editor to close. A draft still gets the "Discard this card?" question, and Keep editing leaves Back ready to ask again. Closing the editor any other way removes the entry, so the history is as it was.
 
 Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that presses Back on an empty editor, then on a draft: it keeps editing once, then discards and stays on the library.
+
+## 2026-09-11 — UX loop 95: a card deleted meanwhile says so instead of blaming the connection
+
+The wave 4 Nielsen review deleted the card on screen through MCP, as an assistant might while someone studies. Rating it got a 404, but Recall said "Your rating wasn’t saved. Check your connection and try again." Retry and the number keys failed every time, and only Leave session got out. Saving an edit to a card deleted meanwhile said only "Card not found."
+
+A rating on a deleted card now says "This card was deleted, perhaps by your assistant." with a Next card button that reloads the review, beside the existing reload for a card that changed. The editor says "This card was deleted after you opened it, perhaps by your assistant. Copy your text before closing." and keeps the typed text. The wave 4 frontend review also found that a keyboard Retry dropped focus to the page: the whole notice, Retry included, vanished the moment a retry started. The notice now stays while its retry runs, with Retry reading "Retrying…", and leaves once the rating is saved.
+
+Validation: format, typecheck, 146 unit tests and build pass, including a rating failure test for a 404. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including new journeys that delete a card during a review and while it is open in the editor; the failed rating journey now retries from the keyboard and checks that focus stays on the button.

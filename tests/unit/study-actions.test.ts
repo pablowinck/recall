@@ -178,5 +178,5 @@ it('re-enables the ratings when a rating fails before it is sent', async () => {
   );
   expect(scenario.snapshot.value.saving).toBe(false);
   expect(scenario.snapshot.runtime.pending).toBe(false);
-  expect(scenario.snapshot.value.ratingFailure).toEqual({ rating: 3, conflict: false });
+  expect(scenario.snapshot.value.ratingFailure).toEqual({ rating: 3, reason: 'unsaved' });
 });

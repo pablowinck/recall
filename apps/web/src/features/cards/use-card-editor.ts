@@ -128,11 +128,14 @@ async function createCard(client: RecallClient, draft: CardDraft): Promise<void>
   rememberLastDeck(draft.deck_id);
 }
 
+const DELETED_MESSAGE =
+  'This card was deleted after you opened it, perhaps by your assistant. Copy your text before closing.';
 const CONFLICT_MESSAGE =
   'This card changed after you opened it, perhaps through your assistant. Save again to replace that change with yours, or close without saving to keep it.';
 
 // The editor sends the version it opened, so an edit made meanwhile is never overwritten silently. Once the conflict
-// has been explained, saving again replaces the other change on purpose.
+// has been explained, saving again replaces the other change on purpose. A card deleted meanwhile cannot be saved,
+// so the person is told to copy their text first.
 async function updateCard(
   client: RecallClient,
   card: Flashcard,
@@ -143,6 +146,7 @@ async function updateCard(
   try {
     await client.updateCard(card.id, { ...draft, version });
   } catch (failure) {
+    if (hasStatus(failure, 404)) throw new Error(DELETED_MESSAGE);
     if (conflictShown.current || !hasStatus(failure, 409)) throw failure;
     conflictShown.current = true;
     throw new Error(CONFLICT_MESSAGE);

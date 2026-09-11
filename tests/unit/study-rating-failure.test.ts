@@ -81,7 +81,7 @@ async function failFirstRating(failure: Error): Promise<{
 describe('rating failures', () => {
   it('keeps the answer and the rating so a retry reuses the same request', async () => {
     const { gateway, session } = await failFirstRating(new TypeError('Failed to fetch'));
-    expect(session.value.ratingFailure).toEqual({ rating: 3, conflict: false });
+    expect(session.value.ratingFailure).toEqual({ rating: 3, reason: 'unsaved' });
     expect(session.value.revealed).toBe(true);
     expect(session.value.queue).toHaveLength(1);
     await recordStudyRating(session.context(gateway), 3);
@@ -94,6 +94,11 @@ describe('rating failures', () => {
     const { session } = await failFirstRating(
       new RecallApiError(409, 'This card has changed. Refresh the session before reviewing it.'),
     );
-    expect(session.value.ratingFailure).toEqual({ rating: 3, conflict: true });
+    expect(session.value.ratingFailure).toEqual({ rating: 3, reason: 'changed' });
+  });
+
+  it('marks a card deleted meanwhile so the review can move past it', async () => {
+    const { session } = await failFirstRating(new RecallApiError(404, 'Card not found.'));
+    expect(session.value.ratingFailure).toEqual({ rating: 3, reason: 'deleted' });
   });
 });

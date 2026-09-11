@@ -76,7 +76,14 @@ test('a rating that fails to save keeps the answer and retries in place', async 
       page.getByText('Your rating wasn’t saved. Check your connection and try again.'),
     ).toBeVisible();
     await expect(page.getByText('Offline answer', { exact: true })).toBeVisible();
-    await page.getByRole('button', { name: 'Retry', exact: true }).click();
+    await page.route('**/v1/cards/*/reviews', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await route.continue();
+    });
+    await page.getByRole('button', { name: 'Retry', exact: true }).focus();
+    await page.keyboard.press('Enter');
+    // Retrying keeps focus on the button, which reports busy instead of disabling itself.
+    await expect(page.getByRole('button', { name: 'Retrying…', exact: true })).toBeFocused();
     await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
     expect((await account.api.workspace()).stats.reviewed_today).toBe(1);
   } finally {
@@ -451,6 +458,30 @@ test('at 400% zoom the study bar scrolls with the answer instead of covering it'
     await expect(page.locator('.reveal-action')).toHaveCSS('position', 'static');
     await page.getByRole('button', { name: /Reveal answer/ }).click();
     await expect(page.locator('.rating-section')).toHaveCSS('position', 'static');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a card deleted during a review says so and lets the review move on', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const { cards } = await account.api.importCards([
+      { deck_id: deck.id, front: 'Card an assistant deletes', back: 'Gone', tags: [] },
+      { deck_id: deck.id, front: 'Card that stays', back: 'Still here', tags: [] },
+    ]);
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    const question = page.locator('.review-card h2');
+    const shown = await question.innerText();
+    const remaining = cards.find((card) => card.front !== shown)!;
+    await account.api.deleteCard(cards.find((card) => card.front === shown)!.id);
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(page.getByText('This card was deleted, perhaps by your assistant.')).toBeVisible();
+    await page.getByRole('button', { name: 'Next card', exact: true }).click();
+    await expect(question).toHaveText(remaining.front);
   } finally {
     await account.cleanup();
   }
