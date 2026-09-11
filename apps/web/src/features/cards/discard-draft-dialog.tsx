@@ -1,4 +1,5 @@
 import { AlertDialog, Button } from '@radix-ui/themes';
+import { useDialogBack } from '@/lib/use-dialog-back';
 
 interface DiscardDraftDialogProps {
   open: boolean;
@@ -10,6 +11,8 @@ interface DiscardDraftDialogProps {
 
 /** Ask before throwing away typed card text; "Keep editing" is the default focus. Example: <DiscardDraftDialog {...props} />. */
 export function DiscardDraftDialog(props: DiscardDraftDialogProps): React.JSX.Element {
+  // Back answers the question the way Escape does: the draft stays.
+  useDialogBack(props.open, props.keepEditing);
   return (
     <AlertDialog.Root open={props.open} onOpenChange={(next) => !next && props.keepEditing()}>
       <AlertDialog.Content

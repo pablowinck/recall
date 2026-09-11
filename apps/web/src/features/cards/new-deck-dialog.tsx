@@ -1,6 +1,7 @@
 import { Dialog } from '@radix-ui/themes';
 import type { RecallClient } from '@recall/client';
 import type { Deck } from '@recall/contracts';
+import { useDialogBack } from '@/lib/use-dialog-back';
 import { useDeckDialog, type DeckDialogState } from './use-deck-dialog';
 import { DeckDialogTrigger, DeckDialogContent } from './deck-dialog-content';
 
@@ -13,6 +14,7 @@ export function NewDeckDialog({
   done: (deck: Deck) => void;
 }): React.JSX.Element {
   const state = useDeckDialog(client, done);
+  useDialogBack(state.open, () => changeDeckDialog(state, false));
   return (
     <Dialog.Root open={state.open} onOpenChange={(open) => changeDeckDialog(state, open)}>
       <DeckDialogTrigger />

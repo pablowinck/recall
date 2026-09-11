@@ -1231,3 +1231,11 @@ The wave 5 design review measured desktop library tiles with 58 px of empty spac
 The hint now appears in the tile's bottom corner beside the tags, on hover or keyboard focus as before, and takes no line of its own. The tags wrap before that corner, so the two never overlap, and a tile ends at its tags with only its padding below.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that measures the space below a tile's tags and checks that the hint appears beside them.
+
+## 2026-09-11 — UX loop 132: browser Back closes the dialog in front
+
+Loop 94 let browser Back close the card editor. The wave 5 Nielsen review pressed Back with other dialogs open: with New deck open, Back left the library and lost the typed name, and with "Sign out?" open, Back changed the view underneath the question.
+
+Every dialog now works the same way: New deck, deleting a deck, the confirmations for signing out, deleting a card and revoking a connection, and the question before discarding a draft. An open dialog adds a history entry at the same address, and Back closes only the dialog in front; the discard question takes Back the way it takes Escape, and the draft stays. Dialogs that close by themselves, or together, such as a confirmation and the editor behind it, remove their entries, so the next Back goes where it would have gone.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including the editor's Back journey and a new journey that presses Back with New deck and "Sign out?" open, then checks that one more Back returns to Today.

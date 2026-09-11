@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactElement } from 'react';
 import { AlertDialog, Button, Tooltip } from '@radix-ui/themes';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
+import { useDialogBack } from '@/lib/use-dialog-back';
 import { ErrorNotice } from './feedback';
 
 interface ConfirmActionProps {
@@ -30,6 +31,9 @@ export function ConfirmAction(props: ConfirmActionProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const action = useAsyncAction();
   const focus = useFocusAfterConfirm(props.focusAfterConfirm);
+  useDialogBack(open, () => {
+    if (!action.busy) setOpen(false);
+  });
   const confirm = (): void => {
     void finishConfirmation(action, props.onConfirm, () => {
       focus.confirmed();

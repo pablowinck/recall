@@ -7,6 +7,7 @@ import type { Deck, DeckRemoval } from '@recall/contracts';
 import { ErrorNotice } from '@/components/feedback';
 import { useAnnounce } from '@/components/status-announcer';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
+import { useDialogBack } from '@/lib/use-dialog-back';
 
 interface DeleteDeckProps {
   deck: Deck;
@@ -99,6 +100,9 @@ function DeckRemovalDialog({
 }: DeckRemovalDialogProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const choice = useDeckRemovalChoice(others);
+  useDialogBack(open, () => {
+    if (!action.busy) setOpen(false);
+  });
   const confirm = (): void => {
     const removal: DeckRemoval = choice.keepCards
       ? { cards: 'move', target: choice.target }

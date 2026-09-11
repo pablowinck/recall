@@ -942,3 +942,34 @@ test('a library tile ends at its tags, with the edit hint beside them', async ({
     await account.cleanup();
   }
 });
+
+test('browser Back closes the dialog in front and nothing behind it', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page).toHaveURL(/\/app\/library$/);
+    await page.getByRole('button', { name: 'New deck', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Typed before Back');
+    await page.goBack();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    // Forward lands on the entry the closed dialog left, which is stepped over, so the library stays as it is.
+    await page.goForward();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page).toHaveURL(/\/app\/library$/);
+    await page
+      .getByRole('button', { name: 'Sign out', exact: true })
+      .filter({ visible: true })
+      .click();
+    await expect(page.getByRole('alertdialog')).toContainText('Sign out?');
+    await page.goBack();
+    await expect(page.getByRole('alertdialog')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    // Closed dialogs leave no entries behind, so one more Back returns to Today.
+    await page.goBack();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});
