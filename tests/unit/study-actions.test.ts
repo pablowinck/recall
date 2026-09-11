@@ -137,7 +137,7 @@ it('does not reveal or rate an absent card', async () => {
   expect(scenario.snapshot.value.revealed).toBe(false);
 });
 
-it('waits for a save from a closed session before loading cards again', async () => {
+it('leaves out a card whose save from a closed session is still on its way', async () => {
   const gateway = new FakeSlowSaveGateway();
   const closed = new FakeStudySnapshot();
   await reloadStudyQueue(gateway, closed.runtime, closed.update);
@@ -155,13 +155,11 @@ it('waits for a save from a closed session before loading cards again', async ()
   );
   closed.runtime.generation += 1;
   const reopened = new FakeStudySnapshot();
-  const reload = reloadStudyQueue(gateway, reopened.runtime, reopened.update);
-  await new Promise((resolve) => setTimeout(resolve, 0));
-  expect(gateway.loads).toBe(1);
-  gateway.release();
-  await Promise.all([rating, reload]);
-  expect(gateway.loads).toBe(2);
+  await reloadStudyQueue(gateway, reopened.runtime, reopened.update);
   expect(reopened.value.loading).toBe(false);
+  expect(reopened.value.queue).toHaveLength(0);
+  gateway.release();
+  await rating;
 });
 
 it('re-enables the ratings when a rating fails before it is sent', async () => {

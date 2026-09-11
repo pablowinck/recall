@@ -17,7 +17,10 @@ export function useWorkspaceHistory(
   const shown = useRef<WorkspaceView | null>(null);
   useEffect(() => {
     const path = workspacePath(view, studyDeck);
-    if (currentWorkspacePath() !== path) {
+    // An address the workspace does not know, such as /app/settings, is replaced by the view it opened.
+    if (shown.current === null && window.location.pathname !== path.split('?')[0])
+      window.history.replaceState(window.history.state, '', path);
+    else if (currentWorkspacePath() !== path) {
       window.history.pushState({}, '', path);
       window.scrollTo({ top: 0 });
     }

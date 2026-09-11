@@ -401,3 +401,27 @@ test('the tab bar never covers the focused control when zoomed in', async ({ pag
     await account.cleanup();
   }
 });
+
+test('an unknown address or a deleted deck’s review settles on what it can show', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Due in any deck',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.goto('/app/settings');
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/\/app$/);
+    await page.goto(`/app/study?deck=${crypto.randomUUID()}`);
+    await expect(page.getByText('0 of 1 reviewed')).toBeVisible();
+    await expect(page.getByText('Due in any deck', { exact: true })).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

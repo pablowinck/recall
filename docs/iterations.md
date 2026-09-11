@@ -1057,3 +1057,11 @@ The wave 4 frontend review pressed Escape in the card editor with a draft typed,
 Keep editing now returns focus to the field that had it when the discard question opened. After Discard, the editor closes and restores focus as before. The editor also ignores an Escape the discard question has already handled, so closing the question with Escape can no longer ask it again from the editor behind it.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that keeps editing with the button and with Escape and checks the Front field has focus each time.
+
+## 2026-09-11 — UX loop 111: saves on their way no longer cause conflicts, and stale addresses settle
+
+The wave 4 frontend review repeated loop 76's test with a save slower than its 4-second wait: after leaving during a 6-second save and starting again, the same card came back and rating it returned a 409. It also opened the review address of a deck deleted since, which said nothing was due while four cards were. The Nielsen review found that /app/settings showed Today under the unknown address.
+
+A new review now leaves out cards whose saves are still on their way, at once, instead of waiting for them. A review address naming a deck that no longer exists reviews every due card, and an unknown workspace address is replaced by the view it opened.
+
+Validation: format, typecheck, 152 unit tests and build pass, and the save test now checks that a card still saving is left out without a wait. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens /app/settings and a deleted deck's review address.

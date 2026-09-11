@@ -81,7 +81,8 @@ function StudyWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX.E
   return (
     <StudyView
       client={model.client}
-      deck={model.studyDeck}
+      // A deck deleted since its review address was saved is ignored, so the review covers every due card.
+      deck={studyDeck?.id}
       decks={decks}
       expectedTotal={studyDeck ? studyDeck.due_count : stats.due}
       exit={() => model.actions.navigate('today')}

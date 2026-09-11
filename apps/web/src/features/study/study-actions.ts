@@ -23,9 +23,9 @@ interface NextBatch {
 }
 
 // A rating can outlive the session that sent it. Leaving during a slow save and starting again would load the card
-// before the save lands, and rating it again would conflict, so a new session waits a little for saves on their way.
-const savesInFlight = new Set<Promise<void>>();
-const SAVE_WAIT_MS = 4000;
+// before the save lands, and rating it again would conflict, so cards whose saves are still on their way stay out
+// of the queue. Waiting for them held a new session back and still failed for saves slower than the wait.
+const cardsSaving = new Set<string>();
 
 /** Refresh the queue without accepting results from a disposed session. Example: reloadStudyQueue(gateway, runtime, update). */
 export async function reloadStudyQueue(
@@ -37,8 +37,7 @@ export async function reloadStudyQueue(
   const generation = ++runtime.generation;
   update((current) => ({ ...current, loading: true }));
   try {
-    await waitForSavesInFlight();
-    const queue = await gateway.study(deck);
+    const queue = withoutCardsSaving(await gateway.study(deck));
     if (generation !== runtime.generation) return;
     runtime.attempt = null;
     update((current) => ({
@@ -57,14 +56,8 @@ export async function reloadStudyQueue(
   }
 }
 
-async function waitForSavesInFlight(): Promise<void> {
-  if (!savesInFlight.size) return;
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<void>((resolve) => {
-    timer = setTimeout(resolve, SAVE_WAIT_MS);
-  });
-  await Promise.race([Promise.all(savesInFlight), timeout]);
-  clearTimeout(timer);
+function withoutCardsSaving(queue: StudyCard[]): StudyCard[] {
+  return cardsSaving.size ? queue.filter((item) => !cardsSaving.has(item.card.id)) : queue;
 }
 
 /** The outcome of loading the next due batch. */
@@ -77,7 +70,7 @@ export type RefillResult = 'loaded' | 'empty' | 'failed';
 export async function refillStudyQueue(context: StudyRefillContext): Promise<RefillResult> {
   const generation = context.runtime.generation;
   try {
-    const queue = await context.gateway.study(context.deck);
+    const queue = withoutCardsSaving(await context.gateway.study(context.deck));
     if (generation !== context.runtime.generation) return 'failed';
     acceptRefill(context, queue);
     return queue.length ? 'loaded' : 'empty';
@@ -168,7 +161,7 @@ async function saveAndAdvance(
 // A batch that fails to load after the last card becomes an error on the study screen, never "Nicely done".
 async function loadNextBatch(context: StudyRefillContext): Promise<NextBatch> {
   try {
-    return { queue: await context.gateway.study(context.deck), error: '' };
+    return { queue: withoutCardsSaving(await context.gateway.study(context.deck)), error: '' };
   } catch (failure) {
     return { queue: [], error: describeFailure(failure) };
   }
@@ -184,12 +177,11 @@ function sendStudyRating(
     version: current.card.version,
     request_id: attempt.requestId,
   });
-  const settled = request.then(
-    () => undefined,
-    () => undefined,
+  cardsSaving.add(current.card.id);
+  void request.then(
+    () => cardsSaving.delete(current.card.id),
+    () => cardsSaving.delete(current.card.id),
   );
-  savesInFlight.add(settled);
-  void settled.then(() => savesInFlight.delete(settled));
   return request;
 }
 
