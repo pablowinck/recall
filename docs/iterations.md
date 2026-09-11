@@ -985,3 +985,11 @@ The wave 4 Nielsen review studied on a phone held sideways, 750 by 342 pixels. L
 Short viewports now unpin the bar only with a mouse or trackpad, where they come from zooming in. Touch screens keep the pinned bar, so Reveal answer and the ratings stay under the thumb.
 
 Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies at 750 by 342 on the touch layouts; the 400% zoom journey now runs on desktop only.
+
+## 2026-09-11 — UX loop 102: long questions read like passages
+
+The wave 4 design review measured the questions assistants often write, a paragraph long. They were set semibold, the weight meant for short prompts, and ran 72 characters a line on desktop and 11 lines on an iPhone. The completion screen's summary was one centred line of 95 characters.
+
+Paragraph questions now use a regular 500 weight and stop at 32em, about 66 characters a line. The completion summary stops at 30em and balances its lines.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that checks a paragraph question's weight and measure and the completion summary's measure.

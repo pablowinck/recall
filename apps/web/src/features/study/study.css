@@ -100,6 +100,9 @@
   line-height: 1.65;
   letter-spacing: -0.005em;
   text-wrap: pretty;
+  /* A passage reads best at a regular weight and about 66 characters a line; semibold is for short prompts. */
+  font-weight: 500;
+  max-width: 32em;
 }
 .review-card > .eyebrow {
   font-size: 0.75rem;
@@ -313,6 +316,9 @@
 .session-complete p {
   line-height: 1.9;
   margin-bottom: 0.5rem;
+  /* Centred text needs a short measure; one 95-character line was hard to take in at a glance. */
+  max-width: 30em;
+  text-wrap: balance;
 }
 /* Always mounted so screen readers announce the result of "Check for more reviews". */
 .check-status {

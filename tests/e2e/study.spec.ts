@@ -510,3 +510,38 @@ test('a phone held sideways keeps Reveal answer within reach', async ({ page }, 
     await account.cleanup();
   }
 });
+
+test('a paragraph-long question reads at regular weight within about 66 characters a line', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: `Explain, in your own words, ${'why spaced repetition works so well. '.repeat(8)}`,
+      back: 'It fights forgetting.',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    const question = page.locator('.review-card h2.is-paragraph');
+    await expect(question).toHaveCSS('font-weight', '500');
+    expect(await measureInEm(question)).toBeLessThanOrEqual(32.5);
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.getByRole('button', { name: /Good/ }).click();
+    const summary = page.locator('.session-complete > p').first();
+    await expect(summary).toBeVisible();
+    expect(await measureInEm(summary)).toBeLessThanOrEqual(30.5);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+/** Read an element's width in ems of its own font size. Example: await measureInEm(question). */
+async function measureInEm(target: Locator): Promise<number> {
+  return target.evaluate(
+    (node) =>
+      node.getBoundingClientRect().width / Number.parseFloat(getComputedStyle(node).fontSize),
+  );
+}
