@@ -19,4 +19,13 @@ describe('the MCP server card on the site', () => {
     );
     await expect(response.json()).resolves.toEqual(MCP_SERVER_CARD);
   });
+
+  it('lists every MCP tool with a description and flags the one that deletes', () => {
+    expect(MCP_SERVER_CARD.tools).toHaveLength(9);
+    expect(MCP_SERVER_CARD.tools.every((tool) => tool.description.length > 20)).toBe(true);
+    const deletion = MCP_SERVER_CARD.tools.find((tool) => tool.name === 'delete_flashcard');
+    expect(deletion && 'annotations' in deletion ? deletion.annotations : undefined).toEqual({
+      destructiveHint: true,
+    });
+  });
 });

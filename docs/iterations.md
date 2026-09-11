@@ -681,3 +681,11 @@ After loop 46 shipped, a forced rescan passed every new discovery check but stil
 Those three links now point at the raw Markdown files on GitHub, which an agent can read directly without GitHub's page around them. The source code link still opens the repository.
 
 Validation: format, typecheck, 129 unit tests and build pass. All 173 browser, API and MCP journeys pass on desktop, tablet and mobile, and the guide journey now checks that the MCP setup link is the raw Markdown file.
+
+## 2026-09-11 — UX loop 64: the server card lists the MCP tools
+
+The forced rescan warned that the MCP server card on the site had no `tools` list. Listing tools on the live server needs a token, so an agent deciding whether Recall fits a task could find the endpoint but not what it can do there.
+
+The tool names, descriptions and behaviour hints now live in one catalog in the shared contracts package. The MCP server registers its tools from it, and the server card at `/.well-known/mcp` lists the same entries, so the two cannot drift apart. The change map names the catalog.
+
+Validation: format, typecheck, 130 unit tests and build pass, including a test that the card lists all nine tools and flags the one that deletes. All 174 browser, API and MCP journeys pass on desktop, tablet and mobile, including a journey that compares the card's tools with the tools the running MCP server lists for a signed-in account.

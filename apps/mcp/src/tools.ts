@@ -1,5 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { RecallClient } from '@recall/client';
+import { mcpToolCatalog as catalog } from '@recall/contracts';
 import { recallToolDefinitions as definitions } from './tool-definitions.js';
 
 type ToolTextResult = {
@@ -28,13 +29,13 @@ export function createRecallMcp(client: RecallClient): McpServer {
 }
 
 function registerReadTools(server: McpServer, client: RecallClient): void {
-  server.registerTool('list_decks', definitions.listDecks, async () =>
+  server.registerTool(catalog.listDecks.name, definitions.listDecks, async () =>
     toolResult(await client.workspace()),
   );
-  server.registerTool('list_flashcards', definitions.listCards, (query) =>
+  server.registerTool(catalog.listCards.name, definitions.listCards, (query) =>
     listToolCards(client, query),
   );
-  server.registerTool('get_due_cards', definitions.dueCards, async ({ deck_id }) =>
+  server.registerTool(catalog.dueCards.name, definitions.dueCards, async ({ deck_id }) =>
     toolResult(await client.study(deck_id)),
   );
 }
@@ -50,25 +51,27 @@ async function listToolCards(client: RecallClient, query: CardQuery): Promise<To
 }
 
 function registerCreationTools(server: McpServer, client: RecallClient): void {
-  server.registerTool('create_deck', definitions.createDeck, async ({ name }) =>
+  server.registerTool(catalog.createDeck.name, definitions.createDeck, async ({ name }) =>
     toolResult(await client.createDeck(name)),
   );
-  server.registerTool('create_flashcard', definitions.createCard, async (draft) =>
+  server.registerTool(catalog.createCard.name, definitions.createCard, async (draft) =>
     toolResult(await client.createCard(draft)),
   );
-  server.registerTool('import_flashcards', definitions.importCards, async ({ cards }) =>
+  server.registerTool(catalog.importCards.name, definitions.importCards, async ({ cards }) =>
     toolResult(await client.importCards(cards)),
   );
 }
 
 function registerMutationTools(server: McpServer, client: RecallClient): void {
-  server.registerTool('update_flashcard', definitions.updateCard, async ({ card_id, patch }) =>
+  server.registerTool(catalog.updateCard.name, definitions.updateCard, async ({ card_id, patch }) =>
     toolResult(await client.updateCard(card_id, patch)),
   );
-  server.registerTool('delete_flashcard', definitions.deleteCard, async ({ card_id }) =>
+  server.registerTool(catalog.deleteCard.name, definitions.deleteCard, async ({ card_id }) =>
     toolResult(await client.deleteCard(card_id)),
   );
-  server.registerTool('review_flashcard', definitions.reviewCard, async ({ card_id, ...input }) =>
-    toolResult(await client.review(card_id, input)),
+  server.registerTool(
+    catalog.reviewCard.name,
+    definitions.reviewCard,
+    async ({ card_id, ...input }) => toolResult(await client.review(card_id, input)),
   );
 }

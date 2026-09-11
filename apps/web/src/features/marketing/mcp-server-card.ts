@@ -1,3 +1,4 @@
+import { mcpToolCatalog } from '@recall/contracts';
 import { MCP_URL, SITE_URL } from '@/lib/site';
 import { REPOSITORY_URL } from './github-repo';
 
@@ -32,6 +33,8 @@ export const MCP_SERVER_CARD = {
       ],
     },
   ],
+  // tools/list needs a token, so an agent deciding whether to connect reads the same catalog here.
+  tools: Object.values(mcpToolCatalog),
 } as const;
 
 /** The server card as a JSON response with the given media type. Example: serverCardResponse('application/json'). */
