@@ -1,6 +1,8 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useWorkspace } from './use-workspace';
 import { useWorkspaceFreshness } from './use-workspace-freshness';
+import { useWorkspaceHistory } from './use-workspace-history';
+import type { WorkspaceView } from './navigation-types';
 import type {
   RecallAccount,
   WorkspaceActions,
@@ -10,15 +12,19 @@ import type {
 
 type UpdateWorkspaceUi = Dispatch<SetStateAction<WorkspaceUiState>>;
 
-/** Separate navigation commands from presentation. Example: useWorkspaceModel(account). */
-export function useWorkspaceModel(account: RecallAccount): WorkspaceModel {
+/** Separate navigation commands from presentation. Example: useWorkspaceModel(account, 'library'). */
+export function useWorkspaceModel(
+  account: RecallAccount,
+  initialView: WorkspaceView,
+): WorkspaceModel {
   const [state, update] = useState<WorkspaceUiState>({
-    view: 'today',
+    view: initialView,
     editing: undefined,
     revision: 0,
     libraryQuery: { search: '', deck: '', page: 0 },
   });
   const remote = useWorkspace(account.client);
+  useWorkspaceHistory(state.view, (view) => update((current) => ({ ...current, view })));
   useWorkspaceFreshness(state.view === 'today', () => void remote.refresh());
   const actions = {
     ...createViewActions(update, remote.refresh),

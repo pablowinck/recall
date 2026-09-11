@@ -2,7 +2,7 @@ import { IconButton, Tooltip } from '@radix-ui/themes';
 import { ConfirmAction } from '@/components/confirm-action';
 import { CircleHelp, LogOut, Moon, Sun } from 'lucide-react';
 import type { AppearanceActions, NavigationProps } from './navigation-types';
-import { supportChatUrl } from './support-link';
+import { supportChatUrl } from '@/lib/support-link';
 
 /** Keep personal controls consistent across screen sizes. Example: <NavigationProfile {...navigation} />. */
 export function NavigationProfile(props: NavigationProps): React.JSX.Element {

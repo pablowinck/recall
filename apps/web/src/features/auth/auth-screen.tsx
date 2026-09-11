@@ -6,8 +6,14 @@ import { AuthFields } from './auth-fields';
 import { AuthActions, AuthFeedback, AuthHeading } from './auth-copy';
 
 /** Sign in or create an account through Supabase Auth. Example: <AuthScreen auth={auth} />. */
-export function AuthScreen({ auth }: { auth: SupabaseClient }): React.JSX.Element {
-  const state = useAuthForm(auth);
+export function AuthScreen({
+  auth,
+  startSignedUp = false,
+}: {
+  auth: SupabaseClient;
+  startSignedUp?: boolean;
+}): React.JSX.Element {
+  const state = useAuthForm(auth, startSignedUp);
   return (
     <AuthLayout>
       <form onSubmit={state.submit} className="auth-form">

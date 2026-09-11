@@ -19,22 +19,24 @@ The web and MCP apps share HTTP contracts. Only the API accesses application dat
 
 ## Where to change a behavior
 
-| Behavior                     | First file or directory                                                 |
-| ---------------------------- | ----------------------------------------------------------------------- |
-| Card input validation        | `packages/contracts/src/index.ts`                                       |
-| FSRS rules / interval labels | `packages/domain/src/`                                                  |
-| Login/session                | `apps/web/src/features/auth/`, `apps/web/src/lib/use-recall-session.ts` |
-| Card editor or library       | `apps/web/src/features/cards/`                                          |
-| Study interactions           | `apps/web/src/features/study/`                                          |
-| A feature's styles           | `apps/web/src/features/<feature>/<feature>.css`                         |
-| Design tokens / base styles  | `apps/web/src/styles/`, imported in order by `app/globals.css`          |
-| Shared HTTP calls            | `packages/client/src/index.ts`                                          |
-| HTTP endpoint for a feature  | `apps/api/src/<feature>/<feature>-routes.ts` + `<feature>-store.ts`     |
-| Route composition / identity | `apps/api/src/http/routes.ts`, `apps/api/src/http/tenant-route.ts`      |
-| Tenant boundary              | `apps/api/src/database.ts`, `supabase/migrations/`                      |
-| Review transaction           | `apps/api/src/reviews/review-store.ts`                                  |
-| MCP tools                    | `apps/mcp/src/tools.ts`                                                 |
-| Containers                   | `Dockerfile`, `compose.yaml`                                            |
+| Behavior                     | First file or directory                                                                                                      |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Card input validation        | `packages/contracts/src/index.ts`                                                                                            |
+| FSRS rules / interval labels | `packages/domain/src/`                                                                                                       |
+| Login/session                | `apps/web/src/features/auth/`, `apps/web/src/lib/use-recall-session.ts`                                                      |
+| Card editor or library       | `apps/web/src/features/cards/`                                                                                               |
+| Study interactions           | `apps/web/src/features/study/`                                                                                               |
+| A feature's styles           | `apps/web/src/features/<feature>/<feature>.css`                                                                              |
+| Landing page, SEO metadata   | `apps/web/src/features/marketing/`, `apps/web/src/app/page.tsx`, `apps/web/src/app/robots.ts`, `apps/web/src/app/sitemap.ts` |
+| Workspace addresses and Back | `apps/web/src/features/workspace/workspace-url.ts`, `apps/web/src/features/workspace/use-workspace-history.ts`               |
+| Design tokens / base styles  | `apps/web/src/styles/`, imported in order by `app/globals.css`                                                               |
+| Shared HTTP calls            | `packages/client/src/index.ts`                                                                                               |
+| HTTP endpoint for a feature  | `apps/api/src/<feature>/<feature>-routes.ts` + `<feature>-store.ts`                                                          |
+| Route composition / identity | `apps/api/src/http/routes.ts`, `apps/api/src/http/tenant-route.ts`                                                           |
+| Tenant boundary              | `apps/api/src/database.ts`, `supabase/migrations/`                                                                           |
+| Review transaction           | `apps/api/src/reviews/review-store.ts`                                                                                       |
+| MCP tools                    | `apps/mcp/src/tools.ts`                                                                                                      |
+| Containers                   | `Dockerfile`, `compose.yaml`                                                                                                 |
 
 ## Data and concurrency
 

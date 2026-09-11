@@ -21,6 +21,16 @@
   --r-lg: 18px;
   --r-xl: 22px;
   --r-pill: 9999px;
+  /* The brand blue works on both appearances; the landing page has no Radix accent scale. */
+  --brand: #3e63dd;
+  --brand-strong: #3358d4;
+  --brand-ink: #ffffff;
+  --brand-soft: rgba(62, 99, 221, 0.12);
+  --brand-text: #3a5bc7;
+  /* SF Pro on Apple devices; Inter (next/font, set on <html>) everywhere else. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, var(--font-inter), 'Segoe UI', Roboto, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-press: 0.08s;
   --motion-fast: 0.15s;
@@ -41,6 +51,8 @@
   --ink: #eeeeec;
   --ink-2: #b5b3ad;
   --sidebar: rgba(10, 10, 9, 0.85);
+  --brand-soft: rgba(62, 99, 221, 0.24);
+  --brand-text: #9eb1ff;
   --elev-1: 0 0 0 1px rgba(238, 238, 236, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   --elev-2:
     0 0 0 1px rgba(238, 238, 236, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05),
@@ -48,10 +60,7 @@
 }
 /* Radix defines accent scales on each Theme element (app root and portals), so accent aliases must live there too. */
 .radix-themes {
-  /* SF Pro on Apple devices; Inter (next/font, set on <html>) everywhere else. */
-  --default-font-family:
-    -apple-system, BlinkMacSystemFont, var(--font-inter), 'Segoe UI', Roboto, system-ui, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji';
+  --default-font-family: var(--font-sans);
   --heading-font-family: var(--default-font-family);
   --cursor-button: pointer;
   --color-overlay: rgba(33, 32, 28, 0.24);

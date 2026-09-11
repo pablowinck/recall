@@ -1,8 +1,11 @@
 * {
   box-sizing: border-box;
 }
+/* Pages outside Radix Themes, such as the landing page, share the same type and ink. */
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

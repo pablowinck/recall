@@ -399,3 +399,13 @@ Nothing in the app pointed to a person. The owner asked for a question mark besi
 A help control now sits in the sidebar footer and in the phone header, on every screen: an anchor styled as an icon button that opens `wa.me` in a new tab with `noopener`, carrying a message that says the reader is using Recall and needs help. `support-link.ts` builds that URL in one place.
 
 Validation: format, typecheck, 106 unit tests and build pass. All 121 E2E journeys pass on desktop, tablet and mobile, including one that reads the link target, its `rel` and the written message. The UX tour reports no overflow or axe violations on three devices.
+
+## 2026-09-10 — UX loop 29: a public landing page, and a workspace with its own addresses
+
+The owner asked for a landing page at `/`, with the signed-in area moved to its own path and the browser's Back button kept inside the app. Until now the whole product was one address: every view — Today, Library, Connections, a study session — lived at `/`, so Back left Recall entirely, a reload always returned to Today, and there was nothing public to show someone who had never signed in.
+
+The workspace now lives under `/app`, and each view has an address: `/app`, `/app/library`, `/app/connections` and `/app/study`. Moving between views pushes a history entry and Back and Forward restore the view without leaving the app, a reload opens the view in the address, and `workspace-url.ts` maps views to paths in one place. `/app?new=1` opens straight on account creation.
+
+`/` is a first landing page, rendered statically without Radix Themes so it ships almost no JavaScript. Following the owner's choices it is free to use, its call to action creates an account, and its hero leads with the assistant: "Your AI writes the cards. Recall makes them stick." It explains the three-step loop, the qualities of long study sessions and how cards stay private, and it carries `SoftwareApplication` structured data, canonical and Open Graph metadata, `robots.txt` that keeps `/app` out of search and a sitemap. Product tokens gained `--font-sans`, `--brand`, `--brand-soft` and `--brand-text`, so pages outside Radix share the same type and colour; the dark `theme-color` now matches the dark canvas.
+
+Validation: format, typecheck, 109 unit tests and build pass, including view-to-path mapping. All 130 E2E journeys pass on desktop, tablet and mobile, among them the landing page's call to action opening account creation with no accessibility violations, `robots.txt` and the sitemap, and a journey that moves through three views, goes Back twice, reloads, and opens `/app/library` directly. The UX tour reports no overflow or axe violations, and captures of the landing page at 1440 px and 390 px in both appearances were reviewed.

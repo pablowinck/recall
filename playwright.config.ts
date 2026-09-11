@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Browser journeys run on every device project; the API and MCP specs run once.
 const browserJourneys = [
+  '**/landing.spec.ts',
   '**/product.spec.ts',
   '**/cards.spec.ts',
   '**/study.spec.ts',

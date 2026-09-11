@@ -4,7 +4,7 @@ import type { TestAccount } from './fixtures';
 
 /** Sign in through the actual form and wait for the workspace. Example: await signInToRecall(page, account). */
 export async function signInToRecall(page: Page, account: TestAccount): Promise<void> {
-  await page.goto('/');
+  await page.goto('/app');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await fillSignInForm(page, account);
 }

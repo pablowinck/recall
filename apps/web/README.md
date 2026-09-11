@@ -1,6 +1,6 @@
 # Recall web
 
-Next.js App Router with Radix Themes and plain CSS. The product is one client workspace: `app/page.tsx` renders `features/workspace/recall-workspace.tsx`, which shows sign-in or the signed-in workspace.
+Next.js App Router with Radix Themes and plain CSS. `app/page.tsx` is the static landing page (`features/marketing`): it renders without Radix Themes and styles itself from product tokens only. `app/app/[[...view]]/page.tsx` renders `features/workspace/recall-workspace.tsx`, which shows sign-in or the signed-in workspace; every view has its own address under `/app` (`features/workspace/workspace-url.ts`), so Back and Forward move between views instead of leaving the app.
 
 ## Where things live
 
@@ -12,7 +12,7 @@ Next.js App Router with Radix Themes and plain CSS. The product is one client wo
 | `features/<feature>/` | One feature: components (`*.tsx`), state hooks (`use-*.ts`), pure helpers, `<feature>.css`. |
 | `lib/`                | Shared hooks and helpers: session, async actions, remote resources, appearance.             |
 
-Features: `auth` (sign in and sign up), `workspace` (shell, navigation, Today), `cards` (library, card editor, decks), `study` (review session), `connections` (personal MCP tokens). Only `workspace` composes other features; features never import each other's internals.
+Features: `auth` (sign in and sign up), `workspace` (shell, navigation, Today), `cards` (library, card editor, decks), `study` (review session), `connections` (personal MCP tokens), `marketing` (the public landing page). Only `workspace` composes other features; features never import each other's internals, and code two features need moves to `lib/` or `components/`.
 
 ## Conventions
 

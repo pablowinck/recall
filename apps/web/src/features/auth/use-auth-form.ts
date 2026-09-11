@@ -12,9 +12,9 @@ export interface AuthFormState {
   toggle: () => void;
 }
 
-/** Separate account state from the auth presentation. Example: useAuthForm(auth). */
-export function useAuthForm(auth: SupabaseClient): AuthFormState {
-  const [signup, setSignup] = useState(false);
+/** Separate account state from the auth presentation. Example: useAuthForm(auth, true). */
+export function useAuthForm(auth: SupabaseClient, startSignedUp = false): AuthFormState {
+  const [signup, setSignup] = useState(startSignedUp);
   const [notice, setNotice] = useState('');
   const action = useAsyncAction();
   const submit = (event: FormEvent<HTMLFormElement>): void => {

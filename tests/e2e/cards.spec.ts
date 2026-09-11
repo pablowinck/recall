@@ -7,7 +7,7 @@ test('card save failure keeps the draft and permits one successful retry', async
   const account = await createTestAccount();
   const outage = new FakeCardSaveOutage();
   try {
-    await page.goto('/');
+    await page.goto('/app');
     await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
     await page.getByLabel('Password', { exact: true }).fill(account.password);
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();

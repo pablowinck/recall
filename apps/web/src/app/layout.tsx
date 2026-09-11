@@ -4,12 +4,14 @@ import { Inter } from 'next/font/google';
 import '@radix-ui/themes/styles.css';
 import './globals.css';
 import { appearanceBootstrapScript } from '@/lib/appearance';
+import { SITE_URL } from '@/lib/site';
 
 // Apple devices keep SF Pro through -apple-system; Inter gives every other platform the same calm geometry.
 const inter = Inter({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Recall',
+  metadataBase: new URL(SITE_URL),
+  title: { default: 'Recall', template: '%s · Recall' },
   description: 'Learn anything with flashcards and spaced repetition.',
 };
 
@@ -18,7 +20,7 @@ export const viewport: Viewport = {
   colorScheme: 'light dark',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#f1f0ef' },
-    { media: '(prefers-color-scheme: dark)', color: '#111110' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a09' },
   ],
 };
 

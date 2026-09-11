@@ -9,7 +9,7 @@ import {
 test('login → create/edit → MCP → study → persist → sign out', async ({ page }, testInfo) => {
   const account = await createTestAccount();
   try {
-    await page.goto('/');
+    await page.goto('/app');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email);
     await page.getByLabel('Password', { exact: true }).fill(account.password);
@@ -148,7 +148,7 @@ test('appearance follows a saved choice or the system before the app hydrates', 
   const isDark = (): Promise<boolean> =>
     page.evaluate(() => document.documentElement.classList.contains('dark'));
   await page.emulateMedia({ colorScheme: 'dark' });
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.goto('/app', { waitUntil: 'domcontentloaded' });
   expect(await isDark()).toBe(true);
   await page.emulateMedia({ colorScheme: 'light' });
   await page.evaluate(() => localStorage.setItem('recall-appearance', 'dark'));
@@ -230,6 +230,29 @@ test('help reaches a person on WhatsApp with the message already written', async
     const href = await help.getAttribute('href');
     expect(href).toContain('https://wa.me/5551992116696');
     expect(decodeURIComponent(href ?? '')).toContain('I need some help.');
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('each view has its own address and Back stays inside the app', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await expect(page).toHaveURL(/\/app$/);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page).toHaveURL(/\/app\/library$/);
+    await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await expect(page).toHaveURL(/\/app\/connections$/);
+    await page.goBack();
+    await expect(page).toHaveURL(/\/app\/library$/);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    await page.goBack();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await page.goto('/app/library');
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
   } finally {
     await account.cleanup();
   }

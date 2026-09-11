@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { supportChatUrl } from '../../apps/web/src/features/workspace/support-link';
+import { supportChatUrl } from '../../apps/web/src/lib/support-link';
 
 describe('the help link', () => {
   it('opens a WhatsApp chat with the support number', () => {
