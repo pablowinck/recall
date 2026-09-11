@@ -909,3 +909,36 @@ test('an open library shows cards an assistant added once its window has focus a
     await account.cleanup();
   }
 });
+
+test('a library tile ends at its tags, with the edit hint beside them', async ({
+  page,
+}, testInfo) => {
+  test.skip(Boolean(testInfo.project.use.hasTouch), 'Touch screens show no edit hint.');
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Balanced tile',
+      back: 'Answer',
+      tags: ['anatomy', 'bones', 'skull', 'jaw'],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const tile = page.locator('.library-card').filter({ hasText: 'Balanced tile' });
+    const tags = tile.locator('.tag-list');
+    await expect(tags).toBeVisible();
+    const tileBox = (await tile.boundingBox())!;
+    const tagsBox = (await tags.boundingBox())!;
+    // Only the tile's padding sits below its tags; the hidden hint used to add a 34 px line.
+    expect(tileBox.y + tileBox.height - (tagsBox.y + tagsBox.height)).toBeLessThanOrEqual(26);
+    await tile.hover();
+    const hint = tile.locator('.card-edit-hint');
+    await expect(hint).toHaveCSS('opacity', '1');
+    const hintBox = (await hint.boundingBox())!;
+    expect(hintBox.x).toBeGreaterThanOrEqual(tagsBox.x + tagsBox.width);
+    expect(hintBox.y + hintBox.height).toBeLessThanOrEqual(tileBox.y + tileBox.height);
+  } finally {
+    await account.cleanup();
+  }
+});

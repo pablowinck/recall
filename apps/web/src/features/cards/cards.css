@@ -49,7 +49,8 @@
   align-items: flex-start;
   text-align: start;
   border: 0;
-  padding: 1.5rem;
+  --tile-padding: 1.5rem;
+  padding: var(--tile-padding);
   background: var(--surface);
   border-radius: var(--r-lg);
   color: var(--ink);
@@ -178,13 +179,16 @@
   border-color: transparent;
   padding-inline: 0.15rem;
 }
-/* The whole card opens the editor, so the hint shows on hover or keyboard focus instead of on every card. */
+/* The whole card opens the editor, so the hint shows on hover or keyboard focus instead of on every card. It sits in
+   the tile's bottom corner beside the tags: on its own line, the hidden hint left the bottom of every tile empty. */
 .card-edit-hint {
+  position: absolute;
+  inset-inline-end: var(--tile-padding);
+  inset-block-end: var(--tile-padding);
   display: flex;
   align-items: center;
   gap: 0.3rem;
   font-size: var(--text-caption);
-  margin-top: 1rem;
   color: var(--ink-2);
   opacity: 0;
   transition: opacity var(--motion-fast) var(--ease-out);
@@ -200,6 +204,12 @@
 @media (hover: none) {
   .card-edit-hint {
     display: none;
+  }
+}
+/* Tags wrap before the corner the edit hint appears in. */
+@media (hover: hover) {
+  .library-card .tag-list {
+    max-width: calc(100% - 6rem);
   }
 }
 .pagination {
@@ -309,7 +319,7 @@
     flex-basis: 100%;
   }
   .library-card {
-    padding: 1.25rem;
+    --tile-padding: 1.25rem;
     min-height: 210px;
   }
   .pagination {

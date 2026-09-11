@@ -1223,3 +1223,11 @@ The wave 5 design review found the sidebar's account avatar squeezed into an ell
 The avatar keeps its 35 px circle beside any email, and the header tools use the secondary ink on phones and tablets too.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that measures the avatar and compares the visible tools' colour with secondary text.
+
+## 2026-09-11 — UX loop 131: a library tile ends at its tags, with the edit hint beside them
+
+The wave 5 design review measured desktop library tiles with 58 px of empty space below the tags and 27 px above the status. The "Edit card" hint is invisible until hover or keyboard focus, but it still took a 34 px line at the bottom of every tile, so the tiles looked bottom-heavy.
+
+The hint now appears in the tile's bottom corner beside the tags, on hover or keyboard focus as before, and takes no line of its own. The tags wrap before that corner, so the two never overlap, and a tile ends at its tags with only its padding below.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that measures the space below a tile's tags and checks that the hint appears beside them.
