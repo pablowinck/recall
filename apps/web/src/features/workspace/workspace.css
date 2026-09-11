@@ -495,3 +495,14 @@
     padding-bottom: 1.5rem;
   }
 }
+/* Theme, help and sign-out are tools, so they stay secondary instead of sharing the selected row's accent. */
+.profile-actions .rt-IconButton {
+  color: var(--ink-2);
+}
+/* On a tablet the three tabs gather in the middle, where the eye and thumb expect them, instead of 242 px apart. */
+@media (min-width: 601px) and (max-width: 768px) {
+  .sidebar nav {
+    justify-content: center;
+    gap: 1.5rem;
+  }
+}

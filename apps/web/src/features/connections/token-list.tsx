@@ -30,14 +30,18 @@ export function TokenList({ model }: { model: ConnectionsModel }): React.JSX.Ele
         Your connections
       </h2>
       <TokenListStatus model={model} />
-      {model.tokens.map((token) => (
-        <TokenRow
-          key={token.id}
-          token={token}
-          revoke={() => revoke(token)}
-          focusAfterRevoke={() => heading.current?.focus()}
-        />
-      ))}
+      {model.tokens.length > 0 && (
+        <div className="token-list">
+          {model.tokens.map((token) => (
+            <TokenRow
+              key={token.id}
+              token={token}
+              revoke={() => revoke(token)}
+              focusAfterRevoke={() => heading.current?.focus()}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

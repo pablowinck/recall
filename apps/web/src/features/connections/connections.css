@@ -38,7 +38,7 @@
   margin-bottom: 1rem;
 }
 .token-row {
-  padding: 1.1rem 0;
+  padding: 1.1rem 1.25rem;
   border-bottom: 1px solid var(--separator);
   display: flex;
   align-items: center;
@@ -103,4 +103,19 @@
 /* Focus lands on the new token's title when it appears; it is not a control, so it draws no ring. */
 .new-secret h2:focus {
   outline: none;
+}
+/* Connections sit on one grouped surface, like the decks on Today. */
+.token-list {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--elev-1);
+}
+.token-list .token-row:last-child {
+  border-bottom: 0;
+}
+@media (forced-colors: active) {
+  .token-list {
+    outline: 1px solid transparent;
+  }
 }

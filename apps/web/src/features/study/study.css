@@ -423,3 +423,7 @@
     background-color: Highlight;
   }
 }
+/* In dark mode amber made Hard the brightest label, at 10.5:1 against about 8:1; orange keeps the four even. */
+.dark .rating-2 strong {
+  color: var(--orange-11);
+}

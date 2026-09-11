@@ -1097,3 +1097,11 @@ The wave 4 design review found three small rough edges in card text. Library pre
 Previews now show list markers as bullets, leaving numbered steps and emphasis alone. Wrapped code keeps its rounded ends on every line. Pagination appears only when there is another page to go to.
 
 Validation: format, typecheck, 152 unit tests and build pass, including a preview test for bullets, numbers and emphasis. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the paging journey now checks that a single remaining page shows its count without pagination.
+
+## 2026-09-11 — UX loop 116: quieter tools, grouped connections, centred iPad tabs and an even Hard label
+
+The wave 4 design review collected four finishing details. The sidebar's theme, help and sign-out icons used the accent colour of the selected view, so tools competed with navigation. Connections listed as bare hairlines on the canvas, while Today's decks sit on a grouped surface. On an iPad Mini the three tabs spread 242 px apart across the bar. In dark mode, Hard was the brightest rating label, amber at 10.5:1 against about 8:1 for the others, which nudged the eye toward it.
+
+Sidebar tools now use the secondary ink. Connections sit on the same grouped surface as the decks, with an edge in forced colours. Tablet tabs gather in the middle with even gaps, and dark mode sets Hard in orange at 7.99:1.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the connection journey now checks that the rows sit in the grouped list.

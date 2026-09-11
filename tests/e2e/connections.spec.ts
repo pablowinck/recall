@@ -61,6 +61,7 @@ test('revoking an older connection keeps a new token on screen', async ({ page }
     await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
     const tokenField = page.getByRole('textbox', { name: 'New personal token' });
     await expect(tokenField).toHaveValue(/^recall_/);
+    await expect(page.locator('.token-list .token-row')).toHaveCount(2);
     await page.getByRole('button', { name: /^Revoke connection Cursor, / }).click();
     await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();
     await expect(page.getByRole('button', { name: /^Revoke connection Cursor, / })).toHaveCount(0);
