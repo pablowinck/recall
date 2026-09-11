@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   cardDraftSchema,
   cardPatchSchema,
+  cardUpdateSchema,
   reviewInputSchema,
 } from '../../packages/contracts/src/index';
 
@@ -19,6 +20,13 @@ describe('public input boundaries', () => {
       schedule: { reps: 99 },
     });
     expect(patch).toEqual({ front: 'new' });
+  });
+  it('lets the web editor send the version it opened, while MCP patches stay version-free', () => {
+    expect(cardUpdateSchema.parse({ back: 'new', version: 3 })).toEqual({
+      back: 'new',
+      version: 3,
+    });
+    expect(cardPatchSchema.parse({ back: 'new', version: 3 })).toEqual({ back: 'new' });
   });
   it('requires a bounded rating and optimistic version', () => {
     expect(

@@ -913,3 +913,11 @@ The wave 3 frontend review rated the last card of a batch with the connection do
 When a failure leaves no card on the study screen, Try again now takes focus. An error shown beside a card leaves focus where it is.
 
 Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, and the failed batch journey now checks that Try again is focused.
+
+## 2026-09-11 — UX loop 93: the editor no longer overwrites a card that changed while it was open
+
+The wave 3 Nielsen review opened a card in the web editor while an assistant edited the same card through MCP. Saving the editor replaced the assistant's edit without a word, because card updates carried no version.
+
+The web editor now sends the version it opened, and the API refuses a stale one with a 409. The editor then explains: "This card changed after you opened it, perhaps through your assistant. Save again to replace that change with yours, or close without saving to keep it." Saving again replaces it on purpose. MCP tools keep their version-free updates, and the study screen and the editor share one status check.
+
+Validation: format, typecheck, 144 unit tests and build pass, including the update schema and the shared status check. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that edits a card an assistant changed meanwhile, reads the explanation, checks the assistant's edit survived, then saves again.

@@ -11,7 +11,7 @@ All `/v1` endpoints require `Authorization: Bearer <Supabase JWT or recall_ toke
 | GET    | `/v1/cards?search=&deck=&limit=24&offset=0`                 | Search and paginate, up to 200 per page                                                                      |
 | POST   | `/v1/cards`                                                 | Create `{deck_id,front,back,tags,source_key?}`                                                               |
 | POST   | `/v1/cards/import`                                          | Atomic import of `{cards:[...]}`, maximum 100                                                                |
-| PATCH  | `/v1/cards/:id`                                             | Change content, tags, deck or suspended flag                                                                 |
+| PATCH  | `/v1/cards/:id`                                             | Change content, tags, deck or suspended flag; an optional `version` refuses a stale edit with 409            |
 | DELETE | `/v1/cards/:id`                                             | Delete owned card and reviews                                                                                |
 | GET    | `/v1/study?deck=`                                           | Up to 20 due cards with scheduling previews                                                                  |
 | POST   | `/v1/cards/:id/reviews`                                     | `{rating,version,request_id}`; atomic/idempotent                                                             |

@@ -1,5 +1,5 @@
 import type { PoolClient } from 'pg';
-import type { CardDraft, CardPage, CardPatch, Flashcard } from '@recall/contracts';
+import type { CardDraft, CardPage, CardUpdate, Flashcard } from '@recall/contracts';
 import { RecallError } from '../errors.js';
 
 export interface CardSearch {
@@ -41,20 +41,30 @@ export async function insertCard(connection: PoolClient, draft: CardDraft): Prom
   return result.rows[0]!.card;
 }
 
-/** Edit only the allowed card fields. Example: updateCard(connection, id, {front:'Hello'}). */
+/** Edit only the allowed card fields, refusing a stale version instead of overwriting. Example: updateCard(connection, id, {front:'Hello', version: 3}). */
 export async function updateCard(
   connection: PoolClient,
   id: string,
-  patch: CardPatch,
+  patch: CardUpdate,
 ): Promise<Flashcard> {
   const result = await connection.query<{ card: Flashcard }>(
     `update recall.cards c set front=coalesce($2,front), back=coalesce($3,back), tags=coalesce($4,tags),
      deck_id=coalesce($5,deck_id), suspended=coalesce($6,suspended), updated_at=now(), version=version+1
-     where id=$1 returning to_jsonb(c) as card`,
-    [id, patch.front, patch.back, patch.tags, patch.deck_id, patch.suspended],
+     where id=$1 and ($7::int is null or version=$7) returning to_jsonb(c) as card`,
+    [
+      id,
+      patch.front,
+      patch.back,
+      patch.tags,
+      patch.deck_id,
+      patch.suspended,
+      patch.version ?? null,
+    ],
   );
-  if (!result.rows[0]) throw new RecallError(404, 'Card not found.');
-  return result.rows[0].card;
+  if (result.rows[0]) return result.rows[0].card;
+  const exists = await connection.query('select 1 from recall.cards where id=$1', [id]);
+  if (!exists.rowCount) throw new RecallError(404, 'Card not found.');
+  throw new RecallError(409, 'This card changed after you opened it.');
 }
 
 /** Delete a card belonging to the authenticated tenant. Example: deleteCard(connection, id). */

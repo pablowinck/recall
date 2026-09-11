@@ -47,7 +47,7 @@ The web and MCP apps share HTTP contracts. Only the API accesses application dat
 
 `tenants` own `decks`, `cards`, `reviews` and `access_tokens`. Composite deck/tenant and card/tenant foreign keys prevent attaching cards or reviews to another user's content. All query parameters are bound SQL values. Tables are outside the Supabase Data API's exposed schemas.
 
-A review locks the current card row, checks for an existing request ID, verifies the caller's expected version, computes FSRS on the server, updates the card and inserts the review in one transaction. Repeated requests return the stored result. Competing evaluations with stale versions return 409.
+A review locks the current card row, checks for an existing request ID, verifies the caller's expected version, computes FSRS on the server, updates the card and inserts the review in one transaction. Repeated requests return the stored result. Competing evaluations with stale versions return 409. Web editor saves send the version they opened, so a card changed meanwhile, for example by an assistant, returns 409 instead of being overwritten; MCP updates stay version-free.
 
 MCP source keys are unique within a tenant. Re-importing the starter data returns existing cards without replacing their content or scheduling history.
 

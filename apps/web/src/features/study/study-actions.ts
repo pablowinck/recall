@@ -1,4 +1,5 @@
 import type { Flashcard, RecallRating, StudyCard } from '@recall/contracts';
+import { hasStatus } from '../../lib/api-status';
 import { describeFailure } from '../../lib/error-message';
 import { pruneReturningCards, trackReturningCard } from './returning-cards';
 import type {
@@ -138,7 +139,8 @@ async function commitStudyRating(
     if (generation === context.runtime.generation)
       context.update((snapshot) => ({
         ...snapshot,
-        ratingFailure: { rating, conflict: isVersionConflict(failure) },
+        // A 409 means the card changed since it loaded: edited, paused or reviewed elsewhere.
+        ratingFailure: { rating, conflict: hasStatus(failure, 409) },
       }));
   } finally {
     context.runtime.pending = false;
@@ -209,12 +211,4 @@ function acceptStudyRating(
       returning: next ? pruneReturningCards(returning, queue, now) : returning,
     };
   });
-}
-
-// A 409 means the card changed since it loaded: edited, paused or reviewed elsewhere. Retrying the same version
-// would fail again. Duck-typed so the check survives separate copies of the client package.
-function isVersionConflict(failure: unknown): boolean {
-  return (
-    typeof failure === 'object' && failure !== null && 'status' in failure && failure.status === 409
-  );
 }

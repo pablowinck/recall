@@ -3,7 +3,7 @@ import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import {
   cardDraftSchema,
-  cardPatchSchema,
+  cardUpdateSchema,
   importCardsSchema,
   type CardPage,
   type Flashcard,
@@ -47,7 +47,7 @@ async function importCards(
 
 function editCard(connection: PoolClient, request: Request): Promise<Flashcard> {
   const id = z.uuid().parse(request.params.id);
-  return updateCard(connection, id, cardPatchSchema.parse(request.body));
+  return updateCard(connection, id, cardUpdateSchema.parse(request.body));
 }
 
 function removeCard(connection: PoolClient, request: Request): Promise<{ deleted: boolean }> {

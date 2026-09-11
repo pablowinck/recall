@@ -2,7 +2,7 @@ import type {
   AccessToken,
   CardDraft,
   CardPage,
-  CardPatch,
+  CardUpdate,
   CreatedToken,
   Deck,
   DeckRemoval,
@@ -58,7 +58,7 @@ export class RecallClient {
   createCard(draft: CardDraft): Promise<Flashcard> {
     return this.request('/cards', 'POST', draft);
   }
-  updateCard(id: string, patch: CardPatch): Promise<Flashcard> {
+  updateCard(id: string, patch: CardUpdate): Promise<Flashcard> {
     return this.request(`/cards/${id}`, 'PATCH', patch);
   }
   deleteCard(id: string): Promise<{ deleted: boolean }> {

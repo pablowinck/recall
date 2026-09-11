@@ -13,6 +13,11 @@ export const cardPatchSchema = cardDraftSchema
   .omit({ source_key: true, tags: true })
   .partial()
   .extend({ tags: tagsSchema.optional(), suspended: z.boolean().optional() });
+// The web editor sends the version it opened, so an edit made meanwhile, for example by an assistant, is refused
+// instead of overwritten. MCP tools keep cardPatchSchema, without a version.
+export const cardUpdateSchema = cardPatchSchema.extend({
+  version: z.number().int().min(0).optional(),
+});
 export const reviewInputSchema = z.object({
   rating: z.number().int().min(1).max(4),
   version: z.number().int().min(0),
@@ -29,6 +34,7 @@ export const tokenDraftSchema = z.object({ name: z.string().trim().min(1).max(80
 
 export type CardDraft = z.infer<typeof cardDraftSchema>;
 export type CardPatch = z.infer<typeof cardPatchSchema>;
+export type CardUpdate = z.infer<typeof cardUpdateSchema>;
 export type ReviewInput = z.infer<typeof reviewInputSchema>;
 export type RecallRating = 1 | 2 | 3 | 4;
 

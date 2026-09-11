@@ -573,3 +573,33 @@ test('a card over the length limit says by how much instead of cutting the text'
     await account.cleanup();
   }
 });
+
+test('saving a card that changed meanwhile explains the conflict before replacing it', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const card = await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Conflict question',
+      back: 'Original answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.locator('.library-card').click();
+    await account.api.updateCard(card.id, { back: 'Answer an assistant wrote' });
+    await page.getByRole('textbox', { name: /^Back/ }).fill('Answer written in the editor');
+    const save = page.getByRole('button', { name: 'Save changes', exact: true });
+    await save.click();
+    await expect(page.getByText(/^This card changed after you opened it/)).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(1);
+    expect((await account.api.cards()).cards[0]?.back).toBe('Answer an assistant wrote');
+    await save.click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect((await account.api.cards()).cards[0]?.back).toBe('Answer written in the editor');
+  } finally {
+    await account.cleanup();
+  }
+});

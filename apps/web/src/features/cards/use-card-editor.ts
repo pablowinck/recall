@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent, type RefObject } from 'react';
 import type { RecallClient } from '@recall/client';
 import type { CardDraft, Deck, Flashcard } from '@recall/contracts';
 import { useAnnounce } from '@/components/status-announcer';
+import { hasStatus } from '@/lib/api-status';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 import {
   buildCardDraft,
@@ -69,6 +70,7 @@ export function useCardEditor(props: CardEditorProps): CardEditorState {
 function useEditorOutcome(props: CardEditorProps): EditorOutcome {
   const announce = useAnnounce();
   const removed = useRef(false);
+  const conflictShown = useRef(false);
   const finish = (message: string): void => {
     props.saved();
     props.close();
@@ -79,7 +81,7 @@ function useEditorOutcome(props: CardEditorProps): EditorOutcome {
     if (textProblem) throw new Error(textProblem);
     const tagProblem = describeTagProblem(draft.tags);
     if (tagProblem) throw new Error(tagProblem);
-    if (props.card) await props.client.updateCard(props.card.id, draft);
+    if (props.card) await updateCard(props.client, props.card, draft, conflictShown);
     else await createCard(props.client, draft);
     finish(props.card ? 'Card saved' : 'Card created');
   };
@@ -124,4 +126,25 @@ async function createDeckOnce(
 async function createCard(client: RecallClient, draft: CardDraft): Promise<void> {
   await client.createCard(draft);
   rememberLastDeck(draft.deck_id);
+}
+
+const CONFLICT_MESSAGE =
+  'This card changed after you opened it, perhaps through your assistant. Save again to replace that change with yours, or close without saving to keep it.';
+
+// The editor sends the version it opened, so an edit made meanwhile is never overwritten silently. Once the conflict
+// has been explained, saving again replaces the other change on purpose.
+async function updateCard(
+  client: RecallClient,
+  card: Flashcard,
+  draft: CardDraft,
+  conflictShown: RefObject<boolean>,
+): Promise<void> {
+  const version = conflictShown.current ? undefined : card.version;
+  try {
+    await client.updateCard(card.id, { ...draft, version });
+  } catch (failure) {
+    if (conflictShown.current || !hasStatus(failure, 409)) throw failure;
+    conflictShown.current = true;
+    throw new Error(CONFLICT_MESSAGE);
+  }
 }
