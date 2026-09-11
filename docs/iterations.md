@@ -1111,3 +1111,11 @@ Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, A
 The Vercel deployment limit reset, and the 42 validated commits for loops 67 to 101 went out in one push to `main`, at e4917cb. Vercel reported all three production deployments ready: MCP at 07:26:12 UTC (recall-mc3hmat5l), web at 07:26:28 (recall-rj5wq4enh) and API at 07:26:47 (recall-92uhh8ycu). GitHub CI run 34574337859 passed.
 
 Production checks: the web app, API and MCP health endpoints answered 200, and the ten chunks production serves for /app contain strings introduced by loops 80, 90, 94, 95, 97, 98 and 99.
+
+## 2026-09-11 — UX loop 117: one connection message and a guard for the API address
+
+The wave 4 frontend review listed code a contributor or coding agent would trip over. "Can’t reach Recall. Check your connection and try again." was written out twice, in the app's failure copy and in the sign-in errors, so the two could drift apart. `describeFailure` was imported both directly and through a re-export from the feedback components. The API address used `process.env.NEXT_PUBLIC_API_URL!`, which fails deep inside the first request in a fresh worktree, while the Supabase settings already explain what is missing.
+
+The connection message now lives once, beside `describeFailure`, and sign-in uses it. `describeFailure` has one import path. The guard that explains a missing public setting moved to its own module and covers the API address too.
+
+Validation: format, typecheck, 153 unit tests and build pass, including a test that sign-in and the app say the same thing when a request never arrives. All 280 browser, API and MCP journeys pass on desktop, tablet and mobile.

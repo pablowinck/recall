@@ -1,4 +1,5 @@
 import { AuthClient } from '@supabase/auth-js';
+import { requirePublicSetting } from './public-setting';
 
 /** The browser's Supabase Auth client. auth-js exports AuthClient as a value, so the type is named here. */
 export type BrowserAuth = InstanceType<typeof AuthClient>;
@@ -49,13 +50,4 @@ export function browserAuth(): BrowserAuth {
   if (typeof window === 'undefined') return createBrowserAuth(url, key);
   tabAuth ??= createBrowserAuth(url, key);
   return tabAuth;
-}
-
-// Next inlines a public setting only where it is written as process.env.NAME, so callers pass the value in.
-function requirePublicSetting(value: string | undefined, name: string): string {
-  if (!value)
-    throw new Error(
-      `${name} is not set. A fresh worktree needs apps/web/.env.local (see AGENTS.md).`,
-    );
-  return value;
 }

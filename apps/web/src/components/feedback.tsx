@@ -60,5 +60,3 @@ export function ErrorState({
     </section>
   );
 }
-
-export { describeFailure } from '../lib/error-message';

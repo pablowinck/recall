@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { describeAuthFailure } from '../../apps/web/src/features/auth/auth-errors';
+import { describeFailure } from '../../apps/web/src/lib/error-message';
 
 describe('what an authentication failure says', () => {
   it('turns invalid credentials into one message for both fields', () => {
@@ -36,4 +37,10 @@ it('says Recall is unreachable when the request never arrives, in each browserâ€
     expect(describeAuthFailure(wording)).toBe(
       'Canâ€™t reach Recall. Check your connection and try again.',
     );
+});
+
+it('uses the same connection message as the rest of the app', () => {
+  expect(describeAuthFailure('Failed to fetch')).toBe(
+    describeFailure(new TypeError('Failed to fetch')),
+  );
 });

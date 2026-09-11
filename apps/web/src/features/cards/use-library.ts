@@ -1,7 +1,7 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import type { RecallClient } from '@recall/client';
 import type { CardPage } from '@recall/contracts';
-import { describeFailure } from '@/components/feedback';
+import { describeFailure } from '@/lib/error-message';
 import { encodeLibraryQuery, type LibraryQuery } from './library-query';
 
 export interface LibraryLoad {

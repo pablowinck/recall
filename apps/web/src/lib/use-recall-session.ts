@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { RecallClient } from '@recall/client';
+import { requirePublicSetting } from './public-setting';
 import { browserAuth, type AuthChangeEvent, type BrowserAuth, type Session } from './supabase-auth';
 
 export interface SessionSnapshot {
@@ -73,7 +74,7 @@ function consumeSignOutRequest(): boolean {
 
 function createSessionClient(auth: BrowserAuth, update: SessionUpdate): RecallClient {
   return new RecallClient({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL!,
+    baseUrl: requirePublicSetting(process.env.NEXT_PUBLIC_API_URL, 'NEXT_PUBLIC_API_URL'),
     token: async () => {
       const { data: current } = await auth.getSession();
       return current.session?.access_token ?? '';
