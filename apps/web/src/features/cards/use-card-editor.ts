@@ -50,7 +50,7 @@ export interface CardEditorState extends InlineDeckState {
 export function useCardEditor(props: CardEditorProps): CardEditorState {
   const [deck, setDeck] = useState(() => chooseInitialDeck(props));
   const inline = useInlineDeck(props, setDeck);
-  const outcome = useEditorOutcome(props);
+  const outcome = useEditorOutcome(props, inline.decks);
   const action = useAsyncAction();
   const form = useRef<HTMLFormElement>(null);
   const submit = (event: FormEvent<HTMLFormElement>): void => {
@@ -67,7 +67,7 @@ export function useCardEditor(props: CardEditorProps): CardEditorState {
 }
 
 // Saving or deleting closes the editor, away from where the person was working, so each says what happened.
-function useEditorOutcome(props: CardEditorProps): EditorOutcome {
+function useEditorOutcome(props: CardEditorProps, decks: Deck[]): EditorOutcome {
   const announce = useAnnounce();
   const removed = useRef(false);
   const conflictShown = useRef(false);
@@ -83,7 +83,7 @@ function useEditorOutcome(props: CardEditorProps): EditorOutcome {
     if (tagProblem) throw new Error(tagProblem);
     if (props.card) await updateCard(props.client, props.card, draft, conflictShown);
     else await createCard(props.client, draft);
-    finish(props.card ? 'Card saved' : 'Card created');
+    finish(describeSave(props.card, draft, decks));
   };
   const remove = async (): Promise<void> => {
     if (!props.card) return;
@@ -151,4 +151,11 @@ async function updateCard(
     conflictShown.current = true;
     throw new Error(CONFLICT_MESSAGE);
   }
+}
+
+// A card moved to another deck can leave a filtered library, so the announcement says where it went.
+function describeSave(card: Flashcard | undefined, draft: CardDraft, decks: Deck[]): string {
+  if (!card) return 'Card created';
+  const moved = card.deck_id !== draft.deck_id && decks.find((deck) => deck.id === draft.deck_id);
+  return moved ? `Card saved and moved to “${moved.name}”` : 'Card saved';
 }

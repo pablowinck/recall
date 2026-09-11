@@ -953,3 +953,11 @@ The wave 4 Nielsen review created a deck from the library. The filter stayed on 
 Creating a deck now selects it in the filter and announces "Deck “Chemistry” created and selected". An empty deck no longer reads like a failed search: it says "This deck has no cards yet" with a Create a card button that opens the editor on that deck.
 
 Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that creates a deck, checks the filter, the announcement and the empty deck, and opens the editor on the new deck.
+
+## 2026-09-11 — UX loop 98: a card moved out of the filtered deck says where it went
+
+The wave 4 Nielsen review moved a card from a library filtered to Chemistry into "My first deck". Recall announced "Card saved", and the card's tile left the filtered list with focus still on it, so focus fell to the page and nothing said where the card had gone.
+
+Saving a card into another deck now announces "Card saved and moved to “My first deck”". A library tile that leaves while focused, because its card moved or was deleted, hands focus to the page title.
+
+Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that moves a card out of a filtered deck and checks the announcement and focus.

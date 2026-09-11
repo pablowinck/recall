@@ -710,3 +710,33 @@ test('a deck created in the library becomes the filter and the next card’s dec
     await account.cleanup();
   }
 });
+
+test('moving a card out of the filtered deck says where it went and keeps focus', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const chemistry = await account.api.createDeck('Chemistry');
+    await account.api.createCard({
+      deck_id: chemistry.id,
+      front: 'What is H2O?',
+      back: 'Water',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    await page.getByRole('option', { name: 'Chemistry', exact: true }).click();
+    await page.getByRole('heading', { name: 'What is H2O?' }).click();
+    await page.getByRole('combobox', { name: 'Deck' }).click();
+    await page.getByRole('option', { name: 'My first deck', exact: true }).click();
+    await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Card saved and moved to “My first deck”' }),
+    ).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeFocused();
+  } finally {
+    await account.cleanup();
+  }
+});
