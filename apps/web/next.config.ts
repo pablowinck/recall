@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 import path from 'node:path';
 
+// Agents that ask for Markdown (acceptmarkdown.com) get Markdown; browsers keep the HTML.
+const markdownAccept = { type: 'header', key: 'accept', value: '(.*)text/markdown(.*)' } as const;
+
 const nextConfig: NextConfig = {
   // Next.js #96646: the Vercel adapter conflicts with standalone output in 16.3.
   output: process.env.VERCEL ? undefined : 'standalone',
@@ -13,12 +16,15 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         {
           source: '/',
-          has: [{ type: 'header', key: 'accept', value: '(.*)text/markdown(.*)' }],
+          has: [markdownAccept],
           destination: '/llms.txt',
         },
       ],
       afterFiles: [],
-      fallback: [],
+      fallback: [
+        // Unknown paths give agents a Markdown 404 with the way back; browsers keep not-found.tsx.
+        { source: '/:path*', has: [markdownAccept], destination: '/not-found.md' },
+      ],
     };
   },
 };

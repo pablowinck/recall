@@ -473,3 +473,11 @@ An agent-readiness scan from is-agentic.com marked Markdown negotiation as an es
 `next.config.ts` now rewrites those requests to the `llms.txt` guide before any page renders. An agent gets `text/markdown` at `/`, and browsers still get the HTML. The Markdown response carries `Vary: Accept`. Next.js writes its own `Vary` on HTML pages and drops one set in `next.config.ts`, so the HTML response does not name `Accept`. The journey checks for the exact `Accept` token, because a substring match also passed on `Accept-Encoding`.
 
 Validation: format, typecheck, 117 unit tests and build pass. All 149 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that asks for the home page in Markdown and in HTML.
+
+## 2026-09-10 — UX loop 38: agents find their way back and find the MCP server
+
+The agent-readiness scan gave two more checks only partial credit. A missing page returned a real 404, but only as an HTML page, so an agent that asked for Markdown got no short way back. The site also never said where its MCP server is, so an agent had to read `llms.txt` or the docs to find the endpoint.
+
+When a request asks for Markdown, unknown paths now answer with a Markdown 404 that links the home page, `llms.txt`, sign-in, the sitemap and the source code. Browsers still get the HTML page. `/.well-known/mcp` and `/.well-known/mcp/server-card.json` publish a server card in the shape of the MCP registry's `server.json`. The card gives the endpoint, the bearer header it needs and where to create a token. `llms.txt` links the card, and the change map lists where agent discovery lives.
+
+Validation: format, typecheck, 119 unit tests and build pass, including two new tests for the card's registry limits and media type. All 155 browser, API and MCP journeys pass on desktop, tablet and mobile, including new journeys for the Markdown 404 and the server card.

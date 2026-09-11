@@ -87,3 +87,27 @@ test('an agent that asks for Markdown gets the guide at the home page', async ({
     .map((token) => token.trim().toLowerCase());
   expect(varied).toContain('accept');
 });
+
+test('an agent that asks for Markdown at a missing page gets the way back', async ({ request }) => {
+  const markdown = await request.get('/this-page-does-not-exist', {
+    headers: { Accept: 'text/markdown' },
+  });
+  expect(markdown.status()).toBe(404);
+  expect(markdown.headers()['content-type']).toContain('text/markdown');
+  expect(await markdown.text()).toContain('/llms.txt');
+  const page = await request.get('/this-page-does-not-exist', { headers: { Accept: 'text/html' } });
+  expect(page.status()).toBe(404);
+  expect(page.headers()['content-type']).toContain('text/html');
+});
+
+test('MCP clients find the server card on the site', async ({ request }) => {
+  const card = await request.get('/.well-known/mcp');
+  expect(card.ok()).toBe(true);
+  const body = (await card.json()) as { name: string; remotes: { type: string; url: string }[] };
+  expect(body.name).toBe('io.github.pablowinck/recall');
+  const remote = body.remotes.at(0);
+  expect(remote?.type).toBe('streamable-http');
+  expect(remote?.url).toMatch(/\/mcp$/);
+  const proposed = await request.get('/.well-known/mcp/server-card.json');
+  expect(proposed.headers()['content-type']).toContain('application/mcp-server-card+json');
+});

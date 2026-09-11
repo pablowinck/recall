@@ -16,6 +16,7 @@ export const LLMS_TEXT = [
   '## Connect',
   '',
   '- MCP endpoint: https://recall-mcp-five.vercel.app/mcp (Streamable HTTP, POST, header `Authorization: Bearer <token>`).',
+  '- MCP server card: https://recall-web-gilt.vercel.app/.well-known/mcp/server-card.json',
   '- The user creates the token at https://recall-web-gilt.vercel.app/app/connections. It is shown only once, expires after 90 days and can be revoked there at any time.',
   '- Setup is provided for Claude Code, Codex, Cursor, VS Code, Claude Desktop (through mcp-remote, which needs Node.js) and Gemini CLI. Any MCP client that supports Streamable HTTP with a bearer header works.',
   '- Not supported yet: ChatGPT connectors and claude.ai custom connectors, because they require OAuth.',
