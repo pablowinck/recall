@@ -587,3 +587,26 @@ test('a session revoked while the tab was away explains itself when the tab retu
     await account.cleanup();
   }
 });
+
+test('a failed refresh of Today stays off the review screen', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Question while Today is offline',
+      back: 'Answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.route('**/v1/workspace**', (route) => route.abort());
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    const outage = page.getByText('Can’t reach Recall. Check your connection and try again.');
+    await expect(outage).toBeVisible();
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.getByRole('button', { name: /Reveal answer/ })).toBeVisible();
+    await expect(outage).toHaveCount(0);
+  } finally {
+    await account.cleanup();
+  }
+});

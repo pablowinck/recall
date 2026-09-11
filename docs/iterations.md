@@ -1041,3 +1041,11 @@ The wave 4 frontend review revoked a session while its tab sat in the background
 A sign-out the person didn't ask for now shows "Your session ended. Sign in again to pick up where you left off.", whether an API call or a token refresh found it, while Sign out and the consent screen's account switch mark their sign-outs as requested. A repeated SIGNED_IN with the same user and token keeps the current state, so returning to the tab re-renders nothing. AGENTS.md records the auth-js behaviour.
 
 Validation: format, typecheck, 152 unit tests and build pass, including tests of how each Auth event changes the session state. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that revokes the session, lets the access token expire and returns to the tab.
+
+## 2026-09-11 — UX loop 109: a failed Today refresh stays off the review screen
+
+The wave 4 frontend review let Today's background refresh fail, then started reviewing. "Can’t reach Recall. Check your connection and try again." stayed above the whole review session, although reviewing worked, because the workspace's refresh error showed on every view.
+
+The refresh error now shows only on Today and the library, whose decks and stats it concerns. A review and Connections stay clear of it.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that fails Today's refresh, checks the message, starts a review and checks that it is gone.

@@ -4,6 +4,7 @@ import { LibraryView } from '../cards/library-view';
 import { StudyView } from '../study/study-view';
 import { ConnectionsView } from '../connections/connections-view';
 import { TodayView } from './today-view';
+import type { WorkspaceView } from './navigation-types';
 import type { LoadedWorkspaceModel, WorkspaceModel } from './workspace-model';
 
 /** Render only the selected authenticated working view. Example: <WorkspaceContent model={model} />. */
@@ -18,7 +19,9 @@ export function WorkspaceContent({ model }: { model: WorkspaceModel }): React.JS
     );
   return (
     <>
-      {model.error && <ErrorNotice message={model.error} retry={model.actions.refresh} />}
+      {model.error && showsWorkspaceData(model.view) && (
+        <ErrorNotice message={model.error} retry={model.actions.refresh} />
+      )}
       <LoadedWorkspace model={model} />
     </>
   );
@@ -105,4 +108,9 @@ function WorkspaceEditor({ model }: { model: LoadedWorkspaceModel }): React.JSX.
       onDeckCreated={model.actions.refresh}
     />
   );
+}
+
+// A failed refresh of decks and stats concerns Today and the library; a review and Connections work without it.
+function showsWorkspaceData(view: WorkspaceView): boolean {
+  return view === 'today' || view === 'library';
 }
