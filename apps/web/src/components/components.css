@@ -102,6 +102,9 @@
   margin-bottom: 0;
 }
 .card-code {
+  /* Code that wraps keeps its rounded ends and padding on every line. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--fill-1);

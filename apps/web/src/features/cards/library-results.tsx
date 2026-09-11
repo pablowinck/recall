@@ -45,7 +45,10 @@ function LibraryResultsContent({ library, state }: LibraryResultsProps): React.J
         ))}
       </div>
       {!result.cards.length && <EmptyLibrary library={library} state={state} />}
-      {result.cards.length > 0 && <LibraryPagination state={state} />}
+      {/* One page has nowhere to go, so disabled Previous and Next buttons would only be noise. */}
+      {lastLibraryPage(result.total) > 0 && result.cards.length > 0 && (
+        <LibraryPagination state={state} />
+      )}
     </>
   );
 }

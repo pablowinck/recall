@@ -3,7 +3,10 @@ import {
   encodeLibraryQuery,
   lastLibraryPage,
 } from '../../apps/web/src/features/cards/library-query';
-import { describeCardStatus } from '../../apps/web/src/features/cards/card-presentation';
+import {
+  describeCardStatus,
+  previewText,
+} from '../../apps/web/src/features/cards/card-presentation';
 import { initialSchedule } from '../../packages/domain/src/index';
 
 it('clamps the final page when its last card is deleted', () => {
@@ -41,4 +44,10 @@ it('says when a scheduled card comes back, in calendar days', () => {
   expect(status(new Date(2026, 8, 13, 9, 0))).toBe('Due in 3 days');
   expect(status(new Date(2026, 9, 2, 9, 0))).toBe('Due Oct 2');
   expect(status(new Date(2027, 0, 5, 9, 0))).toBe('Due Jan 5, 2027');
+});
+
+it('shows list markers as bullets in previews, leaving numbers and emphasis alone', () => {
+  expect(previewText('Intro\n- one\n  * two\n3. three\n*word*')).toBe(
+    'Intro\n• one\n  • two\n3. three\n*word*',
+  );
 });

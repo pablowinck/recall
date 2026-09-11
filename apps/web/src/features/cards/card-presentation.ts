@@ -38,3 +38,8 @@ function describeDueDate(due: Date, now: Date): string {
 function startOfDay(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }
+
+/** Show a card's list markers as bullets in a two-line preview instead of raw dashes. Example: previewText('- one\n- two'). */
+export function previewText(text: string): string {
+  return text.replace(/^(\s*)[-*]\s+/gm, '$1• ');
+}

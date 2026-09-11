@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import type { Flashcard } from '@recall/contracts';
 import { CardInline } from '@/components/card-text';
 import { focusPageHeading } from '@/components/page-heading';
-import { describeCardStatus, summarizeFront } from './card-presentation';
+import { describeCardStatus, previewText, summarizeFront } from './card-presentation';
 
 /** Present one editable card without executing its content. Example: <LibraryCard card={card} edit={edit} />. */
 export function LibraryCard({
@@ -35,7 +35,7 @@ export function LibraryCard({
         </button>
       </h2>
       <p dir="auto">
-        <CardInline text={card.back} />
+        <CardInline text={previewText(card.back)} />
       </p>
       <LibraryTags tags={card.tags} />
       <span className="card-edit-hint" aria-hidden="true">

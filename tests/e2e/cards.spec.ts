@@ -70,7 +70,8 @@ test('deleting the last card on a page returns to a valid page', async ({ page }
     await page.getByRole('button', { name: 'Delete card', exact: true }).click();
     await expect(page.getByRole('alertdialog')).toBeVisible({ timeout: 2000 });
     await page.getByRole('button', { name: 'Delete permanently', exact: true }).click();
-    await expect(page.getByText('Page 1 of 1', { exact: true })).toBeVisible();
+    await expect(page.locator('.result-label')).toHaveText('24 cards');
+    await expect(page.getByRole('button', { name: 'Next', exact: true })).toHaveCount(0);
     await expect(page.locator('.library-card')).toHaveCount(24);
     await expect(page.getByRole('status').filter({ hasText: 'Card deleted' })).toHaveCount(1);
     await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeFocused();

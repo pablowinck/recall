@@ -1089,3 +1089,11 @@ The wave 4 frontend review profiled ratings on a throttled phone. Radix tooltips
 The rating hints now render only for a primary pointer that can hover, a mouse or trackpad. Each rating button's name already says what the rating claims, so touch screens and screen readers lose nothing.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that hovers a rating on desktop and focuses one on the touch layouts without a hint appearing.
+
+## 2026-09-11 — UX loop 115: card text details in the library and in reviews
+
+The wave 4 design review found three small rough edges in card text. Library previews showed raw "- " list markers from the answer. A code span that wrapped onto a second line lost its rounded ends and padding at the break. A library with a single page still showed disabled Previous and Next buttons.
+
+Previews now show list markers as bullets, leaving numbered steps and emphasis alone. Wrapped code keeps its rounded ends on every line. Pagination appears only when there is another page to go to.
+
+Validation: format, typecheck, 152 unit tests and build pass, including a preview test for bullets, numbers and emphasis. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the paging journey now checks that a single remaining page shows its count without pagination.
