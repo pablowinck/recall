@@ -40,7 +40,7 @@ export function AuthActions({ state }: { state: AuthFormState }): React.JSX.Elem
       </button>
       <span className="privacy-note">
         <LockKeyhole size={14} />
-        Your cards stay yours.
+        Only your account can reach your cards.
       </span>
     </>
   );

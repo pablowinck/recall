@@ -1,27 +1,31 @@
 import Link from 'next/link';
 import { supportChatUrl } from '@/lib/support-link';
+import { REPOSITORY_URL } from './github-repo';
 
-/** Close with the same invitation and a way to reach a person. Example: <LandingClose />. */
+/** Close with one concrete first step and a way to reach a person. Example: <LandingClose />. */
 export function LandingClose(): React.JSX.Element {
   return (
     <>
       <section className="landing-close" aria-labelledby="close-title">
         <h2 id="close-title">Start with one card</h2>
         <p>
-          Create an account, connect your assistant, and let the next thing you learn become a card
-          you will actually remember.
+          Create a free account, connect your assistant and ask for your first card. Or write it
+          yourself.
         </p>
         <Link className="landing-cta" href="/app?new=1">
-          Create your account
+          Create a free account
         </Link>
+        <p className="landing-close-signin">
+          Already have an account? <Link href="/app">Sign in</Link>
+        </p>
       </section>
       <footer className="landing-footer">
         <span>Recall</span>
-        <a href={supportChatUrl()} target="_blank" rel="noopener noreferrer">
-          Talk to us on WhatsApp
+        <a href={REPOSITORY_URL} target="_blank" rel="noopener noreferrer">
+          Open source (MIT) on GitHub
         </a>
-        <a href="https://github.com/pablowinck/recall" target="_blank" rel="noopener noreferrer">
-          Source on GitHub
+        <a href={supportChatUrl()} target="_blank" rel="noopener noreferrer">
+          Questions? Message us on WhatsApp
         </a>
       </footer>
     </>

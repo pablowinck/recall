@@ -1,19 +1,20 @@
+// Only Claude Code is a single command; the other assistants take a short config, so the copy says so.
 const STEPS = [
   {
     title: 'Connect your assistant',
-    body: 'One command and one token. Claude Code, Codex, Cursor, VS Code, Claude Desktop and Gemini CLI all speak MCP.',
+    body: 'Pick it in Connections and Recall fills your personal token into its setup: one command for Claude Code, a short config for the others.',
   },
   {
-    title: 'Cards appear as you learn',
-    body: 'Ask for a card in the middle of a conversation. It lands in the deck you chose, with the tags you use.',
+    title: 'Ask for cards',
+    body: 'Mid-conversation, ask for one card or a whole set. They land in the deck you name, with your tags.',
   },
   {
     title: 'Review at the right moment',
-    body: 'Recall schedules each card for the day you are about to forget it, and a session tells you what comes back and when.',
+    body: 'Study in Recall. FSRS schedules each card, and every rating shows when you’ll see it next.',
   },
 ];
 
-/** Explain the loop in three steps. Example: <LandingSteps />. */
+/** Explain the loop in three honest steps. Example: <LandingSteps />. */
 export function LandingSteps(): React.JSX.Element {
   return (
     <section className="landing-section" id="how-it-works" aria-labelledby="how-it-works-title">

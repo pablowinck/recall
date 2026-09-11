@@ -1,32 +1,30 @@
 import { LandingHero } from './landing-hero';
 import { LandingSteps } from './landing-steps';
 import { LandingStudy } from './landing-study';
+import { LandingQuestions } from './landing-questions';
+import { landingStructuredData } from './landing-structured-data';
+import { LandingOpenSource } from './landing-open-source';
 import { LandingClose } from './landing-close';
-
-// Structured data states the same facts the page does, for search engines and agents that read JSON-LD.
-const APPLICATION_DATA = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Recall',
-  applicationCategory: 'EducationalApplication',
-  operatingSystem: 'Web',
-  description:
-    'Flashcards with spaced repetition that AI assistants fill through MCP: Claude, Codex, Cursor and others create the cards, Recall schedules the reviews.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-};
+import { readStarCount } from './github-repo';
 
 /** Present Recall to someone who has never seen it. Example: <LandingPage />. */
-export function LandingPage(): React.JSX.Element {
+export async function LandingPage(): Promise<React.JSX.Element> {
+  const stars = await readStarCount(fetch);
   return (
     <main className="landing">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(APPLICATION_DATA) }}
-      />
-      <LandingHero />
+      <StructuredData value={landingStructuredData()} />
+      <LandingHero stars={stars} />
       <LandingSteps />
       <LandingStudy />
+      <LandingQuestions />
+      <LandingOpenSource stars={stars} />
       <LandingClose />
     </main>
   );
+}
+
+// The values are constants written here; escaping "<" still keeps them from ever closing the script tag.
+function StructuredData({ value }: { value: Record<string, unknown> }): React.JSX.Element {
+  const json = JSON.stringify(value).replace(/</g, '\\u003c');
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />;
 }

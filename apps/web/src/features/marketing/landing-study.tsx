@@ -1,23 +1,23 @@
 const QUALITIES = [
   {
     title: 'Made for long sessions',
-    body: 'Reading sizes that follow the length of a question, a comfortable measure, and a rating bar that never moves under your thumb.',
+    body: 'Short questions display large, long ones at reading size, and the rating buttons stay within reach on long cards.',
   },
   {
     title: 'Keyboard or thumb',
-    body: 'Space reveals, 1 to 4 rate. On a phone the session takes the whole screen and the app chrome steps aside.',
+    body: 'Space reveals, 1 to 4 rate. On a phone a session fills the screen with the ratings under your thumb.',
   },
   {
     title: 'Light and dark',
-    body: 'Both appearances are built to be read for hours, and the app follows the one your system already uses.',
+    body: 'Both appearances are made to be read for hours. Recall follows your system, or you pick one yourself.',
   },
   {
-    title: 'Your cards stay yours',
-    body: 'Every query runs under row-level security in your own tenant. Connections are personal tokens you can revoke whenever you like.',
+    title: 'Formatting that renders',
+    body: 'Bold, italic, code and lists display cleanly, whether you or your assistant wrote the card.',
   },
 ];
 
-/** Say what the study experience is like. Example: <LandingStudy />. */
+/** Say what the study experience is like, in plain words. Example: <LandingStudy />. */
 export function LandingStudy(): React.JSX.Element {
   return (
     <section className="landing-section" aria-labelledby="study-title">
