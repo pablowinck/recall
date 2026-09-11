@@ -118,6 +118,9 @@ test('creates a new deck inline from the card editor without discarding entered 
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'New deck', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Cancel new deck' })).toBeVisible();
+    await page.getByRole('button', { name: 'Cancel new deck' }).click();
+    await expect(page.getByRole('button', { name: 'New deck', exact: true })).toBeFocused();
+    await page.getByRole('button', { name: 'New deck', exact: true }).click();
     const inlineInput = page.getByRole('textbox', { name: 'New deck name' });
     await inlineInput.fill('日本語');
     // The Enter that confirms an input method's word is text input, so it must not create the deck.
@@ -126,6 +129,8 @@ test('creates a new deck inline from the card editor without discarding entered 
     await inlineInput.fill('Italian Language');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     await expect(inlineInput).toHaveCount(0);
+    await expect(page.getByRole('combobox', { name: 'Deck' })).toBeFocused();
+    await expect(page.getByRole('combobox', { name: 'Deck' })).toContainText('Italian Language');
 
     // Verify card content was preserved and new deck is selected
     await expect(page.getByPlaceholder('What would you like to remember?')).toHaveValue(

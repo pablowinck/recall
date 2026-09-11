@@ -1,6 +1,14 @@
 import { Button, Select, TextArea, TextField } from '@radix-ui/themes';
 import { Plus } from 'lucide-react';
-import { useState, type ComponentProps, type FormEvent, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type FormEvent,
+  type KeyboardEvent,
+  type RefObject,
+} from 'react';
 import type { Deck } from '@recall/contracts';
 import { ErrorNotice } from '@/components/feedback';
 import { TEXT_LIMITS } from './card-draft';
@@ -26,6 +34,7 @@ export function CardEditorFields({
 }
 
 function DeckField({ state }: { state: CardEditorState }): React.JSX.Element {
+  const focus = useInlineDeckReturn(state);
   if (state.creatingDeck) {
     return <InlineDeckCreator state={state} />;
   }
@@ -36,6 +45,7 @@ function DeckField({ state }: { state: CardEditorState }): React.JSX.Element {
           Deck
         </label>
         <button
+          ref={focus.newDeck}
           type="button"
           className="inline-deck-btn"
           onClick={() => state.setCreatingDeck(true)}
@@ -44,7 +54,12 @@ function DeckField({ state }: { state: CardEditorState }): React.JSX.Element {
           <span>New deck</span>
         </button>
       </div>
-      <DeckSelect decks={state.decks} selected={state.deck} change={state.setDeck} />
+      <DeckSelect
+        decks={state.decks}
+        selected={state.deck}
+        change={state.setDeck}
+        trigger={focus.select}
+      />
     </div>
   );
 }
@@ -54,14 +69,16 @@ function DeckSelect({
   decks,
   selected,
   change,
+  trigger,
 }: {
   decks: Deck[];
   selected: string;
   change: (id: string) => void;
+  trigger: RefObject<HTMLButtonElement | null>;
 }): React.JSX.Element {
   return (
     <Select.Root value={selected} onValueChange={change}>
-      <Select.Trigger id="card-deck-select" aria-label="Deck" />
+      <Select.Trigger ref={trigger} id="card-deck-select" aria-label="Deck" />
       <Select.Content>
         {decks.map((deck) => (
           <Select.Item key={deck.id} value={deck.id}>
@@ -243,4 +260,28 @@ function TextLimit({ length, limit }: { length: number; limit: number }): React.
       {length.toLocaleString('en-US')} / {limit.toLocaleString('en-US')}
     </span>
   );
+}
+
+interface InlineDeckReturn {
+  newDeck: RefObject<HTMLButtonElement | null>;
+  select: RefObject<HTMLButtonElement | null>;
+}
+
+// Closing the inline deck form removes the focused field. Cancel or Escape returns focus to "New deck"; adding a deck
+// moves it to the deck list, which reads the new deck as the choice.
+function useInlineDeckReturn(state: CardEditorState): InlineDeckReturn {
+  const newDeck = useRef<HTMLButtonElement>(null);
+  const select = useRef<HTMLButtonElement>(null);
+  const deckWhenOpened = useRef<string | null>(null);
+  useEffect(() => {
+    if (state.creatingDeck) {
+      deckWhenOpened.current ??= state.deck;
+      return;
+    }
+    const opened = deckWhenOpened.current;
+    deckWhenOpened.current = null;
+    if (opened === null) return;
+    (opened === state.deck ? newDeck : select).current?.focus();
+  }, [state.creatingDeck, state.deck]);
+  return { newDeck, select };
 }

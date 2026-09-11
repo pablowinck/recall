@@ -897,3 +897,11 @@ The wave 3 frontend review signed out from the library, and the sign-in screen k
 A shared useDocumentTitle hook sets the tab title and sets it again if the metadata replaces it. The sign-in screen names the tab "Sign in · Recall" or "Create account · Recall", and each workspace view names it from the first load. AGENTS.md records the gotcha.
 
 Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey for both sign-in titles; the view address journey now checks the titles after a reload and after opening /app/library directly. A first attempt set the title once and failed the new journey on all three layouts.
+
+## 2026-09-11 — UX loop 91: closing the inline deck form keeps focus in the editor
+
+The wave 2 frontend backlog still had part of F-06 open: cancelling the card editor's inline "New deck" form, with its button or Escape, removed the focused field and focus with it. Adding a deck closed the form the same way, and nothing said which deck was now chosen.
+
+Cancelling now returns focus to "New deck", and adding a deck moves focus to the deck list, which reads the new deck as the choice.
+
+Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, and the inline deck journey now checks focus after Cancel and after Add.
