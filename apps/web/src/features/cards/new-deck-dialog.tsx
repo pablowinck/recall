@@ -1,15 +1,16 @@
 import { Dialog } from '@radix-ui/themes';
 import type { RecallClient } from '@recall/client';
+import type { Deck } from '@recall/contracts';
 import { useDeckDialog, type DeckDialogState } from './use-deck-dialog';
 import { DeckDialogTrigger, DeckDialogContent } from './deck-dialog-content';
 
-/** Create a deck without leaving the library. Example: <NewDeckDialog client={client} done={refresh} />. */
+/** Create a deck without leaving the library, then show it. Example: <NewDeckDialog client={client} done={selectDeck} />. */
 export function NewDeckDialog({
   client,
   done,
 }: {
   client: RecallClient;
-  done: () => void;
+  done: (deck: Deck) => void;
 }): React.JSX.Element {
   const state = useDeckDialog(client, done);
   return (

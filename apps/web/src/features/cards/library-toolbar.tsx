@@ -30,7 +30,14 @@ export function LibraryToolbar({
           Clear filters
         </button>
       )}
-      <NewDeckDialog client={library.client} done={library.refresh} />
+      <NewDeckDialog
+        client={library.client}
+        done={(deck) => {
+          // A deck someone just created is the one they mean to fill, so the library shows it right away.
+          state.selectDeck(deck.id);
+          library.refresh();
+        }}
+      />
     </div>
   );
 }

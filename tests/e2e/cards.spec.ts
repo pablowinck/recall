@@ -687,3 +687,26 @@ test('library search finds every word, whatever the spacing or formatting', asyn
     await account.cleanup();
   }
 });
+
+test('a deck created in the library becomes the filter and the next card’s deck', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('button', { name: 'New deck', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Chemistry');
+    await page.getByRole('button', { name: 'Create deck', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText('Chemistry');
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Deck “Chemistry” created and selected' }),
+    ).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: 'This deck has no cards yet' })).toBeVisible();
+    await page.getByRole('button', { name: 'Create a card', exact: true }).click();
+    await expect(page.getByRole('combobox', { name: 'Deck' })).toContainText('Chemistry');
+  } finally {
+    await account.cleanup();
+  }
+});

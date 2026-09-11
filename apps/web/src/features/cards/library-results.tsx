@@ -41,26 +41,39 @@ export function LibraryResults({ library, state }: LibraryResultsProps): React.J
   );
 }
 
+interface EmptyLibraryCopy {
+  title: string;
+  detail: string;
+}
+
 function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Element {
-  const filtered = Boolean(state.query.search || state.query.deck);
+  const { search, deck } = state.query;
+  const copy = describeEmptyLibrary(search, deck);
   return (
     <div className="empty-state">
       <BookOpen size={32} strokeWidth={1.4} />
-      <h2>{filtered ? 'No cards found' : 'No cards yet'}</h2>
-      <p>
-        {filtered
-          ? 'Try another search or choose a different deck.'
-          : 'Write a question and its answer. Recall schedules every review for you.'}
-      </p>
-      {filtered ? (
+      <h2>{copy.title}</h2>
+      <p>{copy.detail}</p>
+      {search ? (
         <Button variant="soft" onClick={() => clearLibraryFilters(state)}>
           Clear filters
         </Button>
       ) : (
-        <Button onClick={() => library.create()}>Create your first card</Button>
+        <Button onClick={() => library.create(deck || undefined)}>
+          {deck ? 'Create a card' : 'Create your first card'}
+        </Button>
       )}
     </div>
   );
+}
+
+// An empty deck is not a failed search, so it asks for its first card instead of suggesting other filters.
+function describeEmptyLibrary(search: string, deck: string): EmptyLibraryCopy {
+  const invitation = 'Write a question and its answer. Recall schedules every review for you.';
+  if (search)
+    return { title: 'No cards found', detail: 'Try another search or choose a different deck.' };
+  if (deck) return { title: 'This deck has no cards yet', detail: invitation };
+  return { title: 'No cards yet', detail: invitation };
 }
 
 type PageDirection = 'previous' | 'next';

@@ -945,3 +945,11 @@ The wave 4 Nielsen review searched the library the way people type. Search only 
 Search now splits the query into words and finds cards that hold every word, in any order, anywhere on either side or in the tags, ignoring extra spaces and the `*`, `_` and backtick markers along with case and accents. Each card is folded once per query and not at all for an empty search, and the words are folded before they reach the database. With 2,000 cards, an empty search now takes 60 ms and a two-word search 109 ms, the median of nine runs against the local API. The MCP search tool calls the same endpoint, so assistants search the same way.
 
 Validation: format, typecheck, 146 unit tests and build pass, including a test of how a search folds into words. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that searches two words, a phrase broken by bold markers and a trailing space.
+
+## 2026-09-11 — UX loop 97: a deck created in the library opens ready for its first card
+
+The wave 4 Nielsen review created a deck from the library. The filter stayed on "All decks", so the new deck was nowhere in sight, and the next New card defaulted to "My first deck", where the card was saved.
+
+Creating a deck now selects it in the filter and announces "Deck “Chemistry” created and selected". An empty deck no longer reads like a failed search: it says "This deck has no cards yet" with a Create a card button that opens the editor on that deck.
+
+Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that creates a deck, checks the filter, the announcement and the empty deck, and opens the editor on the new deck.
