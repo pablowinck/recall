@@ -849,3 +849,11 @@ The wave 3 reviews signed in with the network cut. The form said "We couldn’t 
 A sign-in or sign-up that never reaches the service now says "Can’t reach Recall. Check your connection and try again.", the same words as the rest of the app, whether the browser reports it the Chrome, Firefox or Safari way. After any failure, focus returns to the button, so trying again is one key away.
 
 Validation: format, typecheck, 142 unit tests and build pass, including the three browsers' network failure wording. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that signs in with the auth service unreachable, checks the message and the focus, then signs in once it is back.
+
+## 2026-09-11 — UX loop 85: a deck review survives a reload, and signing in starts on Today
+
+The wave 3 Nielsen review reloaded the page while reviewing one deck. Every review used the address /app/study, so the reload started a review of all decks, with other decks' cards and a different total. Signing in at that address was worse: someone whose session had ended landed straight in a review.
+
+A deck review's address now carries its deck, /app/study?deck=…, through reloads and Back and Forward, and only a deck id is read from it. When the app opens on the sign-in screen, signing in starts on Today, while reloading a signed-in review still resumes it.
+
+Validation: format, typecheck, 142 unit tests and build pass, including the review address and the deck id check. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reloads a deck review, checks it kept its deck, then signs in again at that address and lands on Today.

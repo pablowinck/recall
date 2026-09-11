@@ -16,15 +16,19 @@ type UpdateWorkspaceUi = Dispatch<SetStateAction<WorkspaceUiState>>;
 export function useWorkspaceModel(
   account: RecallAccount,
   initialView: WorkspaceView,
+  initialStudyDeck?: string,
 ): WorkspaceModel {
   const [state, update] = useState<WorkspaceUiState>({
     view: initialView,
+    studyDeck: initialStudyDeck,
     editing: undefined,
     revision: 0,
     libraryQuery: { search: '', deck: '', page: 0 },
   });
   const remote = useWorkspace(account.client);
-  useWorkspaceHistory(state.view, (view) => update((current) => ({ ...current, view })));
+  useWorkspaceHistory(state.view, state.studyDeck, (view, studyDeck) =>
+    update((current) => ({ ...current, view, studyDeck })),
+  );
   useWorkspaceFreshness(state.view === 'today', () => void remote.refresh());
   const actions = {
     ...createViewActions(update, remote.refresh),

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  studyDeckFrom,
   viewFromPath,
   workspacePath,
   workspaceTitle,
@@ -10,6 +11,15 @@ describe('workspace addresses', () => {
     expect(workspacePath('today')).toBe('/app');
     expect(workspacePath('library')).toBe('/app/library');
     expect(workspacePath('study')).toBe('/app/study');
+  });
+
+  it('keeps a deck review’s deck in its address, and reads back only a deck id', () => {
+    const deck = '4f0b6f1e-0000-4000-8000-000000000000';
+    expect(workspacePath('study', deck)).toBe(`/app/study?deck=${deck}`);
+    expect(workspacePath('library', deck)).toBe('/app/library');
+    expect(studyDeckFrom(deck)).toBe(deck);
+    expect(studyDeckFrom('../workspace')).toBeUndefined();
+    expect(studyDeckFrom(null)).toBeUndefined();
   });
 
   it('reads the view back from an address', () => {

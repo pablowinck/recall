@@ -11,6 +11,8 @@ export interface AuthenticatedWorkspaceProps {
   dark: boolean;
   toggleTheme: () => void;
   initialView: WorkspaceView;
+  /** The deck a reloaded review address named. */
+  initialStudyDeck?: string;
 }
 
 /** Keep identity-scoped state below the keyed authentication gate. Example: <AuthenticatedWorkspace {...props} />. */
@@ -19,8 +21,9 @@ export function AuthenticatedWorkspace({
   dark,
   toggleTheme,
   initialView,
+  initialStudyDeck,
 }: AuthenticatedWorkspaceProps): React.JSX.Element {
-  const model = useWorkspaceModel(account, initialView);
+  const model = useWorkspaceModel(account, initialView, initialStudyDeck);
   const navigation: NavigationProps = {
     view: model.view,
     email: model.email,

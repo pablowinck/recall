@@ -377,3 +377,34 @@ test('right-to-left card text reads right to left beside a translation', async (
 async function readDirection(target: Locator): Promise<'rtl' | 'ltr'> {
   return target.evaluate((node) => (node.matches(':dir(rtl)') ? 'rtl' : 'ltr'));
 }
+
+test('a deck review survives a reload, and signing in again starts on Today', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = await account.api.createDeck('Reload deck');
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Reload deck question',
+      back: 'Reload deck answer',
+      tags: [],
+    });
+    const other = (await account.api.workspace()).decks.find((item) => item.id !== deck.id)!;
+    await account.api.createCard({
+      deck_id: other.id,
+      front: 'Other deck question',
+      back: 'Other deck answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: /^Reload deck/ }).click();
+    await expect(page).toHaveURL(new RegExp(`/app/study\\?deck=${deck.id}$`));
+    await page.reload();
+    await expect(page.getByText('Reload deck question', { exact: true })).toBeVisible();
+    await expect(page.getByText('0 of 1 reviewed')).toBeVisible();
+    await page.evaluate(() => localStorage.clear());
+    await page.reload();
+    await fillSignInForm(page, account);
+  } finally {
+    await account.cleanup();
+  }
+});
