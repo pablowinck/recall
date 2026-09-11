@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState, type RefObject } from 'react';
 import { Button } from '@radix-ui/themes';
 import { Check } from 'lucide-react';
 import type { StudySessionState } from './use-study-session';
@@ -28,16 +28,28 @@ export function SessionComplete({
 }): React.JSX.Element {
   useReturningCardsResume(session);
   const now = useHalfMinuteClock();
+  const heading = useFocusOnMount<HTMLHeadingElement>();
   return (
     <div className="session-complete view-enter">
       <span className="complete-mark">
         <Check size={35} strokeWidth={1.7} />
       </span>
-      <h1>{session.completed ? 'Nicely done' : 'All caught up'}</h1>
+      <h1 ref={heading} tabIndex={-1}>
+        {session.completed ? 'Nicely done' : 'All caught up'}
+      </h1>
       <p>{describeCompletion(session.completed, session.returning, now)}</p>
       <SessionCompleteActions session={session} exit={exit} />
     </div>
   );
+}
+
+// The last card and its rating buttons unmount here, so focus lands on the result instead of the page body.
+function useFocusOnMount<Target extends HTMLElement>(): RefObject<Target | null> {
+  const target = useRef<Target>(null);
+  useEffect(() => {
+    target.current?.focus({ preventScroll: true });
+  }, []);
+  return target;
 }
 
 function SessionCompleteActions({

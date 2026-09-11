@@ -65,9 +65,10 @@
 .review-card.is-clickable {
   cursor: pointer;
 }
-/* Focus lands here programmatically to keep screen readers on the card; it is not a control. */
+/* Focus lands here programmatically to keep screen readers on the card or the result; none is a control. */
 .review-card:focus,
-.review-answer:focus {
+.review-answer:focus,
+.session-complete h1:focus {
   outline: none;
 }
 @media (hover: hover) {

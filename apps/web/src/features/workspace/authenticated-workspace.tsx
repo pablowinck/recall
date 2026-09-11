@@ -1,3 +1,4 @@
+import { StatusAnnouncer } from '@/components/status-announcer';
 import type { NavigationProps, WorkspaceView } from './navigation-types';
 import type { RecallAccount } from './workspace-model';
 import { useWorkspaceModel } from './use-workspace-model';
@@ -28,8 +29,10 @@ export function AuthenticatedWorkspace({
     toggleTheme,
   };
   return (
-    <WorkspaceShell navigation={navigation} studying={model.view === 'study'}>
-      <WorkspaceContent model={model} />
-    </WorkspaceShell>
+    <StatusAnnouncer>
+      <WorkspaceShell navigation={navigation} studying={model.view === 'study'}>
+        <WorkspaceContent model={model} />
+      </WorkspaceShell>
+    </StatusAnnouncer>
   );
 }

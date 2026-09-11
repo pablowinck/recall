@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Dialog } from '@radix-ui/themes';
 import { ErrorNotice } from '@/components/feedback';
+import { focusPageHeading } from '@/components/page-heading';
 import { CardEditorFields } from './card-editor-fields';
 import { CardEditorActions } from './card-editor-actions';
 import { DiscardDraftDialog } from './discard-draft-dialog';
@@ -57,13 +58,18 @@ function CardEditorContent({
       maxWidth="640px"
       className="card-editor"
       {...createDismissHandlers(state, dismissal)}
-      onCloseAutoFocus={(event) => restoreOpenerFocus(event, opener)}
+      onCloseAutoFocus={(event) => restoreFocus(event, opener, state.removed.current)}
     >
       <CardEditorHeader hasCard={Boolean(editor.card)} />
       <form ref={state.form} onSubmit={state.submit}>
         <CardEditorFields editor={editor} state={state} />
         {state.action.error && <ErrorNotice message={state.action.error} />}
-        <CardEditorActions editor={editor} busy={state.action.busy} cancel={dismissal.request} />
+        <CardEditorActions
+          editor={editor}
+          busy={state.action.busy}
+          cancel={dismissal.request}
+          remove={state.remove}
+        />
       </form>
     </Dialog.Content>
   );
@@ -102,7 +108,13 @@ function useOpener(): HTMLElement | null {
   return opener;
 }
 
-function restoreOpenerFocus(event: Event, opener: HTMLElement | null): void {
+// A deleted card takes its library tile with it, so focus moves to the view's title instead of the opener.
+function restoreFocus(event: Event, opener: HTMLElement | null, removed: boolean): void {
+  if (removed) {
+    event.preventDefault();
+    focusPageHeading();
+    return;
+  }
   if (!opener?.isConnected || opener === document.body) return;
   event.preventDefault();
   opener.focus();

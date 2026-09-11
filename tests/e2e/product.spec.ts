@@ -21,6 +21,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     await page.getByRole('textbox', { name: /^Tags/ }).fill('learning, vocabulary');
     await page.getByRole('button', { name: 'Create card', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('status').filter({ hasText: 'Card created' })).toHaveCount(1);
     await page.getByRole('button', { name: 'Library', exact: true }).click();
     await page.getByRole('heading', { name: 'What does stumped mean?', exact: true }).click();
     await page
@@ -28,6 +29,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
       .fill('Unable to work out the answer to a question.');
     await page.getByRole('button', { name: 'Save changes' }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('status').filter({ hasText: 'Card saved' })).toHaveCount(1);
     const token = await account.api.createToken('Browser test');
     const mcp = await connectTestMcp(token.token);
     try {
@@ -71,6 +73,7 @@ test('login → create/edit → MCP → study → persist → sign out', async (
     await page.getByRole('button', { name: /Reveal answer/ }).click();
     await page.getByRole('button', { name: /Good/ }).click();
     await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeFocused();
     expect((await account.api.workspace()).stats.reviewed_today).toBe(2);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth,

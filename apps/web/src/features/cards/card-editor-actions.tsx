@@ -11,19 +11,21 @@ const deleteCopy = {
   cancelLabel: 'Keep card',
 };
 
-/** Prevent competing card mutations while saving. Example: <CardEditorActions editor={props} busy={busy} cancel={close} />. */
+/** Prevent competing card mutations while saving. Example: <CardEditorActions editor={props} busy={busy} cancel={close} remove={remove} />. */
 export function CardEditorActions({
   editor,
   busy,
   cancel,
+  remove,
 }: {
   editor: CardEditorProps;
   busy: boolean;
   cancel: () => void;
+  remove: () => Promise<void>;
 }): React.JSX.Element {
   return (
     <div className="dialog-actions">
-      <DeleteCardButton editor={editor} busy={busy} />
+      {editor.card && <DeleteCardButton busy={busy} remove={remove} />}
       <SaveShortcutHint />
       <Button type="button" variant="soft" color="gray" onClick={cancel} disabled={busy}>
         Cancel
@@ -47,21 +49,13 @@ function SaveShortcutHint(): React.JSX.Element {
 }
 
 function DeleteCardButton({
-  editor,
   busy,
+  remove,
 }: {
-  editor: CardEditorProps;
   busy: boolean;
-}): React.JSX.Element | null {
-  const card = editor.card;
-  if (!card) return null;
-  return (
-    <ConfirmAction
-      {...deleteCopy}
-      trigger={createDeleteTrigger(busy)}
-      onConfirm={() => deleteEditedCard(editor, card.id)}
-    />
-  );
+  remove: () => Promise<void>;
+}): React.JSX.Element {
+  return <ConfirmAction {...deleteCopy} trigger={createDeleteTrigger(busy)} onConfirm={remove} />;
 }
 
 // Return the actual Radix Button so its trigger props survive cloning (7f2219e regression).
@@ -79,10 +73,4 @@ function createDeleteTrigger(busy: boolean): React.JSX.Element {
       <Trash2 size={18} />
     </Button>
   );
-}
-
-async function deleteEditedCard(editor: CardEditorProps, id: string): Promise<void> {
-  await editor.client.deleteCard(id);
-  editor.saved();
-  editor.close();
 }

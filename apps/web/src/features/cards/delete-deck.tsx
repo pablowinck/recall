@@ -5,6 +5,7 @@ import { Trash2 } from 'lucide-react';
 import type { RecallClient } from '@recall/client';
 import type { Deck, DeckRemoval } from '@recall/contracts';
 import { ErrorNotice } from '@/components/feedback';
+import { useAnnounce } from '@/components/status-announcer';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 
 interface DeleteDeckProps {
@@ -13,27 +14,19 @@ interface DeleteDeckProps {
   client: RecallClient;
   done: () => void;
 }
+type RemoveDeck = (removal: DeckRemoval) => Promise<boolean>;
 interface DeckRemovalDialogProps {
   deck: Deck;
   others: Deck[];
   action: AsyncAction;
-  remove: (removal: DeckRemoval) => Promise<boolean>;
+  remove: RemoveDeck;
 }
 
 /** Delete the deck the library is filtered by. Example: <DeleteDeckButton deck={deck} decks={decks} client={client} done={refresh} />. */
-export function DeleteDeckButton({
-  deck,
-  decks,
-  client,
-  done,
-}: DeleteDeckProps): React.JSX.Element | null {
-  const others = decks.filter((other) => other.id !== deck.id);
-  const action = useAsyncAction();
-  const remove = async (removal: DeckRemoval): Promise<boolean> => {
-    const removed = await action.run(() => client.deleteDeck(deck.id, removal));
-    if (removed) done();
-    return Boolean(removed);
-  };
+export function DeleteDeckButton(props: DeleteDeckProps): React.JSX.Element | null {
+  const { deck } = props;
+  const others = props.decks.filter((other) => other.id !== deck.id);
+  const { action, remove } = useDeckRemoval(props, others);
   // A tenant always keeps one deck, so the last one offers no delete at all.
   if (!others.length) return null;
   if (!deck.card_count)
@@ -45,6 +38,23 @@ export function DeleteDeckButton({
       />
     );
   return <DeckRemovalDialog deck={deck} others={others} action={action} remove={remove} />;
+}
+
+// The control that had focus leaves with the deck, so the outcome is announced instead of shown beside it.
+function useDeckRemoval(
+  { deck, client, done }: DeleteDeckProps,
+  others: Deck[],
+): { action: AsyncAction; remove: RemoveDeck } {
+  const action = useAsyncAction();
+  const announce = useAnnounce();
+  const remove = async (removal: DeckRemoval): Promise<boolean> => {
+    const removed = await action.run(() => client.deleteDeck(deck.id, removal));
+    if (!removed) return false;
+    done();
+    announce(describeDeckRemoval(deck, others, removal));
+    return true;
+  };
+  return { action, remove };
 }
 
 function DeleteDeckTrigger({
@@ -131,4 +141,11 @@ function DeckRemovalDialog({
 function describeDeckCards(deck: Deck): string {
   const held = deck.card_count === 1 ? 'card lives' : 'cards live';
   return `${deck.card_count} ${held} in this deck. Choose what happens to them.`;
+}
+
+function describeDeckRemoval(deck: Deck, others: Deck[], removal: DeckRemoval): string {
+  if (!deck.card_count) return `Deck “${deck.name}” deleted`;
+  if (removal.cards === 'delete') return `Deck “${deck.name}” and its cards deleted`;
+  const target = others.find((other) => other.id === removal.target);
+  return `Deck “${deck.name}” deleted. Its cards moved to “${target?.name ?? 'another deck'}”`;
 }

@@ -26,6 +26,7 @@ The web and MCP apps share HTTP contracts. Only the API accesses application dat
 | Login/session                | `apps/web/src/features/auth/`, `apps/web/src/lib/use-recall-session.ts`                                                      |
 | Card editor or library       | `apps/web/src/features/cards/`                                                                                               |
 | Study interactions           | `apps/web/src/features/study/`                                                                                               |
+| Outcome announcements, focus | `apps/web/src/components/status-announcer.tsx`, `apps/web/src/components/page-heading.tsx`                                   |
 | A feature's styles           | `apps/web/src/features/<feature>/<feature>.css`                                                                              |
 | Landing page, SEO metadata   | `apps/web/src/features/marketing/`, `apps/web/src/app/page.tsx`, `apps/web/src/app/robots.ts`, `apps/web/src/app/sitemap.ts` |
 | Agent discovery for AI       | `apps/web/src/app/llms.txt/`, `apps/web/src/app/.well-known/mcp/`, rewrites in `apps/web/next.config.ts`                     |

@@ -63,6 +63,8 @@ test('deleting the last card on a page returns to a valid page', async ({ page }
     await page.getByRole('button', { name: 'Delete permanently', exact: true }).click();
     await expect(page.getByText('Page 1 of 1', { exact: true })).toBeVisible();
     await expect(page.locator('.library-card')).toHaveCount(24);
+    await expect(page.getByRole('status').filter({ hasText: 'Card deleted' })).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeFocused();
   } finally {
     await account.cleanup();
   }
@@ -323,6 +325,10 @@ test('an empty deck is deleted straight from the library filter', async ({ page 
     await page.getByRole('option', { name: 'Scratch deck', exact: true }).click();
     await page.getByRole('button', { name: 'Delete deck Scratch deck', exact: true }).click();
     await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText('All decks');
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toBeFocused();
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Deck “Scratch deck” deleted' }),
+    ).toHaveCount(1);
     const decks = (await account.api.workspace()).decks.map((deck) => deck.name);
     expect(decks).not.toContain('Scratch deck');
   } finally {
@@ -348,6 +354,8 @@ test('deleting a deck can move its cards to another deck', async ({ page }) => {
     await expect(page.getByRole('alertdialog')).toContainText('1 card lives in this deck');
     await page.getByRole('button', { name: 'Delete deck', exact: true }).click();
     await expect(page.getByRole('alertdialog')).toHaveCount(0);
+    await expect(page.getByRole('status').filter({ hasText: 'Its cards moved to' })).toHaveCount(1);
+    await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toBeFocused();
     const workspace = await account.api.workspace();
     expect(workspace.decks.map((item) => item.name)).not.toContain('Temporary deck');
     const cards = await account.api.cards();

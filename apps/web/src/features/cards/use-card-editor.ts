@@ -1,6 +1,7 @@
 import { useRef, useState, type FormEvent, type RefObject } from 'react';
 import type { RecallClient } from '@recall/client';
 import type { CardDraft, Deck, Flashcard } from '@recall/contracts';
+import { useAnnounce } from '@/components/status-announcer';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 import { buildCardDraft, hasDraftChanges } from './card-draft';
 import { chooseInitialDeck } from './initial-deck';
@@ -23,6 +24,11 @@ interface InlineDeckState {
   deckAction: AsyncAction;
   createInlineDeck: (name: string) => Promise<void>;
 }
+interface EditorOutcome {
+  save: (draft: CardDraft) => Promise<void>;
+  remove: () => Promise<void>;
+  removed: RefObject<boolean>;
+}
 export interface CardEditorState extends InlineDeckState {
   deck: string;
   setDeck: (id: string) => void;
@@ -30,24 +36,51 @@ export interface CardEditorState extends InlineDeckState {
   form: RefObject<HTMLFormElement | null>;
   hasChanges: () => boolean;
   submit: (event: FormEvent<HTMLFormElement>) => void;
+  remove: () => Promise<void>;
+  removed: RefObject<boolean>;
 }
 
 /** Coordinate one save, inline deck creation and change detection. Example: useCardEditor(props). */
 export function useCardEditor(props: CardEditorProps): CardEditorState {
   const [deck, setDeck] = useState(() => chooseInitialDeck(props));
   const inline = useInlineDeck(props, setDeck);
+  const outcome = useEditorOutcome(props);
   const action = useAsyncAction();
   const form = useRef<HTMLFormElement>(null);
   const submit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const draft = buildCardDraft(new FormData(event.currentTarget), deck);
-    void action.run(() => saveEditedCard(props, draft));
+    void action.run(() => outcome.save(draft));
   };
   const hasChanges = (): boolean => {
     if (!form.current) return false;
     return hasDraftChanges(buildCardDraft(new FormData(form.current), deck), props.card);
   };
-  return { ...inline, deck, setDeck, action, form, hasChanges, submit };
+  const { remove, removed } = outcome;
+  return { ...inline, deck, setDeck, action, form, hasChanges, submit, remove, removed };
+}
+
+// Saving or deleting closes the editor, away from where the person was working, so each says what happened.
+function useEditorOutcome(props: CardEditorProps): EditorOutcome {
+  const announce = useAnnounce();
+  const removed = useRef(false);
+  const finish = (message: string): void => {
+    props.saved();
+    props.close();
+    announce(message);
+  };
+  const save = async (draft: CardDraft): Promise<void> => {
+    if (props.card) await props.client.updateCard(props.card.id, draft);
+    else await createCard(props.client, draft);
+    finish(props.card ? 'Card saved' : 'Card created');
+  };
+  const remove = async (): Promise<void> => {
+    if (!props.card) return;
+    await props.client.deleteCard(props.card.id);
+    removed.current = true;
+    finish('Card deleted');
+  };
+  return { save, remove, removed };
 }
 
 function useInlineDeck(props: CardEditorProps, select: (id: string) => void): InlineDeckState {
@@ -79,13 +112,7 @@ async function createDeckOnce(
   return created;
 }
 
-async function saveEditedCard(props: CardEditorProps, draft: CardDraft): Promise<void> {
-  if (props.card) {
-    await props.client.updateCard(props.card.id, draft);
-  } else {
-    await props.client.createCard(draft);
-    rememberLastDeck(draft.deck_id);
-  }
-  props.saved();
-  props.close();
+async function createCard(client: RecallClient, draft: CardDraft): Promise<void> {
+  await client.createCard(draft);
+  rememberLastDeck(draft.deck_id);
 }

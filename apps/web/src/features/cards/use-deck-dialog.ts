@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import type { RecallClient } from '@recall/client';
+import { useAnnounce } from '@/components/status-announcer';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
 import { explainDeckFailure } from './deck-errors';
 
@@ -14,13 +15,17 @@ export interface DeckDialogState {
 export function useDeckDialog(client: RecallClient, done: () => void): DeckDialogState {
   const [open, setOpen] = useState(false);
   const action = useAsyncAction();
-  const complete = (): void => {
-    done();
-    setOpen(false);
-  };
+  const announce = useAnnounce();
   const submit = (event: FormEvent<HTMLFormElement>): void => {
     const name = readDeckName(event);
-    void saveDeck(client, name, action, complete);
+    void action
+      .run(() => client.createDeck(name).catch(explainDeckFailure))
+      .then((saved) => {
+        if (!saved) return;
+        done();
+        setOpen(false);
+        announce(`Deck “${name}” created`);
+      });
   };
   return { open, setOpen, action, submit };
 }
@@ -29,14 +34,4 @@ function readDeckName(event: FormEvent<HTMLFormElement>): string {
   event.preventDefault();
   const fields = new FormData(event.currentTarget);
   return String(fields.get('name') ?? '').trim();
-}
-
-async function saveDeck(
-  client: RecallClient,
-  name: string,
-  action: AsyncAction,
-  complete: () => void,
-): Promise<void> {
-  const saved = await action.run(() => client.createDeck(name).catch(explainDeckFailure));
-  if (saved) complete();
 }

@@ -114,6 +114,10 @@
 .page-header > button {
   flex-shrink: 0;
 }
+/* Focus lands on the title from code when the focused control is gone; the title is not a control. */
+.page-header h1:focus {
+  outline: none;
+}
 .mobile-top {
   display: none;
 }
