@@ -92,7 +92,8 @@
 .card-body ul,
 .card-body ol {
   margin: 0 0 0.75rem;
-  padding-left: 1.35rem;
+  /* Logical, so a right-to-left list indents on its right. */
+  padding-inline-start: 1.35rem;
 }
 .card-body li {
   margin-bottom: 0.3rem;

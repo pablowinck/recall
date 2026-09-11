@@ -381,6 +381,11 @@ test('right-to-left card text reads right to left beside a translation', async (
     await expect(paragraphs).toHaveCount(2);
     expect(await readDirection(paragraphs.nth(0))).toBe('ltr');
     expect(await readDirection(paragraphs.nth(1))).toBe('rtl');
+    const questionEnd = await question.evaluate((node) => node.getBoundingClientRect().right);
+    const answerEnd = await paragraphs
+      .nth(1)
+      .evaluate((node) => node.getBoundingClientRect().right);
+    expect(Math.abs(questionEnd - answerEnd)).toBeLessThanOrEqual(2);
   } finally {
     await account.cleanup();
   }

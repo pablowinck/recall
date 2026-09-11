@@ -1001,3 +1001,11 @@ The wave 4 design review looked at the bar that holds Reveal answer and the rati
 The bar is now plain at rest. While the card runs beneath it, the study view is marked and the bar takes the card's surface at 72%, the blur and the hairline, like a toolbar over scrolling content.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile; the keyboard journey checks that a short card's bar draws no hairline, and the long card journey checks that the pinned bar shows its material.
+
+## 2026-09-11 — UX loop 104: right-to-left answers reach their reading edge
+
+The wave 4 design review studied an Arabic card after loop 79. The question ended at the card's right edge, at x 1082, but the answer paragraph stopped at 896 and a list item at 856. The answer's 28em measure sat on its whole block, anchored to the left, and card lists indented with a physical left padding.
+
+The measure now sits on each answer paragraph and list, and a right-to-left one moves to its own reading edge. Card lists indent on the side they are read from. A first version used `:dir(rtl)`, which the CSS build rewrites as right-to-left `:lang()` selectors that never match card text marked only with `dir="auto"`; an end margin, which follows each block's own direction, now places answers and questions alike, and AGENTS.md records the rewrite.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the right-to-left journey now checks that the Arabic answer paragraph ends where the question ends.
