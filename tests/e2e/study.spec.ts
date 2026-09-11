@@ -408,3 +408,26 @@ test('a deck review survives a reload, and signing in again starts on Today', as
     await account.cleanup();
   }
 });
+
+test('the study screen keeps its edges in forced colours', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'High contrast question',
+      back: 'High contrast answer',
+      tags: [],
+    });
+    await page.emulateMedia({ forcedColors: 'active' });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.locator('.review-card')).toHaveCSS('border-top-style', 'solid');
+    await expect(page.locator('.reveal-action')).toHaveCSS('border-top-style', 'solid');
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await expect(page.locator('.rating-button').first()).toHaveCSS('border-top-style', 'solid');
+    await expect(page.locator('.rt-ProgressIndicator')).toHaveCSS('forced-color-adjust', 'none');
+  } finally {
+    await account.cleanup();
+  }
+});

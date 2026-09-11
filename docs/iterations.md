@@ -865,3 +865,11 @@ The wave 3 Nielsen review pasted a long text into the editor. The Front and Back
 The fields no longer cut text. Past 90% of a side's limit a count appears under it, such as "7,412 / 8,000", in red once over. Saving an over-long card keeps the editor open and says, for example, "The back is 412 characters over its 8,000-character limit. Shorten it to save."
 
 Validation: format, typecheck, 142 unit tests and build pass, including the new messages and a check that the editor's limits match the shared card schema. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that types past the front's limit, reads the count and the message, and confirms nothing was saved.
+
+## 2026-09-11 — UX loop 87: the study screen keeps its edges in forced colours
+
+The wave 3 frontend review turned on forced colours, as Windows high contrast themes do. The browser drops shadows and backgrounds there, and those were the only edges of the review card, the four rating buttons and the bar beneath them, so the ratings read as floating words and the progress bar disappeared.
+
+In forced colours the card, the ratings and the study bar now get borders the system paints in the theme's colours, and the progress bar fills with the theme's highlight colour. Nothing changes in the normal themes.
+
+Validation: format, typecheck, 142 unit tests and build pass. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies in forced colours and checks the borders and the progress bar.

@@ -377,3 +377,19 @@
     opacity: 1;
   }
 }
+/* Forced colours drop shadows and backgrounds, the only edges of the card, the ratings and the study bar. The system
+   paints transparent borders in its own colours, so they become those edges, and the progress bar keeps its fill. */
+@media (forced-colors: active) {
+  .review-card,
+  .rating-button {
+    border: 1px solid transparent;
+  }
+  .reveal-action,
+  .rating-section {
+    border-top: 1px solid transparent;
+  }
+  .rt-ProgressIndicator {
+    forced-color-adjust: none;
+    background-color: Highlight;
+  }
+}
