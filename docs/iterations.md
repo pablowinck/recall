@@ -1105,3 +1105,9 @@ The wave 4 design review collected four finishing details. The sidebar's theme, 
 Sidebar tools now use the secondary ink. Connections sit on the same grouped surface as the decks, with an edge in forced colours. Tablet tabs gather in the middle with even gaps, and dark mode sets Hard in orange at 7.99:1.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the connection journey now checks that the rows sit in the grouped list.
+
+## 2026-09-11 — Delivery: UX loops 67 to 101 in production
+
+The Vercel deployment limit reset, and the 42 validated commits for loops 67 to 101 went out in one push to `main`, at e4917cb. Vercel reported all three production deployments ready: MCP at 07:26:12 UTC (recall-mc3hmat5l), web at 07:26:28 (recall-rj5wq4enh) and API at 07:26:47 (recall-92uhh8ycu). GitHub CI run 34574337859 passed.
+
+Production checks: the web app, API and MCP health endpoints answered 200, and the ten chunks production serves for /app contain strings introduced by loops 80, 90, 94, 95, 97, 98 and 99.
