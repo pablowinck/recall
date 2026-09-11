@@ -96,3 +96,7 @@
     align-items: stretch;
   }
 }
+/* Focus lands on this heading after a revoke; it is not a control, so it draws no ring. */
+.tokens-section h2:focus {
+  outline: none;
+}

@@ -825,3 +825,11 @@ The wave 3 Nielsen review used the library with a keyboard and a screen reader. 
 The result count is now a polite status, so a search says how many cards it found. Clear filters, in the toolbar or in the empty state, gives focus back to the search field. When Next or Previous reaches the end of the pages, the other button takes focus.
 
 Validation: format, typecheck, 138 unit tests and build pass. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, and the paging and filter journeys now check where focus lands and that the count is a status.
+
+## 2026-09-11 — UX loop 82: Connections keeps focus after a token closes or a connection is revoked
+
+The wave 3 Nielsen review found two dead ends for keyboard and screen reader users on Connections. "I saved it" removed the token panel along with the focused button, and revoking a connection removed its row, so focus fell to the top of the page each time. The revoke itself was never announced.
+
+Closing the token panel now moves focus to the page title. Revoking moves focus to "Your connections" and announces "Connection Cursor revoked". The shared confirmation dialog takes an optional place to send focus after a confirmation, for triggers that leave with what they removed.
+
+Validation: format, typecheck, 138 unit tests and build pass. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, and the connection journeys now check focus after closing the token panel both ways and after a revoke, and the revoke announcement.

@@ -25,11 +25,18 @@ test('creates and revokes a personal MCP connection through the web', async ({ p
     await page.getByRole('button', { name: 'I saved it', exact: true }).click();
     await page.getByRole('button', { name: 'Close without copying', exact: true }).click();
     await expect(tokenField).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Connections', exact: true })).toBeFocused();
     await page.getByRole('button', { name: /^Revoke connection Cursor, / }).click();
     await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();
     await expect(
       page.getByText('You have not created a connection yet.', { exact: true }),
     ).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Your connections', exact: true }),
+    ).toBeFocused();
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Connection Cursor revoked' }),
+    ).toHaveCount(1);
     expect(
       (
         await fetch('http://localhost:3211/v1/workspace', {
@@ -80,6 +87,7 @@ test('a new token waits on Connections while you visit another view', async ({ p
     await page.getByRole('button', { name: 'I saved it', exact: true }).click();
     await expect(tokenField).toHaveCount(0);
     await expect(page.getByRole('alertdialog')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Connections', exact: true })).toBeFocused();
   } finally {
     await account.cleanup();
   }

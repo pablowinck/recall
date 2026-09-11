@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, TextField } from '@radix-ui/themes';
 import { Copy } from 'lucide-react';
 import { ConfirmAction } from '@/components/confirm-action';
+import { focusPageHeading } from '@/components/page-heading';
 import { useAnnounce } from '@/components/status-announcer';
 import { MCP_URL } from '@/lib/site';
 import { findConnectionClient } from './connection-clients';
@@ -101,13 +102,25 @@ function SecretActions(props: {
   );
 }
 
-// Closing the panel destroys the only view of the secret, so confirm unless it was copied.
+// Closing the panel destroys the only view of the secret, so confirm unless it was copied. The panel leaves with
+// the focused button, so focus moves to the page title.
 function SavedButton({ copied, clear }: { copied: boolean; clear: () => void }): React.JSX.Element {
+  const close = (): void => {
+    clear();
+    focusPageHeading();
+  };
   const button = (
-    <Button variant="soft" color="gray" onClick={copied ? clear : undefined}>
+    <Button variant="soft" color="gray" onClick={copied ? close : undefined}>
       I saved it
     </Button>
   );
   if (copied) return button;
-  return <ConfirmAction {...closeUncopiedCopy} trigger={button} onConfirm={async () => clear()} />;
+  return (
+    <ConfirmAction
+      {...closeUncopiedCopy}
+      trigger={button}
+      onConfirm={async () => clear()}
+      focusAfterConfirm={focusPageHeading}
+    />
+  );
 }

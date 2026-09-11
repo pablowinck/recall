@@ -1,8 +1,10 @@
+import { useRef } from 'react';
 import { Button, Spinner } from '@radix-ui/themes';
 import { Trash2 } from 'lucide-react';
 import type { AccessToken } from '@recall/contracts';
 import { ConfirmAction } from '@/components/confirm-action';
 import { ErrorNotice } from '@/components/feedback';
+import { useAnnounce } from '@/components/status-announcer';
 import type { ConnectionsModel } from './use-connections';
 
 const revokeCopy = {
@@ -15,12 +17,26 @@ const revokeCopy = {
 
 /** List metadata only, never previously issued secrets. Example: <TokenList model={model} />. */
 export function TokenList({ model }: { model: ConnectionsModel }): React.JSX.Element {
+  const heading = useRef<HTMLHeadingElement>(null);
+  const announce = useAnnounce();
+  const revoke = async (token: AccessToken): Promise<void> => {
+    await model.revoke(token.id);
+    announce(`Connection ${token.name} revoked`);
+  };
   return (
     <section className="tokens-section">
-      <h2>Your connections</h2>
+      {/* A revoked row leaves with its button, so focus comes here instead of falling to the page. */}
+      <h2 ref={heading} tabIndex={-1}>
+        Your connections
+      </h2>
       <TokenListStatus model={model} />
       {model.tokens.map((token) => (
-        <TokenRow key={token.id} token={token} revoke={() => model.revoke(token.id)} />
+        <TokenRow
+          key={token.id}
+          token={token}
+          revoke={() => revoke(token)}
+          focusAfterRevoke={() => heading.current?.focus()}
+        />
       ))}
     </section>
   );
@@ -44,9 +60,11 @@ function TokenListStatus({ model }: { model: ConnectionsModel }): React.JSX.Elem
 function TokenRow({
   token,
   revoke,
+  focusAfterRevoke,
 }: {
   token: AccessToken;
   revoke: () => Promise<void>;
+  focusAfterRevoke: () => void;
 }): React.JSX.Element {
   // Connections can share an assistant's name, so the token prefix tells their revoke buttons apart.
   const trigger = (
@@ -61,7 +79,12 @@ function TokenRow({
   return (
     <div className="token-row">
       <TokenMetadata token={token} />
-      <ConfirmAction {...revokeCopy} trigger={trigger} onConfirm={revoke} />
+      <ConfirmAction
+        {...revokeCopy}
+        trigger={trigger}
+        onConfirm={revoke}
+        focusAfterConfirm={focusAfterRevoke}
+      />
     </div>
   );
 }
