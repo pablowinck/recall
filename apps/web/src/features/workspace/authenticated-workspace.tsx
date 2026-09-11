@@ -1,4 +1,5 @@
 import { StatusAnnouncer } from '@/components/status-announcer';
+import { IssuedConnectionProvider } from '../connections/issued-connection';
 import type { NavigationProps, WorkspaceView } from './navigation-types';
 import type { RecallAccount } from './workspace-model';
 import { useWorkspaceModel } from './use-workspace-model';
@@ -30,9 +31,11 @@ export function AuthenticatedWorkspace({
   };
   return (
     <StatusAnnouncer>
-      <WorkspaceShell navigation={navigation} studying={model.view === 'study'}>
-        <WorkspaceContent model={model} />
-      </WorkspaceShell>
+      <IssuedConnectionProvider>
+        <WorkspaceShell navigation={navigation} studying={model.view === 'study'}>
+          <WorkspaceContent model={model} />
+        </WorkspaceShell>
+      </IssuedConnectionProvider>
     </StatusAnnouncer>
   );
 }

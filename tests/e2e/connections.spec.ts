@@ -61,3 +61,28 @@ test('revoking an older connection keeps a new token on screen', async ({ page }
     await account.cleanup();
   }
 });
+
+test('a new token waits on Connections while you visit another view', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Assistant' }).click();
+    await page.getByRole('option', { name: 'Cursor', exact: true }).click();
+    await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
+    const tokenField = page.getByRole('textbox', { name: 'New personal token' });
+    await expect(tokenField).toHaveValue(/^recall_/);
+    const token = await tokenField.inputValue();
+    await page.locator('.new-secret').dispatchEvent('copy');
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await expect(tokenField).toHaveValue(token);
+    await expect(page.getByRole('combobox', { name: 'Assistant' })).toContainText('Cursor');
+    await page.getByRole('button', { name: 'I saved it', exact: true }).click();
+    await expect(tokenField).toHaveCount(0);
+    await expect(page.getByRole('alertdialog')).toHaveCount(0);
+  } finally {
+    await account.cleanup();
+  }
+});

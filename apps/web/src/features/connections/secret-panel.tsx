@@ -2,16 +2,15 @@ import { useState } from 'react';
 import { Button, TextField } from '@radix-ui/themes';
 import { Copy } from 'lucide-react';
 import { ConfirmAction } from '@/components/confirm-action';
+import { MCP_URL } from '@/lib/site';
 import { findConnectionClient } from './connection-clients';
 import type { IssuedConnection } from './use-connections';
 
 type CopyTarget = 'setup' | 'token';
 interface ClipboardState {
   copied: CopyTarget | '';
-  copiedOnce: boolean;
   error: string;
   copy: (target: CopyTarget, text: string) => void;
-  markCopied: () => void;
 }
 
 const closeUncopiedCopy = {
@@ -22,24 +21,22 @@ const closeUncopiedCopy = {
   cancelLabel: 'Keep token',
 };
 
-/** Show a new token once, with setup already filled in for the chosen assistant. Example: <SecretPanel secret={secret} clear={clear} />. */
+/** Show a new token once, with setup already filled in for the chosen assistant. Example: <SecretPanel secret={secret} clear={clear} markCopied={markCopied} />. */
 export function SecretPanel({
   secret,
   clear,
+  markCopied,
 }: {
   secret: IssuedConnection;
   clear: () => void;
+  markCopied: () => void;
 }): React.JSX.Element {
   const assistant = findConnectionClient(secret.clientId);
-  const setup = assistant.setup(process.env.NEXT_PUBLIC_MCP_URL ?? '', secret.token);
-  const clipboard = useClipboard();
+  const setup = assistant.setup(MCP_URL, secret.token);
+  const clipboard = useClipboard(markCopied);
   return (
     // Manual copies (select + Cmd/Ctrl+C) count too, so people who copy by hand are not asked again.
-    <section
-      className="new-secret"
-      aria-labelledby="new-secret-title"
-      onCopy={clipboard.markCopied}
-    >
+    <section className="new-secret" aria-labelledby="new-secret-title" onCopy={markCopied}>
       <h2 id="new-secret-title">Connect {assistant.name}</h2>
       <p>{assistant.where} The token is shown only once; anyone with it can use your cards.</p>
       <pre className="setup-snippet">{setup}</pre>
@@ -49,40 +46,46 @@ export function SecretPanel({
         readOnly
         value={secret.token}
       />
-      <SecretActions setup={setup} token={secret.token} clear={clear} clipboard={clipboard} />
+      <SecretActions
+        setup={setup}
+        token={secret.token}
+        copiedOnce={secret.copied}
+        clear={clear}
+        clipboard={clipboard}
+      />
       <p role="status">{clipboard.error}</p>
     </section>
   );
 }
 
-function useClipboard(): ClipboardState {
+function useClipboard(markCopied: () => void): ClipboardState {
   const [copied, setCopied] = useState<CopyTarget | ''>('');
-  const [copiedOnce, setCopiedOnce] = useState(false);
   const [error, setError] = useState('');
   const copy = (target: CopyTarget, text: string): void => {
     navigator.clipboard.writeText(text).then(
       () => {
         setError('');
-        setCopiedOnce(true);
+        markCopied();
         setCopied(target);
         setTimeout(() => setCopied(''), 2500);
       },
       () => setError('Select and copy the text manually.'),
     );
   };
-  return { copied, copiedOnce, error, copy, markCopied: () => setCopiedOnce(true) };
+  return { copied, error, copy };
 }
 
 function SecretActions(props: {
   setup: string;
   token: string;
+  copiedOnce: boolean;
   clear: () => void;
   clipboard: ClipboardState;
 }): React.JSX.Element {
   const { copied, copy } = props.clipboard;
   return (
     <div className="dialog-actions">
-      <SavedButton copied={props.clipboard.copiedOnce} clear={props.clear} />
+      <SavedButton copied={props.copiedOnce} clear={props.clear} />
       <Button variant="soft" onClick={() => copy('token', props.token)}>
         {copied === 'token' ? 'Copied' : 'Copy token'}
       </Button>

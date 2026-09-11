@@ -1,10 +1,11 @@
 import type { ConnectionClientId } from './connection-clients';
 
-/** A token shown once, with the connection it belongs to and the assistant it was created for. */
+/** A token shown once, with its connection, the assistant it was created for and whether it was copied. */
 export interface IssuedConnection {
   id: string;
   token: string;
   clientId: ConnectionClientId;
+  copied: boolean;
 }
 
 /**
@@ -16,4 +17,10 @@ export function secretAfterRevoke(
   revokedId: string,
 ): IssuedConnection | null {
   return secret?.id === revokedId ? null : secret;
+}
+
+/** Remember that the token was copied, so closing it later asks nothing. Example: markSecretCopied(secret)?.copied === true. */
+export function markSecretCopied(secret: IssuedConnection | null): IssuedConnection | null {
+  if (!secret || secret.copied) return secret;
+  return { ...secret, copied: true };
 }

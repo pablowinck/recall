@@ -497,3 +497,11 @@ The usability review found that creating, saving or deleting a card or a deck ga
 The workspace now has one polite status region. It says "Card created", "Card saved" and "Card deleted", names a deck that was created or deleted, and says whether a deleted deck's cards moved or went with it. Each message lands a moment after it is sent, because a dialog that just closed still hides the page from assistive technology, and emptying the region first lets a repeated message speak again. After a card is deleted, focus moves to the view's title. After a deck is deleted, focus returns to the deck filter, which now shows all decks. When a batch ends, the "Nicely done" heading takes focus, so a screen reader reads the result. These titles show no focus ring, because they are not controls.
 
 Validation: format, typecheck, 119 unit tests and build pass. All 155 browser, API and MCP journeys pass on desktop, tablet and mobile, with new checks for each announcement and for where focus lands after deleting a card or a deck and at the end of a batch. The card journeys pass again after the focus style for titles was added.
+
+## 2026-09-10 — UX loop 41: a new connection token survives a visit to another view
+
+The token Recall shows once after a connection is created lived inside the Connections view. Opening another view and coming back destroyed the only copy, so the person had to revoke that connection and create another.
+
+The new token now stays in the signed-in workspace, in memory only, until the person closes it or revokes that connection. Signing out or switching accounts still drops it, because the workspace is keyed by account. So that the panel reads the same after a return, it remembers whether the token or the setup was copied, including a copy made by hand, and the assistant picker names the assistant the token was created for. The setup reads the MCP address from the same constant as the server card.
+
+Validation: format, typecheck, 121 unit tests and build pass, including two new tests for remembering a copy. All 161 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that leaves Connections for the library and comes back to the same token.

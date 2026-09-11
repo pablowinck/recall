@@ -18,7 +18,9 @@ export function ConnectionsView({ client }: { client: RecallClient }): React.JSX
       />
       <ConnectionIntro model={model} />
       {model.actionError && <ErrorNotice message={model.actionError} />}
-      {model.secret && <SecretPanel secret={model.secret} clear={model.clear} />}
+      {model.secret && (
+        <SecretPanel secret={model.secret} clear={model.clear} markCopied={model.markCopied} />
+      )}
       <TokenList model={model} />
     </div>
   );
