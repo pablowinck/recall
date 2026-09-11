@@ -1247,3 +1247,11 @@ The wave 5 Nielsen review opened a card for editing with the keyboard and a scre
 Opening a card for editing now puts the cursor at the end of its question when there is a mouse or keyboard. On a touch screen the editor itself takes focus instead, so the on-screen keyboard does not cover the card before the person chooses a field.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens a card for editing and checks where focus and the cursor land.
+
+## 2026-09-11 — UX loop 134: library search takes every character as written, and ß as ss
+
+The wave 5 reviews searched the library with characters the search's folding did not expect. The Nielsen review found that "strasse" did not find "Straße", since ß has no accent to remove. The frontend review found that the database read % and \ in a search as LIKE pattern characters: "%" returned every card, "50%" also matched "500 people", and a card containing C:\Users could not be found.
+
+Card text and search words now both fold ß to ss, and each word must appear in the folded card exactly as written, which the database checks with strpos() instead of a LIKE pattern.
+
+Validation: format, typecheck, 166 unit tests and build pass, including search word tests for ß, % and backslashes. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that searches for "strasse", "50%" and "c:\users" and finds exactly one card each time.

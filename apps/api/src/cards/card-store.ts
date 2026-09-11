@@ -13,9 +13,10 @@ export interface CardSearch {
 // Search ignores case, accents and Markdown markers, reads tags as well as both sides, and needs every word somewhere
 // on the card, so "capital portugal" finds "What is the capital of Portugal?". PostgreSQL's built-in normalize()
 // splits accents off their letters, so no extension or migration is needed. Each card is folded once per query, and
-// not at all for an empty search; the words arrive folded the same way from searchWords().
-const FOLDED_CARD = `cross join lateral (select case when cardinality($1::text[]) = 0 then '' else lower(regexp_replace(normalize(regexp_replace(c.front || ' ' || c.back || ' ' || array_to_string(c.tags, ' '), '[*_\`]', '', 'g'), NFD), '[\\u0300-\\u036f]', '', 'g')) end as text) as folded`;
-const CARD_FILTER = `(select coalesce(bool_and(folded.text like '%' || word || '%'), true) from unnest($1::text[]) as word) and ($2::uuid is null or c.deck_id = $2)`;
+// not at all for an empty search; the words arrive folded the same way from searchWords(). ß has no accent to split
+// off, so it folds to ss, and strpos() finds each word as written, where LIKE read % and \ in a search as patterns.
+const FOLDED_CARD = `cross join lateral (select case when cardinality($1::text[]) = 0 then '' else replace(lower(regexp_replace(normalize(regexp_replace(c.front || ' ' || c.back || ' ' || array_to_string(c.tags, ' '), '[*_\`]', '', 'g'), NFD), '[\\u0300-\\u036f]', '', 'g')), 'ß', 'ss') end as text) as folded`;
+const CARD_FILTER = `(select coalesce(bool_and(strpos(folded.text, word) > 0), true) from unnest($1::text[]) as word) and ($2::uuid is null or c.deck_id = $2)`;
 
 /** List paginated content under row-level security. Example: listCards(connection, query). */
 export async function listCards(connection: PoolClient, query: CardSearch): Promise<CardPage> {

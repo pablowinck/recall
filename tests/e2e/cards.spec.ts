@@ -1000,3 +1000,32 @@ test('editing a card starts in its question, not on New deck', async ({ page }, 
     await account.cleanup();
   }
 });
+
+test('library search takes every character as written, and ß as ss', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.importCards([
+      { deck_id: deck.id, front: 'Wo ist die Straße?', back: 'Dort drüben', tags: [] },
+      { deck_id: deck.id, front: 'A 50% discount', back: 'Half price', tags: [] },
+      { deck_id: deck.id, front: 'About 500 people', back: 'A crowd', tags: [] },
+      { deck_id: deck.id, front: 'Where is C:\\Users?', back: 'The home folders', tags: [] },
+    ]);
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const search = page.getByRole('textbox', { name: 'Search cards' });
+    const cards = page.locator('.library-card');
+    await search.fill('strasse');
+    await expect(page.getByRole('heading', { name: 'Wo ist die Straße?' })).toBeVisible();
+    await expect(cards).toHaveCount(1);
+    // A LIKE pattern read % as "anything", so "50%" also found "500 people".
+    await search.fill('50%');
+    await expect(page.getByRole('heading', { name: 'A 50% discount' })).toBeVisible();
+    await expect(cards).toHaveCount(1);
+    await search.fill('c:\\users');
+    await expect(page.getByRole('heading', { name: 'Where is C:\\Users?' })).toBeVisible();
+    await expect(cards).toHaveCount(1);
+  } finally {
+    await account.cleanup();
+  }
+});
