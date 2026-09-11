@@ -545,3 +545,11 @@ A new account's Today showed the invitation to write a first card, followed by "
 Today now leaves the statistics out until there is something to count: a card in the library, a review today or a streak. The decks keep the gap below the invitation that the statistics would have left.
 
 Validation: format, typecheck, 122 unit tests and build pass, including a new test for when a workspace counts as a first run. All 169 browser, API and MCP journeys pass, and the main journey now checks that a new account sees no statistics until its first card exists. Captures of a new account's Today at desktop and phone sizes were reviewed.
+
+## 2026-09-10 — UX loop 47: screen readers hear each change once and can tell connections apart
+
+The frontend review listed three announcement problems. Revealing an answer moved focus to it and also filled a live region, so a screen reader read the answer twice. Copying a token or the setup only changed the button's own label to "Copied", which is not reliably read aloud. Two connections made for the same assistant had revoke buttons with the same name, "Revoke connection Cursor".
+
+The answer no longer has a live region, so moving focus to it reads it once. A copy now says "Setup copied" or "Token copied" through the workspace's status region. Each revoke button's name ends with its token prefix, which the row already shows.
+
+Validation: format, typecheck, 122 unit tests and build pass. All 169 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that copies the setup and hears it announced.

@@ -95,8 +95,9 @@ function ReviewAnswer({
   answer: string;
   focusRef: RefObject<HTMLDivElement | null>;
 }): React.JSX.Element {
+  // Revealing moves focus here, which reads the answer; a live region as well read it twice.
   return (
-    <div className="review-answer" aria-live="polite" ref={focusRef} tabIndex={-1}>
+    <div className="review-answer" ref={focusRef} tabIndex={-1}>
       <span className="eyebrow">Answer</span>
       <CardBody text={answer} />
     </div>

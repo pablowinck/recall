@@ -25,7 +25,7 @@ test('creates and revokes a personal MCP connection through the web', async ({ p
     await page.getByRole('button', { name: 'I saved it', exact: true }).click();
     await page.getByRole('button', { name: 'Close without copying', exact: true }).click();
     await expect(tokenField).toHaveCount(0);
-    await page.getByRole('button', { name: 'Revoke connection Cursor', exact: true }).click();
+    await page.getByRole('button', { name: /^Revoke connection Cursor, / }).click();
     await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();
     await expect(
       page.getByText('You have not created a connection yet.', { exact: true }),
@@ -51,11 +51,9 @@ test('revoking an older connection keeps a new token on screen', async ({ page }
     await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
     const tokenField = page.getByRole('textbox', { name: 'New personal token' });
     await expect(tokenField).toHaveValue(/^recall_/);
-    await page.getByRole('button', { name: 'Revoke connection Cursor', exact: true }).click();
+    await page.getByRole('button', { name: /^Revoke connection Cursor, / }).click();
     await page.getByRole('button', { name: 'Revoke connection', exact: true }).click();
-    await expect(
-      page.getByRole('button', { name: 'Revoke connection Cursor', exact: true }),
-    ).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /^Revoke connection Cursor, / })).toHaveCount(0);
     await expect(tokenField).toHaveValue(/^recall_/);
   } finally {
     await account.cleanup();
@@ -82,6 +80,23 @@ test('a new token waits on Connections while you visit another view', async ({ p
     await page.getByRole('button', { name: 'I saved it', exact: true }).click();
     await expect(tokenField).toHaveCount(0);
     await expect(page.getByRole('alertdialog')).toHaveCount(0);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('copying the setup is announced, because the button only changes its own label', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Connections', exact: true }).click();
+    await page.getByRole('button', { name: 'Create personal connection', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'New personal token' })).toHaveValue(/^recall_/);
+    await page.getByRole('button', { name: 'Copy setup', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Setup copied' })).toHaveCount(1);
   } finally {
     await account.cleanup();
   }

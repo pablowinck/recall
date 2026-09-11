@@ -48,8 +48,13 @@ function TokenRow({
   token: AccessToken;
   revoke: () => Promise<void>;
 }): React.JSX.Element {
+  // Connections can share an assistant's name, so the token prefix tells their revoke buttons apart.
   const trigger = (
-    <Button variant="ghost" color="gray" aria-label={`Revoke connection ${token.name}`}>
+    <Button
+      variant="ghost"
+      color="gray"
+      aria-label={`Revoke connection ${token.name}, ${token.prefix}…`}
+    >
       <Trash2 size={18} />
     </Button>
   );

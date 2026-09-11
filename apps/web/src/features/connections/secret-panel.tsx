@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, TextField } from '@radix-ui/themes';
 import { Copy } from 'lucide-react';
 import { ConfirmAction } from '@/components/confirm-action';
+import { useAnnounce } from '@/components/status-announcer';
 import { MCP_URL } from '@/lib/site';
 import { findConnectionClient } from './connection-clients';
 import type { IssuedConnection } from './use-connections';
@@ -61,12 +62,15 @@ export function SecretPanel({
 function useClipboard(markCopied: () => void): ClipboardState {
   const [copied, setCopied] = useState<CopyTarget | ''>('');
   const [error, setError] = useState('');
+  const announce = useAnnounce();
   const copy = (target: CopyTarget, text: string): void => {
     navigator.clipboard.writeText(text).then(
       () => {
         setError('');
         markCopied();
         setCopied(target);
+        // A button that changes its own label is not reliably read aloud, so the copy is announced.
+        announce(target === 'setup' ? 'Setup copied' : 'Token copied');
         setTimeout(() => setCopied(''), 2500);
       },
       () => setError('Select and copy the text manually.'),
