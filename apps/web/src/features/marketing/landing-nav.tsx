@@ -6,9 +6,10 @@ import { GitHubStars } from './github-stars';
 export function LandingNav({ stars }: { stars: number | null }): React.JSX.Element {
   return (
     <header className="landing-nav">
-      <Link className="landing-home" href="/">
+      {/* A plain anchor: next/link would prefetch the page this link is already on. */}
+      <a className="landing-home" href="/">
         <RecallBrand />
-      </Link>
+      </a>
       <div className="landing-nav-actions">
         <GitHubStars stars={stars} />
         <Link className="landing-signin" href="/app">

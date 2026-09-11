@@ -111,3 +111,12 @@ test('MCP clients find the server card on the site', async ({ request }) => {
   const proposed = await request.get('/.well-known/mcp/server-card.json');
   expect(proposed.headers()['content-type']).toContain('application/mcp-server-card+json');
 });
+
+test('the closing sign-in line sits centred under its button', async ({ page }) => {
+  await page.goto('/');
+  const section = await page.locator('.landing-close').boundingBox();
+  const line = await page.locator('.landing-close-signin').boundingBox();
+  expect(section && line).toBeTruthy();
+  const offset = section!.x + section!.width / 2 - (line!.x + line!.width / 2);
+  expect(Math.abs(offset)).toBeLessThan(2);
+});

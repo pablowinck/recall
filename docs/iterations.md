@@ -505,3 +505,11 @@ The token Recall shows once after a connection is created lived inside the Conne
 The new token now stays in the signed-in workspace, in memory only, until the person closes it or revokes that connection. Signing out or switching accounts still drops it, because the workspace is keyed by account. So that the panel reads the same after a return, it remembers whether the token or the setup was copied, including a copy made by hand, and the assistant picker names the assistant the token was created for. The setup reads the MCP address from the same constant as the server card.
 
 Validation: format, typecheck, 121 unit tests and build pass, including two new tests for remembering a copy. All 161 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that leaves Connections for the library and comes back to the same token.
+
+## 2026-09-10 — UX loop 42: landing page details from the design review
+
+The second design review measured the landing page in production. The closing "Already have an account? Sign in" line sat 257 px left of centre at 1440 px, because its margin cancelled the automatic margins that centre the paragraph. Screen readers heard "plus" at the end of every question. The brand link was 30 px tall and the closing Sign in link 19 px, and the brand link prefetched the page it was already on. In forced-colours mode, pills and cards lost their shadows and with them their edges.
+
+The closing line is centred again, and a journey measures it. The question rows keep their plus sign on screen but give it empty alternative text, and browsers without that syntax keep the plain sign. The brand link and the closing Sign in link are now 44 px tall without moving anything around them, and the brand link is a plain anchor. Pills and cards draw a transparent outline that forced-colours mode paints as their edge.
+
+Validation: format, typecheck, 121 unit tests and build pass. All 161 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check and the new centring check.

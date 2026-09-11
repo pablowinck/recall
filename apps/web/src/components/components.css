@@ -160,3 +160,10 @@
   color: var(--ink);
   font-weight: 500;
 }
+/* Forced colours drop the card's shadow; an outline the system paints becomes its edge. */
+@media (forced-colors: active) {
+  .sample-card {
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+  }
+}
