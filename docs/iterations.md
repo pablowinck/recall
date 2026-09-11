@@ -569,3 +569,11 @@ The frontend review found that the progress bar under the study header never ani
 The bar now eases its transform and stops animating when the system asks for reduced motion. Its value text matches the header, so a screen reader hears "Session progress, 3 of 26 reviewed".
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, and the main journey now checks the progress bar's value text.
+
+## 2026-09-10 — UX loop 50: questions read as one list and line up with the steps
+
+The design review found the questions section built from thirteen separate cards in a 780 px column that lined up with nothing on a wide screen, leaving a 304 px empty gutter, with focus rings spilling past each row. In the open-source section, the dark "Star on GitHub" button outweighed the page's primary button: about 14:1 against the background in light and 17:1 in dark, compared with 4.6:1 and 3.8:1 for the blue button.
+
+The questions now sit on one surface with hairlines between them, questions that wrap on a phone keep room above and below, and the focus ring stays inside each row. From 1024 px, the questions and the open-source section put their heading in the first column and their content under the second and third steps. The "Star on GitHub" button uses a soft fill with the page's ink, so the blue button stays the strongest call to action.
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check and a new check that the questions line up with the second step on wide screens. Captures at 1440 px and 390 px in both appearances were reviewed, and the landing journeys passed again after the rows gained that vertical padding.

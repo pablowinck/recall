@@ -130,3 +130,12 @@ test('the example card reads as a captioned figure with its front and back named
   await expect(card).toContainText('Front: I’d like');
   await expect(card).toContainText('Back: I’d = I would');
 });
+
+test('on wide screens the questions line up with the second step', async ({ page }) => {
+  await page.goto('/');
+  test.skip((page.viewportSize()?.width ?? 0) < 1024, 'the aligned columns start at 1024 px');
+  const step = await page.locator('.landing-steps li').nth(1).boundingBox();
+  const questions = await page.locator('.landing-questions').boundingBox();
+  expect(step && questions).toBeTruthy();
+  expect(Math.abs(step!.x - questions!.x)).toBeLessThan(2);
+});
