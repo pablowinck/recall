@@ -62,6 +62,8 @@ test('deleting the last card on a page returns to a valid page', async ({ page }
     await page.getByRole('button', { name: 'Library', exact: true }).click();
     await page.getByRole('button', { name: 'Next', exact: true }).click();
     await expect(page.locator('.library-card')).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Previous', exact: true })).toBeFocused();
+    await expect(page.locator('.result-label')).toHaveAttribute('role', 'status');
     await page.locator('.library-card').click();
     await page.getByRole('button', { name: 'Delete card', exact: true }).click();
     await expect(page.getByRole('alertdialog')).toBeVisible({ timeout: 2000 });
@@ -286,6 +288,7 @@ test('the library keeps its filter while you visit another view', async ({ page 
     );
     await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
     await expect(page.getByRole('textbox', { name: 'Search cards' })).toHaveValue('');
+    await expect(page.getByRole('textbox', { name: 'Search cards' })).toBeFocused();
     await expect(page.getByRole('combobox', { name: 'Filter by deck' })).toContainText('All decks');
   } finally {
     await account.cleanup();

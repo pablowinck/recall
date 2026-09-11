@@ -817,3 +817,11 @@ The wave 3 Nielsen review read the library as someone planning what to study. A 
 A scheduled card now says "Due later today", "Due tomorrow", "Due in 3 days" or "Due Oct 2", counted in calendar days. Extra tags show as "+2 more", the answer preview keeps its line breaks, and the edit hint appears when a card is hovered or focused.
 
 Validation: format, typecheck, 138 unit tests and build pass, including a new test of the due labels across a day, a week and a year. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reviews a card with five tags and checks its library card.
+
+## 2026-09-11 — UX loop 81: the library keeps keyboard and screen reader users oriented
+
+The wave 3 Nielsen review used the library with a keyboard and a screen reader. The result count changed silently as a search narrowed. Clear filters disappeared once pressed and dropped focus to the top of the page, and Next did the same on the last page, because a disabled button can't keep focus.
+
+The result count is now a polite status, so a search says how many cards it found. Clear filters, in the toolbar or in the empty state, gives focus back to the search field. When Next or Previous reaches the end of the pages, the other button takes focus.
+
+Validation: format, typecheck, 138 unit tests and build pass. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, and the paging and filter journeys now check where focus lands and that the count is a status.

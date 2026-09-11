@@ -1,8 +1,10 @@
+import { useEffect, useRef, type RefObject } from 'react';
 import { Button } from '@radix-ui/themes';
 import { ArrowLeft, ArrowRight, BookOpen } from 'lucide-react';
 import { ErrorNotice, LoadingState } from '@/components/feedback';
 import { lastLibraryPage } from './library-query';
 import { LibraryCard } from './library-card';
+import { clearLibraryFilters } from './library-toolbar';
 import type { LibraryViewProps, LibraryViewState } from './library-types';
 
 interface LibraryResultsProps {
@@ -19,7 +21,8 @@ export function LibraryResults({ library, state }: LibraryResultsProps): React.J
   if (outOfBounds && loading) return <LoadingState />;
   return (
     <div className={`library-results-container ${loading ? 'is-refreshing' : ''}`}>
-      <div className="result-label">
+      {/* A polite status, so narrowing a search says how many cards it found. */}
+      <div className="result-label" role="status">
         {result.total} {result.total === 1 ? 'card' : 'cards'}
       </div>
       <div className="card-grid">
@@ -50,7 +53,7 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
           : 'Write a question and its answer. Recall schedules every review for you.'}
       </p>
       {filtered ? (
-        <Button variant="soft" onClick={state.clear}>
+        <Button variant="soft" onClick={() => clearLibraryFilters(state)}>
           Clear filters
         </Button>
       ) : (
@@ -60,22 +63,62 @@ function EmptyLibrary({ library, state }: LibraryResultsProps): React.JSX.Elemen
   );
 }
 
+type PageDirection = 'previous' | 'next';
+interface PaginationFocus {
+  previous: RefObject<HTMLButtonElement | null>;
+  next: RefObject<HTMLButtonElement | null>;
+  press: (direction: PageDirection) => void;
+}
+
 function LibraryPagination({ state }: { state: LibraryViewState }): React.JSX.Element {
   const lastPage = lastLibraryPage(state.response.result.total);
   const page = state.query.page;
+  const focus = usePaginationFocus(page, lastPage);
+  const go = (direction: PageDirection): void => {
+    focus.press(direction);
+    state.goToPage(direction === 'next' ? page + 1 : page - 1);
+  };
   return (
     <div className="pagination">
-      <Button variant="soft" disabled={page === 0} onClick={() => state.goToPage(page - 1)}>
+      <Button
+        ref={focus.previous}
+        variant="soft"
+        disabled={page === 0}
+        onClick={() => go('previous')}
+      >
         <ArrowLeft size={16} />
         Previous
       </Button>
       <span>
         Page {page + 1} of {lastPage + 1}
       </span>
-      <Button variant="soft" disabled={page >= lastPage} onClick={() => state.goToPage(page + 1)}>
+      <Button
+        ref={focus.next}
+        variant="soft"
+        disabled={page >= lastPage}
+        onClick={() => go('next')}
+      >
         Next
         <ArrowRight size={16} />
       </Button>
     </div>
   );
+}
+
+// Reaching the first or last page disables the button just pressed, which would drop focus to the page, so the
+// other button takes it.
+function usePaginationFocus(page: number, lastPage: number): PaginationFocus {
+  const previous = useRef<HTMLButtonElement>(null);
+  const next = useRef<HTMLButtonElement>(null);
+  const pressed = useRef<PageDirection | null>(null);
+  useEffect(() => {
+    const direction = pressed.current;
+    pressed.current = null;
+    if (direction === 'next' && page >= lastPage) previous.current?.focus();
+    if (direction === 'previous' && page === 0) next.current?.focus();
+  }, [page, lastPage]);
+  const press = (direction: PageDirection): void => {
+    pressed.current = direction;
+  };
+  return { previous, next, press };
 }

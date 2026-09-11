@@ -26,13 +26,19 @@ export function LibraryToolbar({
       <LibraryDeckFilter decks={library.decks} state={state} trigger={filter.trigger} />
       <DeleteFilteredDeck library={library} state={state} deleted={filter.refocus} />
       {(state.query.search || state.query.deck) && (
-        <button type="button" className="text-button" onClick={state.clear}>
+        <button type="button" className="text-button" onClick={() => clearLibraryFilters(state)}>
           Clear filters
         </button>
       )}
       <NewDeckDialog client={library.client} done={library.refresh} />
     </div>
   );
+}
+
+/** Clear search and deck, then give focus back to the search field, since the pressed button leaves. Example: clearLibraryFilters(state). */
+export function clearLibraryFilters(state: LibraryViewState): void {
+  state.clear();
+  document.querySelector<HTMLInputElement>('.library-toolbar input')?.focus();
 }
 
 // The delete control leaves with its deck, so focus returns to the filter, which now shows all decks.
