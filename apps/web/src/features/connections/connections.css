@@ -100,3 +100,7 @@
 .tokens-section h2:focus {
   outline: none;
 }
+/* Focus lands on the new token's title when it appears; it is not a control, so it draws no ring. */
+.new-secret h2:focus {
+  outline: none;
+}

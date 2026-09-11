@@ -873,3 +873,11 @@ The wave 3 frontend review turned on forced colours, as Windows high contrast th
 In forced colours the card, the ratings and the study bar now get borders the system paints in the theme's colours, and the progress bar fills with the theme's highlight colour. Nothing changes in the normal themes.
 
 Validation: format, typecheck, 142 unit tests and build pass. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies in forced colours and checks the borders and the progress bar.
+
+## 2026-09-11 — UX loop 88: a new connection token comes into view
+
+The wave 2 frontend backlog left F-06 half open: focus dropped after issuing a token. Creating a connection on a phone showed the token panel below the intro, past the bottom of the screen, and nothing moved to it or announced it, although the token is shown only once.
+
+Focus now moves to the panel's title when a token appears, which scrolls it into view and reads "Connect Cursor" to screen readers. Coming back to Connections with a token still waiting focuses the page title, as every view change does.
+
+Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, and the connection journey now checks that the new token's title is focused and in view.

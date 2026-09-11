@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { Button, TextField } from '@radix-ui/themes';
 import { Copy } from 'lucide-react';
 import { ConfirmAction } from '@/components/confirm-action';
@@ -36,10 +36,13 @@ export function SecretPanel({
   const assistant = findConnectionClient(secret.clientId);
   const setup = assistant.setup(MCP_URL, secret.token);
   const clipboard = useClipboard(markCopied);
+  const title = useFocusOnArrival<HTMLHeadingElement>();
   return (
     // Manual copies (select + Cmd/Ctrl+C) count too, so people who copy by hand are not asked again.
     <section className="new-secret" aria-labelledby="new-secret-title" onCopy={markCopied}>
-      <h2 id="new-secret-title">Connect {assistant.name}</h2>
+      <h2 id="new-secret-title" ref={title} tabIndex={-1}>
+        Connect {assistant.name}
+      </h2>
       <p>{assistant.where} The token is shown only once; anyone with it can use your cards.</p>
       <pre className="setup-snippet">{setup}</pre>
       <TextField.Root
@@ -123,4 +126,15 @@ function SavedButton({ copied, clear }: { copied: boolean; clear: () => void }):
       focusAfterConfirm={focusPageHeading}
     />
   );
+}
+
+// The token appears below the intro, often past the bottom of a phone screen, and it is shown only once. Focus moves
+// to its title, which scrolls it into view and tells screen readers it arrived. Returning to Connections focuses the
+// page title instead, because the view change runs after this.
+function useFocusOnArrival<Target extends HTMLElement>(): RefObject<Target | null> {
+  const target = useRef<Target>(null);
+  useEffect(() => {
+    target.current?.focus();
+  }, []);
+  return target;
 }

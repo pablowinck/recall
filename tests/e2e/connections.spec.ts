@@ -13,6 +13,9 @@ test('creates and revokes a personal MCP connection through the web', async ({ p
     const tokenField = page.getByRole('textbox', { name: 'New personal token' });
     await expect(tokenField).toHaveValue(/^recall_/);
     const token = await tokenField.inputValue();
+    const newTokenTitle = page.getByRole('heading', { name: 'Connect Cursor', exact: true });
+    await expect(newTokenTitle).toBeFocused();
+    await expect(newTokenTitle).toBeInViewport();
     await expect(page.locator('.setup-snippet')).toContainText(
       `"Authorization": "Bearer ${token}"`,
     );
