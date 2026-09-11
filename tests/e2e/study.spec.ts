@@ -265,3 +265,23 @@ test('card text shows its emphasis instead of the markers', async ({ page }) => 
     await account.cleanup();
   }
 });
+
+test('a double tap on Reveal answer never records a rating', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.importCards([
+      { deck_id: deck.id, front: 'Double tap question', back: 'Double tap answer', tags: [] },
+    ]);
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).dblclick();
+    await expect(page.locator('.review-answer')).toBeVisible();
+    // Absence can't be awaited: give a stray save time to land, then confirm nothing was saved.
+    await page.waitForTimeout(800);
+    expect((await account.api.workspace()).stats.reviewed_today).toBe(0);
+    await expect(page.getByText('0 of 1 reviewed')).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

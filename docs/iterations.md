@@ -705,3 +705,11 @@ Loops 37 to 64 gave agents several ways to discover Recall: the Markdown guide a
 `docs/mcp.md` now lists the discovery addresses, what each returns and where their text lives, including the shared tool catalog. The web README names the agent-facing routes, mentions the Auth client in `lib/`, and adds the rule that Supabase Auth is imported only through `lib/supabase-auth.ts`.
 
 Validation: the documentation passes the format check; no code changed.
+
+## 2026-09-11 — UX loop 67: a double tap on Reveal answer no longer rates the card
+
+The wave 3 frontend review found that the rating buttons appear where "Reveal answer" was, so the second half of a double click or double tap landed on a rating. A desktop double-click and two phone taps 90 ms apart each saved a review nobody chose, and the card's schedule moved without the learner judging it.
+
+A rating now ignores the second click of a double click or double tap, which browsers count as click 2. Single clicks, taps, the keyboard and the number keys rate at once. A first attempt made pointer clicks wait 400 ms after the ratings appeared, but it also swallowed deliberate quick ratings, and five study journeys failed on all three layouts.
+
+Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that double-clicks Reveal answer and confirms no review was saved.

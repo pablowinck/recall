@@ -29,6 +29,12 @@ function RatingButton({
   option: ReviewOption;
   session: StudySessionState;
 }): React.JSX.Element {
+  const rate = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    // The ratings appear where "Reveal answer" was, so the second click of a double click or double tap lands on
+    // one. Browsers count that click as 2; a single click or tap is 1 and keyboard activation is 0.
+    if (event.detail > 1) return;
+    void session.rate(option.rating);
+  };
   return (
     // The label says what the rating claims about the recall, which the four words alone never did.
     <Tooltip content={ratingMeaning(option.rating)}>
@@ -37,7 +43,7 @@ function RatingButton({
         aria-label={describeRating(option)}
         aria-keyshortcuts={String(option.rating)}
         disabled={session.saving}
-        onClick={() => void session.rate(option.rating)}
+        onClick={rate}
       >
         <RatingKeyCap rating={option.rating} />
         <strong>{option.label}</strong>
