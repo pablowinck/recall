@@ -1183,3 +1183,11 @@ The wave 4 design review found 12 corner radii. The example card on the landing 
 Every corner now comes from the radius tokens, with a new 6 px step for keycaps and inline code. The example card matches the review card at 22 px, icons and phone-sized cards step to the nearest token, the due badge is a capsule, and the deck icon is a 48 px square. A unit test fails on a corner radius that is not a token, a circle or zero.
 
 Validation: format, typecheck, 166 unit tests and build pass, including the radius check. All 289 browser, API and MCP journeys pass on desktop, tablet and mobile, including the layout and forced colours journeys.
+
+## 2026-09-11 — Loop 126: a local stack that fails to start says why
+
+After loops 117 to 121 were pushed, the CI run for ef776a5 failed in `pnpm local:up` after 32 seconds with no output but `ELIFECYCLE Command failed with exit code 1`. The start script sends Supabase's output to `.supabase-start.log`, which nothing shows, so neither CI nor a contributor could tell what went wrong. A rerun of the same commit started the stack normally.
+
+When Supabase fails to start, `scripts/local-up.sh` now prints the last 80 lines of its log, and a start that succeeds stays as quiet as before.
+
+Validation: a copy of the script with stand-in `pnpm` and `docker` commands prints the end of the log and stops when Supabase's start fails, and prints nothing and runs every later step when it succeeds. Format, typecheck, 166 unit tests and build pass, and all 289 browser, API and MCP journeys pass on desktop, tablet and mobile.
