@@ -2,7 +2,7 @@
 import type { BrowserAuth } from '@/lib/supabase-auth';
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { RecallTheme } from '@/components/recall-theme';
-import { useRecallSession } from '@/lib/use-recall-session';
+import { signOutOnRequest, useRecallSession } from '@/lib/use-recall-session';
 import { AuthScreen } from './auth-screen';
 import { OAuthConsentPanel } from './oauth-consent-panel';
 import { useOAuthConsent } from './use-oauth-consent';
@@ -46,7 +46,7 @@ function SignedInConsent({
       summary={state}
       busy={consent.busy}
       decide={consent.decide}
-      switchAccount={() => void auth.signOut({ scope: 'local' })}
+      switchAccount={() => void signOutOnRequest(auth)}
     />
   );
 }

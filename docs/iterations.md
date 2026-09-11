@@ -1033,3 +1033,11 @@ The wave 4 frontend review zoomed the app to 200% and 400%. The layout switched 
 Keyboard focus now scrolls controls clear of the fixed tab bar. Viewports 480 px tall or shorter with a mouse or trackpad, the zoomed ones, put the tab bar back in the page flow, while a phone held sideways keeps it fixed within reach.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new desktop journey that checks the scroll padding at 200% and the tab bar's place at 400%.
+
+## 2026-09-11 — UX loop 108: a session that ends while the tab is away explains itself
+
+The wave 4 frontend review revoked a session while its tab sat in the background long enough for the access token to expire. On return, auth-js's own token refresh found the revocation before any API call could, signed the tab out, and the plain "Welcome back" screen appeared with no reason; loop 75 only handled an API 401. The same review counted 271 components re-rendering during study, and 437 on Today, each time the tab came back, because auth-js repeats SIGNED_IN with a new session object.
+
+A sign-out the person didn't ask for now shows "Your session ended. Sign in again to pick up where you left off.", whether an API call or a token refresh found it, while Sign out and the consent screen's account switch mark their sign-outs as requested. A repeated SIGNED_IN with the same user and token keeps the current state, so returning to the tab re-renders nothing. AGENTS.md records the auth-js behaviour.
+
+Validation: format, typecheck, 152 unit tests and build pass, including tests of how each Auth event changes the session state. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that revokes the session, lets the access token expire and returns to the tab.

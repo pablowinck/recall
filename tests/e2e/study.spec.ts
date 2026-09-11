@@ -555,3 +555,35 @@ async function measureInEm(target: Locator): Promise<number> {
       node.getBoundingClientRect().width / Number.parseFloat(getComputedStyle(node).fontSize),
   );
 }
+
+test('a session revoked while the tab was away explains itself when the tab returns', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    const browserToken = await page.evaluate(() => {
+      const key = Object.keys(localStorage).find((name) => name.endsWith('-auth-token'));
+      const stored = JSON.parse((key && localStorage.getItem(key)) || '{}') as {
+        access_token?: string;
+      };
+      return stored.access_token ?? '';
+    });
+    await revokeSession(browserToken);
+    // Away long enough for the access token to expire: returning makes auth-js refresh it and find the revocation.
+    await page.evaluate(() => {
+      const key = Object.keys(localStorage).find((name) => name.endsWith('-auth-token'))!;
+      const stored = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
+      localStorage.setItem(
+        key,
+        JSON.stringify({ ...stored, expires_at: Math.floor(Date.now() / 1000) - 60 }),
+      );
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await expect(
+      page.getByText('Your session ended. Sign in again to pick up where you left off.'),
+    ).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

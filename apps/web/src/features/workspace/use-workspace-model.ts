@@ -1,4 +1,5 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
+import { signOutOnRequest } from '@/lib/use-recall-session';
 import { useWorkspace } from './use-workspace';
 import { useWorkspaceFreshness } from './use-workspace-freshness';
 import { useWorkspaceHistory } from './use-workspace-history';
@@ -78,7 +79,7 @@ function createAccountActions(
       void refresh();
     },
     signOut: () => {
-      void account.auth.signOut({ scope: 'local' });
+      void signOutOnRequest(account.auth);
     },
     refresh: () => {
       void refresh();

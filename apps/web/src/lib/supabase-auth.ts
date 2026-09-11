@@ -2,7 +2,7 @@ import { AuthClient } from '@supabase/auth-js';
 
 /** The browser's Supabase Auth client. auth-js exports AuthClient as a value, so the type is named here. */
 export type BrowserAuth = InstanceType<typeof AuthClient>;
-export type { Session } from '@supabase/auth-js';
+export type { AuthChangeEvent, Session } from '@supabase/auth-js';
 
 /** The Auth endpoint supabase-js uses for a project URL. Example: authEndpoint('https://abc.supabase.co') === 'https://abc.supabase.co/auth/v1'. */
 export function authEndpoint(projectUrl: string): string {
