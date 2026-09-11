@@ -23,15 +23,14 @@
   margin-bottom: 0.75rem;
 }
 .connection-intro > p {
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
 }
 .connection-intro .privacy-note {
   justify-content: flex-start;
   margin-top: 1rem;
-  font-size: 0.8rem;
 }
 .new-secret p {
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   margin: 0.5rem 0 1rem;
 }
 .tokens-section h2 {
@@ -50,10 +49,11 @@
   gap: 0.25rem;
 }
 .token-row strong {
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
+  font-weight: 600;
 }
 .token-row span {
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   color: var(--ink-2);
 }
 @media (max-width: 768px) {
@@ -66,7 +66,7 @@
   display: grid;
   gap: 0.5rem;
   margin: 1.5rem 0;
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   font-weight: 500;
 }
 .assistant-picker .rt-SelectTrigger {
@@ -87,7 +87,7 @@
 }
 .token-field input {
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
 }
 @media (max-width: 480px) {
   /* Three actions never fit a phone row; stack them with the primary copy on top. */

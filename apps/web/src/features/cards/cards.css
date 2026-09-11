@@ -30,7 +30,7 @@
 }
 .result-label {
   color: var(--ink-2);
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   margin-bottom: 1rem;
 }
 .card-grid {
@@ -77,7 +77,7 @@
   margin-bottom: 0;
 }
 .card-deck-badge {
-  font-size: 0.72rem;
+  font-size: var(--text-caption);
   font-weight: 500;
   color: var(--ink-2);
   /* A secondary fill sits lighter than the card in dark mode; the canvas colour read as a hole. */
@@ -91,7 +91,7 @@
   white-space: nowrap;
 }
 .card-status {
-  font-size: 0.75rem;
+  font-size: var(--text-caption);
   color: var(--ink-2);
   margin-bottom: 0.85rem;
 }
@@ -147,7 +147,7 @@
   align-self: stretch;
   /* Line breaks survive in the preview, so a numbered answer does not run together. */
   white-space: pre-line;
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -163,7 +163,7 @@
   margin-top: auto;
 }
 .tag-list > span {
-  font-size: 0.72rem;
+  font-size: var(--text-caption);
   font-weight: 500;
   background: var(--fill-2);
   padding: 0.2rem 0.55rem;
@@ -183,7 +183,7 @@
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: 0.75rem;
+  font-size: var(--text-caption);
   margin-top: 1rem;
   color: var(--ink-2);
   opacity: 0;
@@ -211,7 +211,7 @@
 }
 .pagination > span {
   color: var(--ink-2);
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
 }
 .empty-state {
   min-height: 310px;
@@ -235,7 +235,7 @@
   margin-bottom: 0.45rem;
 }
 .deck-field-label {
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   font-weight: 500;
   color: var(--ink);
 }
@@ -247,7 +247,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   font-weight: 500;
   border-radius: var(--r-sm);
   transition:
@@ -324,7 +324,7 @@
   align-items: center;
   gap: 0.25rem;
   margin-right: auto;
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   color: var(--ink-2);
 }
 .dialog-actions .delete-button + .shortcut-hint {
@@ -341,7 +341,7 @@
   display: block;
   margin-top: 0.3rem;
   text-align: end;
-  font-size: 0.75rem;
+  font-size: var(--text-caption);
   font-weight: 400;
   color: var(--gray-11);
   font-variant-numeric: tabular-nums;

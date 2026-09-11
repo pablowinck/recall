@@ -38,7 +38,7 @@ html {
   min-height: 100dvh;
   color: var(--ink);
   background: var(--canvas);
-  font-size: 1rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   letter-spacing: -0.011em;
 }
@@ -79,7 +79,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   font-weight: 600;
   letter-spacing: 0;
   color: var(--ink-2);
@@ -92,7 +92,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   font-weight: 500;
 }
 .muted {
@@ -161,13 +161,13 @@ fieldset.form-fields {
 label {
   display: grid;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   font-weight: 500;
 }
 .field-hint {
   color: var(--gray-11);
   font-weight: 400;
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
 }
 /* Forced colours drop shadows and backgrounds, which are the only edges of Recall's cards, panels, fields, buttons and
    dialogs. The system paints transparent outlines and borders in its own colours, so they become those edges, and

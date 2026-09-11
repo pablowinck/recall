@@ -26,7 +26,7 @@
   min-height: 44px;
   color: var(--brand-text);
   font-weight: 500;
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
   text-decoration: none;
   padding: 0.6rem 0.9rem;
   border-radius: var(--r-pill);
@@ -38,7 +38,7 @@
 }
 .landing-eyebrow {
   color: var(--ink-2);
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
   font-weight: 500;
   margin-bottom: 1.1rem;
 }
@@ -72,7 +72,7 @@
   border-radius: var(--r-pill);
   background: var(--brand);
   color: var(--brand-ink);
-  font-size: 1rem;
+  font-size: var(--text-body);
   font-weight: 600;
   text-decoration: none;
   box-shadow: var(--elev-1);
@@ -101,7 +101,7 @@
 .landing-note {
   margin-top: 1.1rem;
   color: var(--ink-2);
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
 }
 .landing-section {
   margin-top: clamp(5rem, 3.5rem + 3.5vw, 7rem);
@@ -137,7 +137,7 @@
   border-radius: 50%;
   background: var(--brand-soft);
   color: var(--brand-text);
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   font-weight: 600;
   margin-bottom: 1rem;
 }
@@ -150,7 +150,7 @@
 .landing-grid p {
   color: var(--ink-2);
   line-height: 1.6;
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
   text-wrap: pretty;
 }
 .landing-grid {
@@ -188,7 +188,7 @@
   padding-top: 1.5rem;
   border-top: 1px solid var(--separator);
   color: var(--ink-2);
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
 }
 .landing-footer a {
   display: inline-flex;
@@ -215,7 +215,7 @@
   padding: 0 0.85rem;
   border-radius: var(--r-pill);
   color: var(--ink);
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   text-decoration: none;
@@ -308,7 +308,7 @@
 }
 .landing-close .landing-close-signin {
   margin: 1.1rem auto 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
 }
 .landing-close-signin a {
   /* A 44 px target that leaves the line where it was: the margin takes the padding back. */

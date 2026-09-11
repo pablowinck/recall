@@ -43,7 +43,7 @@
   padding: 0.8rem 1rem;
   border-radius: var(--r-md);
   text-align: left;
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
   transition:
     background var(--motion-fast) var(--ease-out),
     color var(--motion-fast) var(--ease-out);
@@ -76,11 +76,11 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  font-size: 0.85rem;
+  font-size: var(--text-subheadline);
 }
 .profile-name {
   min-width: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   color: var(--ink-2);
   white-space: nowrap;
   overflow: hidden;
@@ -140,11 +140,11 @@
   margin: 0.85rem 0;
 }
 .study-invitation h2 strong {
-  font-weight: 650;
+  font-weight: 600;
   color: var(--accent-text);
 }
 .study-invitation p {
-  font-size: 0.9375rem;
+  font-size: var(--text-callout);
   max-width: 390px;
   margin-bottom: 1.5rem;
 }
@@ -181,7 +181,7 @@
 .mini-card span {
   display: block;
   color: var(--ink);
-  font-size: 0.85rem;
+  font-size: var(--text-footnote);
   font-weight: 500;
   line-height: 1.4;
   margin-top: 1.2rem;
@@ -233,7 +233,7 @@
   font-variant-numeric: tabular-nums;
 }
 .stat-card p {
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   margin: 0;
 }
 .section-heading {
@@ -253,7 +253,7 @@
   padding: 2.5rem 1.5rem;
   text-align: center;
   color: var(--ink-2);
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
 }
 .deck-row {
   background: transparent;
@@ -291,11 +291,12 @@
   min-width: 0;
 }
 .deck-description strong {
-  font-size: 1rem;
+  font-size: var(--text-body);
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 .deck-description > span {
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
   color: var(--ink-2);
 }
 .due-badge {
@@ -303,7 +304,7 @@
   color: var(--accent-text);
   border-radius: 30px;
   padding: 0.35rem 0.7rem;
-  font-size: 0.75rem;
+  font-size: var(--text-caption);
   margin-left: auto;
   white-space: nowrap;
 }
@@ -382,7 +383,7 @@
     min-width: 84px;
     min-height: 52px;
     padding: 0.35rem 0.8rem;
-    font-size: 0.75rem;
+    font-size: var(--text-caption);
   }
   .mobile-top {
     display: flex;
@@ -410,10 +411,10 @@
     gap: 1rem;
   }
   .page-header .eyebrow {
-    font-size: 0.75rem;
+    font-size: var(--text-caption);
   }
   .page-header p {
-    font-size: 0.9375rem;
+    font-size: var(--text-callout);
   }
   .page-header h1 {
     font-size: 2rem;
@@ -440,7 +441,7 @@
     font-size: 1.65rem;
   }
   .stat-card p {
-    font-size: 0.75rem;
+    font-size: var(--text-caption);
     line-height: 1.4;
   }
   .deck-row {
@@ -451,7 +452,6 @@
     display: none;
   }
   .due-badge {
-    font-size: 0.75rem;
     padding: 0.3rem 0.5rem;
   }
 }
@@ -471,9 +471,6 @@
   }
   .stat-card strong {
     font-size: 1.45rem;
-  }
-  .stat-card p {
-    font-size: 0.72rem;
   }
 }
 /* The study bar rests on the bottom edge of phones (study.css), so the page adds no padding under it. */

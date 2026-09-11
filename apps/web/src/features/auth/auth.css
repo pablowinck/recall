@@ -100,7 +100,7 @@
   line-height: 1.6;
 }
 .consent-meta {
-  font-size: 0.875rem;
+  font-size: var(--text-subheadline);
 }
 .consent-actions {
   display: flex;
@@ -112,5 +112,5 @@
 .consent-account {
   padding-top: 1rem;
   border-top: 1px solid var(--separator);
-  font-size: 0.8125rem;
+  font-size: var(--text-footnote);
 }

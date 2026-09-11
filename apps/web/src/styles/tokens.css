@@ -37,6 +37,12 @@
   --motion-base: 0.25s;
   /* Tokens and setup commands need 0/O and 1/l to differ. */
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* Text below a title takes its size from this ramp, after Apple's text styles at a 16 px body. */
+  --text-caption: 0.75rem;
+  --text-footnote: 0.8125rem;
+  --text-subheadline: 0.875rem;
+  --text-callout: 0.9375rem;
+  --text-body: 1rem;
 }
 :root.dark {
   /* Radix lightens solid indigo on hover in dark mode (4.3:1 with white text); keep hover at WCAG AA. */

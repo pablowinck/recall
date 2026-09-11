@@ -1167,3 +1167,11 @@ The wave 4 Nielsen review reloaded the page in the middle of a long review. The 
 A review now keeps its count and its returning cards in the tab's session storage, so a reload continues it: the header still says "20 of 46", and the completion screen still says "1 card comes back in about 1 min" and resumes when it does. The saved progress names the person and the deck, so it never reaches another account's review or another deck's. Leaving the review, starting a new one or closing the tab forgets it.
 
 Validation: format, typecheck, 166 unit tests and build pass, including tests that restore progress only for the same person and deck, ignore stored progress that is malformed or refused, and add the reviews before a reload to the cards still due. All 289 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reloads mid-review and on the completion screen, and checks that leaving starts the next review from zero.
+
+## 2026-09-11 — UX loop 124: text follows one type ramp and four weights
+
+The wave 4 design review counted 26 font sizes and 6 weights across Recall. Secondary text used near-duplicates, 11.5, 12.8 and 13.6 px, beside the 12, 13 and 14 px used elsewhere. The wordmark and Today's due count were set at weight 650, the example card's question at 550, and deck names and connection names fell back to the browser's bold, 700.
+
+Body and secondary text now take their sizes from a five-step ramp in the design tokens, after Apple's text styles at a 16 px body: caption 12, footnote 13, subheadline 14, callout 15 and body 16 px. Keycaps, tags, deck badges and the smallest statistics labels move from 11.5 to 12 px, privacy notes from 12.8 to 13 px, and overrides that only repeated a size are gone. Text uses four weights, regular, medium, semibold and bold, and the wordmark, the due count, the example card's question, deck names and connection names are semibold. A unit test fails on a size below a title that is off the ramp or on a fifth weight, and AGENTS.md names the ramp.
+
+Validation: format, typecheck, 166 unit tests and build pass, including the type ramp checks. All 289 browser, API and MCP journeys pass on desktop, tablet and mobile, including the contrast, layout and forced colours journeys.
