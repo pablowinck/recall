@@ -2,9 +2,16 @@ name: Verify Recall
 on:
   push:
     branches: [main]
+    # Documentation-only pushes cannot break the stack, so they skip the eight-minute run.
+    paths-ignore: ['**/*.md', 'docs/**', 'LICENSE']
   pull_request:
+    paths-ignore: ['**/*.md', 'docs/**', 'LICENSE']
 permissions:
   contents: read
+# A newer push verifies everything an older one did, so the older run stops instead of queueing.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   functional:
     runs-on: ubuntu-latest
