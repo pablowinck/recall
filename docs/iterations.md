@@ -697,3 +697,11 @@ After loop 59, a scan for long functions found the deck removal dialog at 58 lin
 The choice now lives in a small hook, the move-or-delete options and the dialog's buttons are their own components, and the dialog composes them. The markup, the default of moving the cards and the behaviour are unchanged.
 
 Validation: format, typecheck, 130 unit tests and build pass. All 174 browser, API and MCP journeys pass on desktop, tablet and mobile, including the journeys that delete an empty deck, move a deck's cards and delete a deck with its cards.
+
+## 2026-09-11 — UX loop 66: the docs say how agents find Recall
+
+Loops 37 to 64 gave agents several ways to discover Recall: the Markdown guide at `/llms.txt` and at `/` for Markdown requests, `/index.md`, `/pricing.md`, a Markdown 404 and a server card with the tool list. No document said so, and the web README still described its session code without the Supabase Auth client from loop 61, so a contributor had to read the code to learn where agents look.
+
+`docs/mcp.md` now lists the discovery addresses, what each returns and where their text lives, including the shared tool catalog. The web README names the agent-facing routes, mentions the Auth client in `lib/`, and adds the rule that Supabase Auth is imported only through `lib/supabase-auth.ts`.
+
+Validation: the documentation passes the format check; no code changed.

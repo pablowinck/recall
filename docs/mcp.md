@@ -85,6 +85,17 @@ Desktop configs start local processes, so [`mcp-remote`](https://github.com/punk
 
 ChatGPT developer-mode connectors and claude.ai custom connectors authenticate remote MCP servers with OAuth. Recall's MCP server accepts personal bearer tokens only, so those connectors cannot sign in yet.
 
+## How assistants discover Recall
+
+Agents can find Recall without reading this page:
+
+- `https://recall-web-gilt.vercel.app/llms.txt` is the Markdown guide: when to use Recall, the endpoint, the tools and their rules. The home page returns the same guide to requests that send `Accept: text/markdown`, and `/index.md` serves it too.
+- `/.well-known/mcp` and `/.well-known/mcp/server-card.json` publish the server card: the endpoint, the `Authorization: Bearer` header it needs and every tool with its description. Tool names and descriptions come from `packages/contracts/src/mcp-tools.ts`, the catalog the MCP server registers.
+- `/pricing.md` states that Recall is free.
+- A missing page requested with `Accept: text/markdown` returns a Markdown 404 with links back.
+
+The texts live in `apps/web/src/features/marketing/`, and the Markdown rewrites in `apps/web/next.config.ts`.
+
 ## Local development with the generated account
 
 After `pnpm local:up` and a host `pnpm build`, the local stdio launcher reads the token from ignored `.local/account.json` and runs the same MCP tool definitions against the local API. It never writes secrets to stdout. Register it with any client that starts stdio servers:
