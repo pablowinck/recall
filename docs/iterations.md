@@ -753,3 +753,11 @@ The design review found that the phone and tablet tab bar, and the desktop sideb
 Both rules now write the prefixed declaration first, with the same blur and saturation, and `AGENTS.md` records the ordering.
 
 Validation: format, typecheck, 133 unit tests and build pass, and the built stylesheet keeps both declarations for the sidebar and the tab bar. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 73: Radix surfaces, focus rings and touch menus follow Recall
+
+The design review measured three places where Radix defaults broke Recall's design. In dark mode, dialogs, alerts and menus used #191918, darker than the #212120 cards they open above. Focus rings on selected navigation rows and soft buttons used Radix's step 8 colour, 2.12:1 in light mode, while the landing page's rings reach 5.27:1. Select menu rows were 32 px tall on touch screens, under the 44 px targets used everywhere else.
+
+In dark mode, dialogs and menus now take the raised surface. Focus rings, including the soft variant's, use the accent text colour, as the landing page does. On coarse pointers, select menu rows are 44 px tall.
+
+Validation: format, typecheck, 133 unit tests and build pass. All 183 browser, API and MCP journeys pass on desktop, tablet and mobile, including the touch sizing journey, which now measures a deck filter row. A probe measured the dark New card dialog at rgb(42, 42, 40) above a card at rgb(33, 33, 32), and the keyboard focus ring on the Today row at rgb(58, 91, 199).

@@ -7,10 +7,18 @@
   --color-overlay: rgba(33, 32, 28, 0.24);
   --accent-text: var(--accent-11);
   --accent-soft: var(--accent-a3);
-  --focus-ring: var(--focus-8);
+  /* Rings use the accent text colour: Radix step 8 fell to about 2:1 on selected rows and soft buttons. */
+  --focus-ring: var(--accent-11);
+  --focus-8: var(--accent-11);
 }
 .dark .radix-themes {
   --color-overlay: rgba(0, 0, 0, 0.5);
+  /* Dialogs and menus sit above cards, so in dark mode they take the raised surface, not a panel darker than the card. */
+  --color-panel-solid: var(--surface-raised);
+}
+/* The soft variant draws its ring from --accent-8 rather than the focus scale. */
+.rt-BaseButton.rt-variant-soft:focus-visible {
+  outline-color: var(--accent-11);
 }
 /* Touch screens get 44px targets (Apple HIG) and 16px fields, because iOS zooms into smaller text on focus. */
 @media (pointer: coarse) {
@@ -29,6 +37,9 @@
   .rt-SelectTrigger.rt-r-size-2,
   .rt-SelectTrigger.rt-r-size-3 {
     --select-trigger-height: 44px;
+  }
+  .rt-SelectContent {
+    --select-item-height: 44px;
   }
   .rt-TextFieldRoot.rt-r-size-2,
   .rt-TextFieldRoot.rt-r-size-3 {

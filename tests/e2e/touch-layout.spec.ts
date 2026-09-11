@@ -24,6 +24,11 @@ test('touch screens get controls at least 44px tall', async ({ page }, testInfo)
       // Subpixel layout can report 43.99999 for a 44px control.
       expect(Math.round(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
     }
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Filter by deck' }).click();
+    const option = await page.getByRole('option', { name: 'All decks' }).boundingBox();
+    expect(Math.round(option?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    await page.keyboard.press('Escape');
   } finally {
     await account.cleanup();
   }
