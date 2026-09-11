@@ -601,3 +601,11 @@ The usability review's terminology pass found two leftovers. The dialog for revo
 The revoke dialog now says "The assistant using this token will lose access." The label above a card shows its deck name, and nothing while that name is unknown.
 
 Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 54: no styles for a Connections box that no longer exists
+
+The frontend review listed dead code among the things that slow contributors down. A scan of every stylesheet for class names that no component uses found one real leftover: `.endpoint-box`, with rules for its label and code, from an earlier Connections design that showed the MCP address in a box. The same scan also flagged the four rating colours, but the rating buttons build those class names at runtime, so they stay.
+
+The `.endpoint-box` rules are removed. Nothing on screen changes.
+
+Validation: format, typecheck, 125 unit tests and build pass. All 170 browser, API and MCP journeys pass on desktop, tablet and mobile, including the Connections journeys.

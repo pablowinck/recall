@@ -30,22 +30,6 @@
   margin-top: 1rem;
   font-size: 0.8rem;
 }
-.endpoint-box {
-  display: grid;
-  gap: 0.5rem;
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: var(--canvas);
-  border-radius: 12px;
-}
-.endpoint-box > span {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-}
-.endpoint-box code {
-  font-size: 0.875rem;
-  overflow-wrap: anywhere;
-}
 .new-secret p {
   font-size: 0.875rem;
   margin: 0.5rem 0 1rem;
