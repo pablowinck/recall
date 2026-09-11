@@ -74,3 +74,16 @@ test('shared links carry a preview image', async ({ page, request }) => {
   expect(image.ok()).toBe(true);
   expect(image.headers()['content-type']).toContain('image/png');
 });
+
+test('an agent that asks for Markdown gets the guide at the home page', async ({ request }) => {
+  const markdown = await request.get('/', { headers: { Accept: 'text/markdown' } });
+  expect(markdown.headers()['content-type']).toContain('text/markdown');
+  expect(await markdown.text()).toContain('# Recall');
+  const page = await request.get('/', { headers: { Accept: 'text/html' } });
+  expect(page.headers()['content-type']).toContain('text/html');
+  // Exact tokens: "Accept-Encoding" would satisfy a substring match without varying on Accept.
+  const varied = (markdown.headers()['vary'] ?? '')
+    .split(/,|\n/)
+    .map((token) => token.trim().toLowerCase());
+  expect(varied).toContain('accept');
+});

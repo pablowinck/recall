@@ -465,3 +465,11 @@ The design review found a landing page made only of text above the fold, with th
 The example card is now a shared component, beside the hero copy from 960 px and under it on smaller screens, with a fixed width so nothing shifts; its front is a paragraph rather than a heading, so both pages that show it keep a clean outline. The steps stay in one column until all three fit side by side, and the headline's two sentences are separate lines that balance on their own. Type and section spacing scale with the viewport width. Footer links and "Sign in" are 44 px tall, the footer stacks on phones and the actions stack full width below 480 px. The focus ring uses the brand text colour, above 5:1 in both appearances, and the GitHub and WhatsApp links announce that they open in a new tab.
 
 Validation: format, typecheck, 117 unit tests and build pass. All 146 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing and sign-in accessibility checks, and the UX tour reports no overflow or axe violations. Captures at 1440 px and 390 px in both appearances were reviewed.
+
+## 2026-09-10 — UX loop 37: the home page answers agents in Markdown
+
+An agent-readiness scan from is-agentic.com marked Markdown negotiation as an essential failure. A request for the home page with `Accept: text/markdown` got the HTML page, and nothing told caches that the answer depends on `Accept`. An agent had to know about `/llms.txt` to get something readable.
+
+`next.config.ts` now rewrites those requests to the `llms.txt` guide before any page renders. An agent gets `text/markdown` at `/`, and browsers still get the HTML. The Markdown response carries `Vary: Accept`. Next.js writes its own `Vary` on HTML pages and drops one set in `next.config.ts`, so the HTML response does not name `Accept`. The journey checks for the exact `Accept` token, because a substring match also passed on `Accept-Encoding`.
+
+Validation: format, typecheck, 117 unit tests and build pass. All 149 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that asks for the home page in Markdown and in HTML.
