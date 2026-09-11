@@ -144,6 +144,8 @@
 }
 .library-card > p {
   align-self: stretch;
+  /* Line breaks survive in the preview, so a numbered answer does not run together. */
+  white-space: pre-line;
   font-size: 0.875rem;
   line-height: 1.5;
   display: -webkit-box;
@@ -170,6 +172,12 @@
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+.tag-list > .tag-more {
+  background: transparent;
+  border-color: transparent;
+  padding-inline: 0.15rem;
+}
+/* The whole card opens the editor, so the hint shows on hover or keyboard focus instead of on every card. */
 .card-edit-hint {
   display: flex;
   align-items: center;
@@ -177,6 +185,21 @@
   font-size: 0.75rem;
   margin-top: 1rem;
   color: var(--ink-2);
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-out);
+}
+.library-card:focus-within .card-edit-hint {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .library-card:hover .card-edit-hint {
+    opacity: 1;
+  }
+}
+@media (hover: none) {
+  .card-edit-hint {
+    display: none;
+  }
 }
 .pagination {
   display: flex;

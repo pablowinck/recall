@@ -809,3 +809,11 @@ The wave 3 Nielsen review found that card text had no direction of its own. A ca
 Card text now takes its direction from its own letters: the question, each paragraph and list of the answer, the library previews and the editor's Front and Back fields. An Arabic sentence with a Latin translation reads each paragraph in its own direction, and library previews stretch to the card's width, so right-to-left text starts at the right edge.
 
 Validation: format, typecheck, 137 unit tests and build pass. All 194 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies an Arabic card and checks the direction of the question and of each answer paragraph.
+
+## 2026-09-11 — UX loop 80: library cards say when they come back
+
+The wave 3 Nielsen review read the library as someone planning what to study. A reviewed card said only "Scheduled", with no date. Tags past the third disappeared without a count. The answer preview dropped line breaks, so a numbered answer ran together ("1. Prophase 2. Prometaphase…"), and "Edit card →" repeated on every card although the whole card opens the editor.
+
+A scheduled card now says "Due later today", "Due tomorrow", "Due in 3 days" or "Due Oct 2", counted in calendar days. Extra tags show as "+2 more", the answer preview keeps its line breaks, and the edit hint appears when a card is hovered or focused.
+
+Validation: format, typecheck, 138 unit tests and build pass, including a new test of the due labels across a day, a week and a year. All 200 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reviews a card with five tags and checks its library card.

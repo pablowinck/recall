@@ -486,3 +486,34 @@ test('a delete confirmation keeps a readable label in light and dark mode', asyn
     await account.cleanup();
   }
 });
+
+test('a library card says when it is due, counts extra tags and keeps line breaks', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    const card = await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Phases of mitosis',
+      back: '1. Prophase\n2. Metaphase',
+      tags: ['biology', 'cells', 'mitosis', 'exam', 'chapter-3'],
+    });
+    await account.api.review(card.id, {
+      rating: 3,
+      version: card.version,
+      request_id: crypto.randomUUID(),
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    const preview = page.locator('.library-card');
+    await expect(preview.locator('.card-status')).toHaveText(
+      /^Due (later today|tomorrow|in \d days|[A-Z][a-z]{2} \d{1,2}(, \d{4})?)$/,
+    );
+    await expect(preview.getByText('+2 more', { exact: true })).toBeVisible();
+    await expect(preview.locator('p')).toHaveCSS('white-space', 'pre-line');
+    await expect(preview.locator('.card-edit-hint')).toHaveCSS('opacity', '0');
+  } finally {
+    await account.cleanup();
+  }
+});

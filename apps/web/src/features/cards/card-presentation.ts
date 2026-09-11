@@ -9,13 +9,32 @@ export function summarizeFront(front: string, limit = 80): string {
   return line.length <= limit ? line : `${line.slice(0, limit - 1).trimEnd()}…`;
 }
 
-/** Give paused and new cards the correct visible status. Example: describeCardStatus(card, now). */
+const DAY_MS = 86_400_000;
+const dueDateFormat: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+
+/** Give paused, new, due and scheduled cards a status that says when they come back. Example: describeCardStatus(card, now). */
 export function describeCardStatus(
   card: CardStatusSource,
   now: Date,
 ): { label: string; tone: string } {
   if (card.suspended) return { label: 'Paused', tone: 'paused' };
   if (card.schedule === null) return { label: 'New', tone: 'ready' };
-  if (new Date(card.due_at) <= now) return { label: 'Due for review', tone: 'ready' };
-  return { label: 'Scheduled', tone: '' };
+  const due = new Date(card.due_at);
+  if (due <= now) return { label: 'Due for review', tone: 'ready' };
+  return { label: describeDueDate(due, now), tone: '' };
+}
+
+// Counts calendar days, not 24-hour spans, so a card due tonight never reads "tomorrow".
+function describeDueDate(due: Date, now: Date): string {
+  const days = Math.round((startOfDay(due) - startOfDay(now)) / DAY_MS);
+  if (days === 0) return 'Due later today';
+  if (days === 1) return 'Due tomorrow';
+  if (days < 7) return `Due in ${days} days`;
+  const sameYear = due.getFullYear() === now.getFullYear();
+  const format = sameYear ? dueDateFormat : { ...dueDateFormat, year: 'numeric' as const };
+  return `Due ${due.toLocaleDateString('en-US', format)}`;
+}
+
+function startOfDay(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }

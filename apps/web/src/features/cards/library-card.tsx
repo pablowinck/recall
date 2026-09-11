@@ -37,12 +37,17 @@ export function LibraryCard({
   );
 }
 
+// Three tags keep a card short; the rest are counted, so no tag looks lost.
+const VISIBLE_TAGS = 3;
+
 function LibraryTags({ tags }: { tags: string[] }): React.JSX.Element {
+  const hidden = tags.length - VISIBLE_TAGS;
   return (
     <div className="tag-list">
-      {tags.slice(0, 3).map((tag) => (
+      {tags.slice(0, VISIBLE_TAGS).map((tag) => (
         <span key={tag}>{tag}</span>
       ))}
+      {hidden > 0 && <span className="tag-more">+{hidden} more</span>}
     </div>
   );
 }
