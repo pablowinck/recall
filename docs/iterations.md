@@ -993,3 +993,11 @@ The wave 4 design review measured the questions assistants often write, a paragr
 Paragraph questions now use a regular 500 weight and stop at 32em, about 66 characters a line. The completion summary stops at 30em and balances its lines.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that checks a paragraph question's weight and measure and the completion summary's measure.
+
+## 2026-09-11 — UX loop 103: the study bar shows its material only over the card
+
+The wave 4 design review looked at the bar that holds Reveal answer and the ratings. On a desktop review of a short card, the bar rested 10 to 13 px below the card with nothing to scroll, yet it drew a hairline and a 20 px blur over empty canvas under every card. When a long card did run beneath it in dark mode, its 80% canvas fill painted near-black across the card's surface.
+
+The bar is now plain at rest. While the card runs beneath it, the study view is marked and the bar takes the card's surface at 72%, the blur and the hairline, like a toolbar over scrolling content.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile; the keyboard journey checks that a short card's bar draws no hairline, and the long card journey checks that the pinned bar shows its material.

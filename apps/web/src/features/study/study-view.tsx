@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type { RecallClient } from '@recall/client';
 import type { Deck } from '@recall/contracts';
 import { ErrorNotice, LoadingState } from '@/components/feedback';
@@ -5,6 +6,7 @@ import { useStudySession, type StudySessionState } from './use-study-session';
 import { useStudyKeyboard } from './use-study-keyboard';
 import { StudyProgress, ReviewContent, StudyActions } from './study-components';
 import { SessionComplete } from './session-complete';
+import { useStudyBarOverlap } from './use-study-bar-overlap';
 
 interface StudyViewProps {
   client: RecallClient;
@@ -31,10 +33,12 @@ function StudyScreen({
   session: StudySessionState;
   view: StudyViewProps;
 }): React.JSX.Element {
+  const screen = useRef<HTMLElement>(null);
+  useStudyBarOverlap(screen);
   const current = session.queue[0];
   const deckName = view.decks.find((deck) => deck.id === current?.card.deck_id)?.name;
   return (
-    <section className="study-view view-enter">
+    <section ref={screen} className="study-view view-enter">
       <StudyProgress session={session} expectedTotal={view.expectedTotal} exit={view.exit} />
       <ReviewContent
         current={current}

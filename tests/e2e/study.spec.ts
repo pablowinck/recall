@@ -18,6 +18,8 @@ test('study keys leave focused controls alone and keep focus on the card', async
     await page.getByRole('button', { name: 'Start reviewing' }).click();
     const card = page.locator('.review-card');
     await expect(card).toBeFocused();
+    // A short card leaves nothing beneath the bar, so it draws no hairline.
+    await expect(page.locator('.reveal-action')).toHaveCSS('box-shadow', 'none');
     await page.keyboard.press('Space');
     await expect(page.locator('.review-answer')).toBeFocused();
     const ink = await card.locator('h2').evaluate((node) => getComputedStyle(node).color);
@@ -52,6 +54,9 @@ test('rating buttons stay within reach on a long card', async ({ page }) => {
     await expect(page.getByText('Line 40 of a long answer.')).toBeAttached();
     await expect(page.getByRole('button', { name: /Again/ })).toBeInViewport();
     await expect(page.getByRole('button', { name: /Easy/ })).toBeInViewport();
+    // The long answer runs beneath the pinned bar, so the bar shows its material and hairline.
+    await expect(page.locator('.study-view')).toHaveAttribute('data-bar-over-card', '');
+    await expect(page.locator('.rating-section')).not.toHaveCSS('box-shadow', 'none');
   } finally {
     await account.cleanup();
   }

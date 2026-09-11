@@ -143,7 +143,12 @@
   z-index: 2;
   margin-inline: -1.25rem;
   padding: 0.75rem 1.25rem max(0.75rem, env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--canvas) 80%, transparent);
+}
+/* The bar shows its material and hairline only while the card runs beneath it, as toolbars do; resting under a
+   short card it would draw a rule and a blur over nothing. */
+.study-view[data-bar-over-card] .reveal-action,
+.study-view[data-bar-over-card] .rating-section {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 0 -1px 0 var(--separator);
