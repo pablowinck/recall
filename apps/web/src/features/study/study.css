@@ -350,7 +350,7 @@
   .review-card {
     padding: 1.6rem;
     min-height: 280px;
-    border-radius: 20px;
+    border-radius: var(--r-lg);
   }
   .review-answer > div {
     line-height: 1.7;

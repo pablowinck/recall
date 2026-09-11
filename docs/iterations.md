@@ -1175,3 +1175,11 @@ The wave 4 design review counted 26 font sizes and 6 weights across Recall. Seco
 Body and secondary text now take their sizes from a five-step ramp in the design tokens, after Apple's text styles at a 16 px body: caption 12, footnote 13, subheadline 14, callout 15 and body 16 px. Keycaps, tags, deck badges and the smallest statistics labels move from 11.5 to 12 px, privacy notes from 12.8 to 13 px, and overrides that only repeated a size are gone. Text uses four weights, regular, medium, semibold and bold, and the wordmark, the due count, the example card's question, deck names and connection names are semibold. A unit test fails on a size below a title that is off the ramp or on a fifth weight, and AGENTS.md names the ramp.
 
 Validation: format, typecheck, 166 unit tests and build pass, including the type ramp checks. All 289 browser, API and MCP journeys pass on desktop, tablet and mobile, including the contrast, layout and forced colours journeys.
+
+## 2026-09-11 — UX loop 125: corners follow the radius tokens
+
+The wave 4 design review found 12 corner radii. The example card on the landing page and the sign-in screen was rounded at 28 px while the review card it previews used 22 px. Small icons, badges and phone-sized cards used 9, 13, 14, 17, 20 and 30 px beside the 8, 12, 18 and 22 px tokens, and the deck icon was a 48 by 52 px rectangle.
+
+Every corner now comes from the radius tokens, with a new 6 px step for keycaps and inline code. The example card matches the review card at 22 px, icons and phone-sized cards step to the nearest token, the due badge is a capsule, and the deck icon is a 48 px square. A unit test fails on a corner radius that is not a token, a circle or zero.
+
+Validation: format, typecheck, 166 unit tests and build pass, including the radius check. All 289 browser, API and MCP journeys pass on desktop, tablet and mobile, including the layout and forced colours journeys.

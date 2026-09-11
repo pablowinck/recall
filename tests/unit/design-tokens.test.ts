@@ -30,6 +30,14 @@ it('sizes text below a title from the type ramp in tokens.css', () => {
   expect(offRamp).toEqual([]);
 });
 
+it('rounds corners with the radius tokens', () => {
+  // A circle may use 50%; every other corner comes from --r-xs to --r-pill.
+  const offScale = declarations('border-radius').filter(
+    (entry) => !/: ((var\(--r-(xs|sm|md|lg|xl|pill)\)|0|50%|inherit)( |$))+$/.test(entry),
+  );
+  expect(offScale).toEqual([]);
+});
+
 it('sets text in four weights', () => {
   const offRamp = declarations('font-weight').filter(
     (entry) => !/: (400|500|600|700)$/.test(entry),

@@ -289,7 +289,7 @@
   .card-editor {
     height: calc(100dvh - 0.5rem);
     max-height: none;
-    border-radius: 16px 16px 0 0;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
   }
   .card-editor .dialog-actions {
     position: sticky;

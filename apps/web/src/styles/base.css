@@ -117,7 +117,7 @@ p {
   background: var(--surface);
   color: var(--accent-text);
   border: 1px solid var(--accent-text);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   z-index: 100;
   font-weight: 500;
   text-decoration: none;

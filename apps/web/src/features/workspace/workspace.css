@@ -160,7 +160,7 @@
   width: 130px;
   height: 160px;
   border: 1px solid var(--separator);
-  border-radius: 17px;
+  border-radius: var(--r-lg);
 }
 .mini-card.back {
   background: var(--accent-soft);
@@ -218,7 +218,7 @@
   place-items: center;
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--r-sm);
   background: var(--accent-soft);
   color: var(--accent-text);
 }
@@ -280,9 +280,9 @@
   place-items: center;
   background: var(--accent-soft);
   color: var(--accent-text);
-  border-radius: 13px;
+  border-radius: var(--r-md);
   width: 48px;
-  height: 52px;
+  height: 48px;
   flex-shrink: 0;
 }
 .deck-description {
@@ -302,7 +302,7 @@
 .due-badge {
   background: var(--accent-soft);
   color: var(--accent-text);
-  border-radius: 30px;
+  border-radius: var(--r-pill);
   padding: 0.35rem 0.7rem;
   font-size: var(--text-caption);
   margin-left: auto;
@@ -421,7 +421,7 @@
   }
   .study-invitation {
     padding: 1.6rem;
-    border-radius: 20px;
+    border-radius: var(--r-lg);
   }
   .invitation-art {
     display: none;
@@ -435,7 +435,7 @@
   }
   .stat-card {
     padding: 1rem 0.8rem;
-    border-radius: 14px;
+    border-radius: var(--r-md);
   }
   .stat-card strong {
     font-size: 1.65rem;

@@ -16,6 +16,7 @@
   --elev-2:
     0 0 0 0.5px rgba(33, 32, 28, 0.08), 0 4px 12px -2px rgba(33, 32, 28, 0.08),
     0 16px 40px -12px rgba(33, 32, 28, 0.14);
+  --r-xs: 6px;
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 18px;
