@@ -26,6 +26,8 @@ export interface RecallClientOptions {
   baseUrl: string;
   token: () => Promise<string>;
   fetcher?: typeof fetch;
+  /** Runs when the API rejects the credentials, for example a session revoked on the server. */
+  onUnauthorized?: () => void;
 }
 
 /** Share one HTTP client between the web and MCP apps. Example: new RecallClient({baseUrl, token}). */
@@ -41,6 +43,7 @@ export class RecallClient {
       body: body === undefined ? undefined : JSON.stringify(body),
       cache: 'no-store',
     });
+    if (response.status === 401) this.options.onUnauthorized?.();
     const payload: unknown = await readApiPayload(response);
     if (!response.ok) throw new RecallApiError(response.status, readErrorMessage(payload));
     return payload as T;

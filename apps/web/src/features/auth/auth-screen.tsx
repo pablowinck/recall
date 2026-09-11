@@ -9,15 +9,18 @@ import { AuthActions, AuthFeedback, AuthHeading } from './auth-copy';
 export function AuthScreen({
   auth,
   startSignedUp = false,
+  sessionEnded = false,
 }: {
   auth: BrowserAuth;
   startSignedUp?: boolean;
+  /** The API rejected the last session, so the heading says why sign-in is back. */
+  sessionEnded?: boolean;
 }): React.JSX.Element {
   const state = useAuthForm(auth, startSignedUp);
   return (
     <AuthLayout>
       <form onSubmit={state.submit} className="auth-form">
-        <AuthHeading signup={state.signup} />
+        <AuthHeading signup={state.signup} sessionEnded={sessionEnded} />
         <AuthFields signup={state.signup} busy={state.busy} />
         <AuthFeedback state={state} />
         <AuthActions state={state} />

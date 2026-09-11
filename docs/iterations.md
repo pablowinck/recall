@@ -769,3 +769,11 @@ Recall loads due cards 20 at a time. The wave 3 frontend review found that ratin
 The rated card now stays on screen, its rating lit, until the next batch arrives, and the next card follows like any other. If the next batch can't load, the study screen shows the connection error with Try again, as before. Checks from the completion screen were already quiet, so the separate loader state is gone.
 
 Validation: format, typecheck, 137 unit tests and build pass, including a new test that holds the next batch and confirms the rated card stays on screen until it arrives. All 186 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 75: a session ended elsewhere returns to sign-in
+
+The wave 3 frontend review revoked a signed-in session on the server, as signing out everywhere or changing a password does. The tab still held the old session, so every request failed. Ratings said "Check your connection" with a Retry that could never work, Today said "Your session has expired" with Try again, and the only way out was finding Sign out.
+
+When the API rejects the tab's session, Recall now signs the tab out, and the sign-in screen says "Your session ended. Sign in again to pick up where you left off." The shared API client reports rejected credentials through an optional callback, so the MCP server is unchanged.
+
+Validation: format, typecheck, 137 unit tests and build pass. All 186 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that revokes the session during study, rates the card, reads the explanation and signs in again.

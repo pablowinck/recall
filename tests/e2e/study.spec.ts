@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
-import { createTestAccount } from './fixtures';
-import { signInToRecall } from './interaction-steps';
+import { createTestAccount, revokeSession } from './fixtures';
+import { fillSignInForm, signInToRecall } from './interaction-steps';
 
 test('study keys leave focused controls alone and keep focus on the card', async ({ page }) => {
   const account = await createTestAccount();
@@ -283,6 +283,38 @@ test('a double tap on Reveal answer never records a rating', async ({ page }) =>
     await page.waitForTimeout(800);
     expect((await account.api.workspace()).stats.reviewed_today).toBe(0);
     await expect(page.getByText('0 of 1 reviewed')).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a session revoked elsewhere returns to sign-in and says why', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Revoked session question',
+      back: 'Revoked session answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    const browserToken = await page.evaluate(() => {
+      const key = Object.keys(localStorage).find((name) => name.endsWith('-auth-token'));
+      const stored = JSON.parse((key && localStorage.getItem(key)) || '{}') as {
+        access_token?: string;
+      };
+      return stored.access_token ?? '';
+    });
+    await revokeSession(browserToken);
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(
+      page.getByText('Your session ended. Sign in again to pick up where you left off.'),
+    ).toBeVisible();
+    await fillSignInForm(page, account);
+    expect((await account.api.workspace()).stats.reviewed_today).toBe(0);
   } finally {
     await account.cleanup();
   }

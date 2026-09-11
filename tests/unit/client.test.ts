@@ -43,6 +43,20 @@ it('preserves actionable server failures', async () => {
   await expect(client.workspace()).rejects.toBeInstanceOf(RecallApiError);
 });
 
+it('reports rejected credentials so the app can end the session', async () => {
+  let rejections = 0;
+  const client = new RecallClient({
+    baseUrl: 'http://recall.test',
+    token: async () => 'revoked-session',
+    fetcher: new FakeHttpTransport(401).fetch,
+    onUnauthorized: () => {
+      rejections += 1;
+    },
+  });
+  await expect(client.workspace()).rejects.toMatchObject({ status: 401 });
+  expect(rejections).toBe(1);
+});
+
 it('turns an HTML gateway page into a recoverable API error', async () => {
   const transport = new FakeGatewayTransport();
   const client = new RecallClient({

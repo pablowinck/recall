@@ -15,9 +15,7 @@ export interface TestAccount {
 
 /** Create disposable identities only in local Supabase. Example: await createTestAccount(). */
 export async function createTestAccount(): Promise<TestAccount> {
-  const url = process.env.SUPABASE_URL!;
-  if (!['localhost', '127.0.0.1'].includes(new URL(url).hostname))
-    throw new Error(`Unsafe test host ${url}; expected local Supabase`);
+  const url = localSupabaseUrl();
   const admin = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false },
   });
@@ -41,6 +39,22 @@ export async function createTestAccount(): Promise<TestAccount> {
       if (deleted.error) throw deleted.error;
     },
   };
+}
+
+/** End one Supabase session on the server, as signing out on another device does. Example: await revokeSession(jwt). */
+export async function revokeSession(accessToken: string): Promise<void> {
+  const admin = createClient(localSupabaseUrl(), process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+    auth: { persistSession: false },
+  });
+  const { error } = await admin.auth.admin.signOut(accessToken, 'local');
+  if (error) throw error;
+}
+
+function localSupabaseUrl(): string {
+  const url = process.env.SUPABASE_URL!;
+  if (!['localhost', '127.0.0.1'].includes(new URL(url).hostname))
+    throw new Error(`Unsafe test host ${url}; expected local Supabase`);
+  return url;
 }
 
 /** Connect to the actual Streamable HTTP transport. Example: await connectTestMcp(token). */

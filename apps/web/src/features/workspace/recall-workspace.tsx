@@ -40,6 +40,12 @@ function SessionGate(
 ): React.JSX.Element {
   if (props.account.loading) return <LoadingState />;
   if (!props.account.session)
-    return <AuthScreen auth={props.account.auth} startSignedUp={props.startSignedUp} />;
+    return (
+      <AuthScreen
+        auth={props.account.auth}
+        startSignedUp={props.startSignedUp}
+        sessionEnded={props.account.ended}
+      />
+    );
   return <AuthenticatedWorkspace key={props.account.session.user.id} {...props} />;
 }
