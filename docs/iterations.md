@@ -1191,3 +1191,11 @@ After loops 117 to 121 were pushed, the CI run for ef776a5 failed in `pnpm local
 When Supabase fails to start, `scripts/local-up.sh` now prints the last 80 lines of its log, and a start that succeeds stays as quiet as before.
 
 Validation: a copy of the script with stand-in `pnpm` and `docker` commands prints the end of the log and stops when Supabase's start fails, and prints nothing and runs every later step when it succeeds. Format, typecheck, 166 unit tests and build pass, and all 289 browser, API and MCP journeys pass on desktop, tablet and mobile.
+
+## 2026-09-11 — UX loop 127: an open library or Today catches up when its window has focus again
+
+The wave 5 Nielsen review kept the library open while an assistant, in a window beside the browser, added 12 cards through MCP. After 75 seconds the library still said "3 cards" and the deck filter did not list the new deck. Focusing the browser window changed nothing; only switching to another tab and back showed the cards, and Today took a minute. Someone watching for their cards saw nothing arrive and might ask the assistant again.
+
+Today and the library now also refresh when their window has focus again, and when the browser restores the page from its back-forward cache, as they already did when their tab came back. One return fires several of these events, and focus also comes back from the browser's own menus, so a return refreshes once and returns refresh at most every 10 seconds; hiding a tab never uses up the refresh its return is owed. The library still keeps no timer, so nothing moves while someone reads.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that adds a card while the library is open and gives its window focus again.

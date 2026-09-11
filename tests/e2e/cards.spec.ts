@@ -871,3 +871,28 @@ test('a reload keeps the library’s search, deck and page', async ({ page }) =>
     await account.cleanup();
   }
 });
+
+test('an open library shows cards an assistant added once its window has focus again', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Library', exact: true }).click();
+    await expect(page.locator('.result-label')).not.toBeEmpty();
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Added beside the browser',
+      back: 'While the assistant had focus',
+      tags: [],
+    });
+    // The assistant's window sat beside the browser, so the tab never hid; only the window's focus came back.
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(
+      page.getByRole('heading', { name: 'Added beside the browser', exact: true }),
+    ).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});
