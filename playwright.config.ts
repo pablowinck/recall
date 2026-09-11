@@ -30,6 +30,7 @@ export default defineConfig({
         '**/seed-lifecycle.spec.ts',
         '**/database-role.spec.ts',
         '**/mcp-availability.spec.ts',
+        '**/mcp-oauth.spec.ts',
         '**/token-query.spec.ts',
       ],
     },

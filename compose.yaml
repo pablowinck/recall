@@ -57,7 +57,8 @@ services:
       target: mcp
     environment:
       API_URL: http://api:3211
-      AUTH_ISSUER_URL: http://localhost:56321/auth/v1
+      # Must equal the issuer local Supabase Auth reports, or OAuth clients reject its metadata.
+      AUTH_ISSUER_URL: http://127.0.0.1:56321/auth/v1
       MCP_PUBLIC_URL: http://localhost:3212
     ports: [127.0.0.1:3212:3212]
     depends_on:
