@@ -513,3 +513,11 @@ The second design review measured the landing page in production. The closing "A
 The closing line is centred again, and a journey measures it. The question rows keep their plus sign on screen but give it empty alternative text, and browsers without that syntax keep the plain sign. The brand link and the closing Sign in link are now 44 px tall without moving anything around them, and the brand link is a plain anchor. Pills and cards draw a transparent outline that forced-colours mode paints as their edge.
 
 Validation: format, typecheck, 121 unit tests and build pass. All 161 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing page's accessibility check and the new centring check.
+
+## 2026-09-10 — UX loop 43: the example card reads as a card
+
+The design review found that screen readers met the example card on the landing page and the sign-in screen as loose paragraphs. Nothing said it was an example, or which text was the front and which the back.
+
+The card is now a figure captioned "Example card", and its two sides carry visually hidden "Front:" and "Back:" labels, so it is announced as an example with both sides named. The figure's default margins are reset, so the card keeps its size and place on both pages.
+
+Validation: format, typecheck, 122 unit tests and build pass. All 166 browser, API and MCP journeys pass on desktop, tablet and mobile, including the landing and sign-in accessibility checks and a new journey that finds the card as a figure with both sides named.

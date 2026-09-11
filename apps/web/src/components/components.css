@@ -130,6 +130,7 @@
 }
 /* The example card appears on the sign-in screen and on the landing page, which loads no product stylesheet. */
 .sample-card {
+  margin: 0;
   background: var(--surface);
   box-shadow: var(--elev-2);
   border-radius: 28px;

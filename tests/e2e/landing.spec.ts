@@ -120,3 +120,13 @@ test('the closing sign-in line sits centred under its button', async ({ page }) 
   const offset = section!.x + section!.width / 2 - (line!.x + line!.width / 2);
   expect(Math.abs(offset)).toBeLessThan(2);
 });
+
+test('the example card reads as a captioned figure with its front and back named', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const card = page.getByRole('figure', { name: 'Example card' });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText('Front: I’d like');
+  await expect(card).toContainText('Back: I’d = I would');
+});
