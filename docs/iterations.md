@@ -857,3 +857,11 @@ The wave 3 Nielsen review reloaded the page while reviewing one deck. Every revi
 A deck review's address now carries its deck, /app/study?deck=…, through reloads and Back and Forward, and only a deck id is read from it. When the app opens on the sign-in screen, signing in starts on Today, while reloading a signed-in review still resumes it.
 
 Validation: format, typecheck, 142 unit tests and build pass, including the review address and the deck id check. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reloads a deck review, checks it kept its deck, then signs in again at that address and lands on Today.
+
+## 2026-09-11 — UX loop 86: a long card says how far over the limit it is
+
+The wave 3 Nielsen review pasted a long text into the editor. The Front and Back fields cut text at 4,000 and 8,000 characters without a word, so the end of a pasted passage vanished and the card saved without it.
+
+The fields no longer cut text. Past 90% of a side's limit a count appears under it, such as "7,412 / 8,000", in red once over. Saving an over-long card keeps the editor open and says, for example, "The back is 412 characters over its 8,000-character limit. Shorten it to save."
+
+Validation: format, typecheck, 142 unit tests and build pass, including the new messages and a check that the editor's limits match the shared card schema. All 212 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that types past the front's limit, reads the count and the message, and confirms nothing was saved.

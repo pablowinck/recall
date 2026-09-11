@@ -335,3 +335,16 @@
     display: none;
   }
 }
+/* The editor's length count, shown near a side's limit. */
+.text-limit {
+  display: block;
+  margin-top: 0.3rem;
+  text-align: end;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--gray-11);
+  font-variant-numeric: tabular-nums;
+}
+.text-limit.is-over {
+  color: var(--red-11);
+}

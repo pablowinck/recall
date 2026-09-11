@@ -543,3 +543,28 @@ test('library search ignores accents and finds cards by tag', async ({ page }) =
     await account.cleanup();
   }
 });
+
+test('a card over the length limit says by how much instead of cutting the text', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).click();
+    const front = page.getByRole('textbox', { name: /^Front/ });
+    await front.fill('x'.repeat(4010));
+    await expect(front).toHaveValue('x'.repeat(4010));
+    await expect(page.getByText('4,010 / 4,000', { exact: true })).toBeVisible();
+    await page.getByRole('textbox', { name: /^Back/ }).fill('Answer');
+    await page.getByRole('button', { name: 'Create card', exact: true }).click();
+    await expect(
+      page.getByText(
+        'The front is 10 characters over its 4,000-character limit. Shorten it to save.',
+      ),
+    ).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(1);
+    expect((await account.api.cards()).total).toBe(0);
+  } finally {
+    await account.cleanup();
+  }
+});

@@ -3,7 +3,12 @@ import type { RecallClient } from '@recall/client';
 import type { CardDraft, Deck, Flashcard } from '@recall/contracts';
 import { useAnnounce } from '@/components/status-announcer';
 import { useAsyncAction, type AsyncAction } from '@/lib/use-async-action';
-import { buildCardDraft, describeTagProblem, hasDraftChanges } from './card-draft';
+import {
+  buildCardDraft,
+  describeTagProblem,
+  describeTextProblem,
+  hasDraftChanges,
+} from './card-draft';
 import { chooseInitialDeck } from './initial-deck';
 import { explainDeckFailure } from './deck-errors';
 import { rememberLastDeck } from './last-deck';
@@ -70,6 +75,8 @@ function useEditorOutcome(props: CardEditorProps): EditorOutcome {
     announce(message);
   };
   const save = async (draft: CardDraft): Promise<void> => {
+    const textProblem = describeTextProblem(draft);
+    if (textProblem) throw new Error(textProblem);
     const tagProblem = describeTagProblem(draft.tags);
     if (tagProblem) throw new Error(tagProblem);
     if (props.card) await props.client.updateCard(props.card.id, draft);

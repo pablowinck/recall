@@ -27,6 +27,24 @@ export function describeTagProblem(tags: string[]): string | null {
   return null;
 }
 
+// Same reason as TAG_LIMITS: the shared schema allows 4,000 characters on the front and 8,000 on the back.
+export const TEXT_LIMITS = { front: 4000, back: 8000 } as const;
+
+/** Say which side of a card is too long, and by how much, before the server rejects it, or null. Example: describeTextProblem(draft). */
+export function describeTextProblem(draft: Pick<CardDraft, 'front' | 'back'>): string | null {
+  for (const side of ['front', 'back'] as const) {
+    const extra = draft[side].trim().length - TEXT_LIMITS[side];
+    const limit = TEXT_LIMITS[side].toLocaleString('en-US');
+    if (extra > 0)
+      return `The ${side} is ${countCharacters(extra)} over its ${limit}-character limit. Shorten it to save.`;
+  }
+  return null;
+}
+
+function countCharacters(count: number): string {
+  return `${count.toLocaleString('en-US')} ${count === 1 ? 'character' : 'characters'}`;
+}
+
 /**
  * Tell whether the editor holds something worth confirming before discarding. Choosing a deck for
  * an otherwise empty new card does not count. Example: hasDraftChanges(draft, card).

@@ -3,7 +3,9 @@ import { cardDraftSchema } from '../../packages/contracts/src/index';
 import {
   buildCardDraft,
   describeTagProblem,
+  describeTextProblem,
   TAG_LIMITS,
+  TEXT_LIMITS,
 } from '../../apps/web/src/features/cards/card-draft';
 
 it('keeps multilingual learning content intact while cleaning tag separators', () => {
@@ -33,4 +35,23 @@ it('keeps the editor’s tag limits in step with the shared card schema', () => 
   expect(cardDraftSchema.safeParse({ ...card, tags: [...full, 'one more'] }).success).toBe(false);
   const long = ['x'.repeat(TAG_LIMITS.length + 1)];
   expect(cardDraftSchema.safeParse({ ...card, tags: long }).success).toBe(false);
+});
+
+it('names the side of a card that is too long, and by how much', () => {
+  expect(describeTextProblem({ front: 'Q', back: 'A' })).toBeNull();
+  expect(describeTextProblem({ front: 'x'.repeat(4010), back: 'A' })).toBe(
+    'The front is 10 characters over its 4,000-character limit. Shorten it to save.',
+  );
+  expect(describeTextProblem({ front: 'Q', back: 'x'.repeat(8001) })).toBe(
+    'The back is 1 character over its 8,000-character limit. Shorten it to save.',
+  );
+});
+
+it('keeps the editor’s text limits in step with the shared card schema', () => {
+  const card = { deck_id: '4f0b6f1e-0000-4000-8000-000000000000', tags: [] };
+  const front = 'x'.repeat(TEXT_LIMITS.front);
+  const back = 'x'.repeat(TEXT_LIMITS.back);
+  expect(cardDraftSchema.safeParse({ ...card, front, back }).success).toBe(true);
+  expect(cardDraftSchema.safeParse({ ...card, front: `${front}x`, back: 'A' }).success).toBe(false);
+  expect(cardDraftSchema.safeParse({ ...card, front: 'Q', back: `${back}x` }).success).toBe(false);
 });

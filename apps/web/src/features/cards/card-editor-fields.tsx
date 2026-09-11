@@ -1,8 +1,9 @@
 import { Button, Select, TextArea, TextField } from '@radix-ui/themes';
 import { Plus } from 'lucide-react';
-import { useState, type ComponentProps, type KeyboardEvent } from 'react';
+import { useState, type ComponentProps, type FormEvent, type KeyboardEvent } from 'react';
 import type { Deck } from '@recall/contracts';
 import { ErrorNotice } from '@/components/feedback';
+import { TEXT_LIMITS } from './card-draft';
 import { isCommandEnter, isSaveShortcut } from './editor-keys';
 import type { CardEditorProps, CardEditorState } from './use-card-editor';
 
@@ -166,40 +167,44 @@ function submitOnlyWithModifier(event: KeyboardEvent<HTMLInputElement>): void {
 }
 
 function FrontField({ value }: { value?: string }): React.JSX.Element {
+  const length = useTextLength(value);
   const attributes: ComponentProps<typeof TextArea> = {
     name: 'front',
     dir: 'auto',
     defaultValue: value,
     placeholder: 'What would you like to remember?',
     required: true,
-    maxLength: 4000,
     rows: 4,
     autoFocus: !value,
     onKeyDown: handleEditorKeyDown,
+    onInput: length.track,
   };
   return (
     <label>
       Front <span className="field-hint">The question or prompt</span>
       <TextArea {...attributes} />
+      <TextLimit length={length.value} limit={TEXT_LIMITS.front} />
     </label>
   );
 }
 
 function BackField({ value }: { value?: string }): React.JSX.Element {
+  const length = useTextLength(value);
   const attributes: ComponentProps<typeof TextArea> = {
     name: 'back',
     dir: 'auto',
     defaultValue: value,
     placeholder: 'Write the answer, with an example if it helps.',
     required: true,
-    maxLength: 8000,
     rows: 5,
     onKeyDown: handleEditorKeyDown,
+    onInput: length.track,
   };
   return (
     <label>
       Back <span className="field-hint">The answer · **bold**, *italic*, `code`, - lists</span>
       <TextArea {...attributes} />
+      <TextLimit length={length.value} limit={TEXT_LIMITS.back} />
     </label>
   );
 }
@@ -215,5 +220,27 @@ function TagsField({ tags }: { tags: string[] }): React.JSX.Element {
         onKeyDown={submitOnlyWithModifier}
       />
     </label>
+  );
+}
+
+interface TextLength {
+  value: number;
+  track: (event: FormEvent<HTMLTextAreaElement>) => void;
+}
+
+// The fields stay uncontrolled; only their length is tracked, for the limit count.
+function useTextLength(initial = ''): TextLength {
+  const [value, setValue] = useState(initial.length);
+  return { value, track: (event) => setValue(event.currentTarget.value.length) };
+}
+
+// The fields used to cut a long paste short without a word. Past 90% of a limit the count appears instead, and
+// saving over it says by how much. Screen readers hear those numbers on save rather than on every keystroke.
+function TextLimit({ length, limit }: { length: number; limit: number }): React.JSX.Element | null {
+  if (length < limit * 0.9) return null;
+  return (
+    <span className={`text-limit ${length > limit ? 'is-over' : ''}`} aria-hidden="true">
+      {length.toLocaleString('en-US')} / {limit.toLocaleString('en-US')}
+    </span>
   );
 }
