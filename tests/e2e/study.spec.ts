@@ -610,3 +610,30 @@ test('a failed refresh of Today stays off the review screen', async ({ page }) =
     await account.cleanup();
   }
 });
+
+test('rating hints open on hover with a mouse and never on a tap', async ({ page }, testInfo) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Hint question',
+      back: 'Hint answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    const good = page.getByRole('button', { name: /Good/ });
+    if (testInfo.project.use.hasTouch) {
+      await good.focus();
+      await page.waitForTimeout(800);
+      await expect(page.getByRole('tooltip')).toHaveCount(0);
+    } else {
+      await good.hover();
+      await expect(page.getByRole('tooltip')).toBeVisible();
+    }
+  } finally {
+    await account.cleanup();
+  }
+});

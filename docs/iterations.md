@@ -1081,3 +1081,11 @@ The wave 4 frontend review listened to the card editor: each hint sat inside its
 Each field is now named by its label alone and described by its hint, which shares the label's row. The editor's description uses the size of the other dialogs. The Tags field reads its direction from its text and doesn't capitalise, and tags that differ only in case are kept once, in the first spelling.
 
 Validation: format, typecheck, 152 unit tests and build pass, including a tag test for case repeats. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that checks the Back field's name and description and the Tags field's attributes.
+
+## 2026-09-11 — UX loop 114: rating hints appear on hover, never on a tap
+
+The wave 4 frontend review profiled ratings on a throttled phone. Radix tooltips open on the focus a tap gives, so each tap on a rating flashed its hint, and the four tooltips made up about two thirds of the 104 component renders per rating, with 47 to 53 ms frames.
+
+The rating hints now render only for a primary pointer that can hover, a mouse or trackpad. Each rating button's name already says what the rating claims, so touch screens and screen readers lose nothing.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that hovers a rating on desktop and focuses one on the touch layouts without a hint appearing.
