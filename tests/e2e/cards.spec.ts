@@ -64,6 +64,8 @@ test('deleting the last card on a page returns to a valid page', async ({ page }
     await expect(page.locator('.library-card')).toHaveCount(1);
     await expect(page.getByRole('button', { name: 'Previous', exact: true })).toBeFocused();
     await expect(page.locator('.result-label')).toHaveAttribute('role', 'status');
+    await expect(page.locator('.result-label')).toHaveText('25 cards · Page 2 of 2');
+    await expect(page.locator('.result-label')).toBeInViewport();
     await page.locator('.library-card').click();
     await page.getByRole('button', { name: 'Delete card', exact: true }).click();
     await expect(page.getByRole('alertdialog')).toBeVisible({ timeout: 2000 });

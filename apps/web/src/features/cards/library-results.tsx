@@ -15,16 +15,25 @@ interface LibraryResultsProps {
 /** Keep loading, errors and pagination consistent. Example: <LibraryResults library={props} state={state} />. */
 export function LibraryResults({ library, state }: LibraryResultsProps): React.JSX.Element {
   const { result, loading, error } = state.response;
-  if (error) return <ErrorNotice message={error} retry={library.refresh} />;
-  const outOfBounds = state.query.page > lastLibraryPage(result.total);
-  if (loading && !result.cards.length && !result.total) return <LoadingState />;
-  if (outOfBounds && loading) return <LoadingState />;
+  const settled = !error && !(loading && !result.total);
   return (
     <div className={`library-results-container ${loading ? 'is-refreshing' : ''}`}>
-      {/* A polite status, so narrowing a search says how many cards it found. */}
+      {/* A polite status that stays mounted through loading, since a status inserted with its text goes unheard. */}
       <div className="result-label" role="status">
-        {result.total} {result.total === 1 ? 'card' : 'cards'}
+        {settled ? describeResultCount(result.total, state.query.page) : ''}
       </div>
+      <LibraryResultsContent library={library} state={state} />
+    </div>
+  );
+}
+
+function LibraryResultsContent({ library, state }: LibraryResultsProps): React.JSX.Element {
+  const { result, loading, error } = state.response;
+  if (error) return <ErrorNotice message={error} retry={library.refresh} />;
+  const outOfBounds = state.query.page > lastLibraryPage(result.total);
+  if (loading && (outOfBounds || (!result.cards.length && !result.total))) return <LoadingState />;
+  return (
+    <>
       <div className="card-grid">
         {result.cards.map((card) => (
           <LibraryCard
@@ -37,8 +46,15 @@ export function LibraryResults({ library, state }: LibraryResultsProps): React.J
       </div>
       {!result.cards.length && <EmptyLibrary library={library} state={state} />}
       {result.cards.length > 0 && <LibraryPagination state={state} />}
-    </div>
+    </>
   );
+}
+
+// The page joins the count, so moving to another page is announced as well.
+function describeResultCount(total: number, page: number): string {
+  const count = `${total} ${total === 1 ? 'card' : 'cards'}`;
+  const pages = lastLibraryPage(total) + 1;
+  return pages > 1 ? `${count} · Page ${page + 1} of ${pages}` : count;
 }
 
 interface EmptyLibraryCopy {
@@ -127,8 +143,11 @@ function usePaginationFocus(page: number, lastPage: number): PaginationFocus {
   useEffect(() => {
     const direction = pressed.current;
     pressed.current = null;
-    if (direction === 'next' && page >= lastPage) previous.current?.focus();
-    if (direction === 'previous' && page === 0) next.current?.focus();
+    if (!direction) return;
+    // A new page starts at its first card, not at the bottom where the last page ended.
+    document.querySelector('.library-results-container')?.scrollIntoView({ block: 'start' });
+    if (direction === 'next' && page >= lastPage) previous.current?.focus({ preventScroll: true });
+    if (direction === 'previous' && page === 0) next.current?.focus({ preventScroll: true });
   }, [page, lastPage]);
   const press = (direction: PageDirection): void => {
     pressed.current = direction;

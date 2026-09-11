@@ -1065,3 +1065,11 @@ The wave 4 frontend review repeated loop 76's test with a save slower than its 4
 A new review now leaves out cards whose saves are still on their way, at once, instead of waiting for them. A review address naming a deck that no longer exists reviews every due card, and an unknown workspace address is replaced by the view it opened.
 
 Validation: format, typecheck, 152 unit tests and build pass, and the save test now checks that a card still saving is left out without a wait. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that opens /app/settings and a deleted deck's review address.
+
+## 2026-09-11 — UX loop 112: the library's count names the page, and a new page starts at its top
+
+The wave 4 Nielsen review pressed Next on page 1 of 3. The scroll stayed at 2,348 px, with page 2's first card 2,119 px above the screen, and nothing was announced. The frontend review found that the result count, loop 81's polite status, went silent after a search with no results, because a loader replaced it and it came back already holding its text.
+
+The count now stays mounted through loading and errors, and names the page when there is more than one, as in "25 cards · Page 2 of 2", so a search or a page change is announced. Moving to another page scrolls the results back to their top, while focus stays on the pagination.
+
+Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the paging journey now checks the count's page and that it is in view after Next.
