@@ -11,6 +11,8 @@ export interface WorkspaceUiState {
   revision: number;
   libraryQuery: LibraryQuery;
   studyDeck?: string;
+  /** False from opening a review until the workspace reloads, so the review's total counts the cards due now. */
+  reviewReady: boolean;
   editorDeck?: string;
 }
 export interface WorkspaceActions {

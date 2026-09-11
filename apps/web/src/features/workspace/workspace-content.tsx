@@ -79,6 +79,8 @@ function LibraryWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX
 }
 
 function StudyWorkspace({ model }: { model: LoadedWorkspaceModel }): React.JSX.Element {
+  // The same words as the review's own loading, so the two waits read as one.
+  if (!model.reviewReady) return <LoadingState label="Loading your cards…" />;
   const { decks, stats } = model.workspace;
   const studyDeck = decks.find((deck) => deck.id === model.studyDeck);
   return (

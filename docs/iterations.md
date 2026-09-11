@@ -1199,3 +1199,11 @@ The wave 5 Nielsen review kept the library open while an assistant, in a window 
 Today and the library now also refresh when their window has focus again, and when the browser restores the page from its back-forward cache, as they already did when their tab came back. One return fires several of these events, and focus also comes back from the browser's own menus, so a return refreshes once and returns refresh at most every 10 seconds; hiding a tab never uses up the refresh its return is owed. The library still keeps no timer, so nothing moves while someone reads.
 
 Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that adds a card while the library is open and gives its window focus again.
+
+## 2026-09-11 — UX loop 128: Back from a review shows current counts, and the next review counts from them
+
+The wave 5 Nielsen and frontend reviews rated cards, then used the browser's Back button to return to Today. Today kept the counts from before the review for a minute: it said "45 cards to review" with 44 due, and starting again showed "0 of 48". Forward into a deck's review counted "0, 1, 2 of 5" and then said 3 cards were reviewed. Only Leave session and the Today tab reloaded the counts; Back and Forward changed the view without them.
+
+Arriving at Today, the library or a review now reloads the workspace, whether through the tabs, Leave session, Back or Forward, so counts and the deck list are current. A review shows "Loading your cards…" until that reload arrives, so its total counts the cards due now. The first view after a page load uses the workspace it is already loading, and Connections, which shows nothing from it, reloads nothing.
+
+Validation: format, typecheck, 166 unit tests and build pass. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that rates a card, goes Back to Today, checks the count there, and starts the next review from that count.

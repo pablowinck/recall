@@ -739,3 +739,27 @@ test('a reload keeps a review’s count and the cards coming back', async ({ pag
     await account.cleanup();
   }
 });
+
+test('Back from a review shows current counts, and the next review counts from them', async ({
+  page,
+}) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    for (const front of ['Current count one', 'Current count two', 'Current count three'])
+      await account.api.createCard({ deck_id: deck.id, front, back: 'Answer', tags: [] });
+    await signInToRecall(page, account);
+    await expect(page.locator('.study-invitation h2')).toHaveText('3 cards to review');
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await page.getByRole('button', { name: /Reveal answer/ }).click();
+    await page.getByRole('button', { name: /Good/ }).click();
+    await expect(page.getByText('1 of 3 reviewed')).toBeVisible();
+    // Today refreshed only once a minute, so Back used to show three cards to review and the next review "0 of 3".
+    await page.goBack();
+    await expect(page.locator('.study-invitation h2')).toHaveText('2 cards to review');
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.getByText('0 of 2 reviewed')).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});
