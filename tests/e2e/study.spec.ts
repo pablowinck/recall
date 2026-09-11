@@ -442,7 +442,11 @@ test('the study screen keeps its edges in forced colours', async ({ page }) => {
 
 test('at 400% zoom the study bar scrolls with the answer instead of covering it', async ({
   page,
-}) => {
+}, testInfo) => {
+  test.skip(
+    Boolean(testInfo.project.use.hasTouch),
+    'Touch screens keep the bar pinned within reach.',
+  );
   const account = await createTestAccount();
   try {
     const deck = (await account.api.workspace()).decks[0]!;
@@ -482,6 +486,26 @@ test('a card deleted during a review says so and lets the review move on', async
     await expect(page.getByText('This card was deleted, perhaps by your assistant.')).toBeVisible();
     await page.getByRole('button', { name: 'Next card', exact: true }).click();
     await expect(question).toHaveText(remaining.front);
+  } finally {
+    await account.cleanup();
+  }
+});
+
+test('a phone held sideways keeps Reveal answer within reach', async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.use.hasTouch, 'Only touch screens keep the bar pinned when short.');
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    await account.api.createCard({
+      deck_id: deck.id,
+      front: 'Sideways question',
+      back: 'Sideways answer',
+      tags: [],
+    });
+    await signInToRecall(page, account);
+    await page.setViewportSize({ width: 750, height: 342 });
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.getByRole('button', { name: /Reveal answer/ })).toBeInViewport();
   } finally {
     await account.cleanup();
   }

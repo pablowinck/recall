@@ -977,3 +977,11 @@ The wave 4 Nielsen review tabbed to the Delete deck and Delete card buttons. The
 The focus scale now follows the accent text colour on every element that sets an accent colour. The contrast helper used by the journeys can measure a ring against the surface behind a control.
 
 Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, and the delete confirmation journey now tabs to Delete permanently in light and dark mode and measures its ring at 3:1 or more.
+
+## 2026-09-11 — UX loop 101: a phone held sideways keeps Reveal answer within reach
+
+The wave 4 Nielsen review studied on a phone held sideways, 750 by 342 pixels. Loop 89 had unpinned the study bar on every viewport 480 pixels tall or shorter, for 400% zoom, so on that phone Reveal answer sat at 463 to 511 pixels, below the fold, and nothing said that tapping the card also reveals it.
+
+Short viewports now unpin the bar only with a mouse or trackpad, where they come from zooming in. Touch screens keep the pinned bar, so Reveal answer and the ratings stay under the thumb.
+
+Validation: format, typecheck, 146 unit tests and build pass. All 245 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies at 750 by 342 on the touch layouts; the 400% zoom journey now runs on desktop only.

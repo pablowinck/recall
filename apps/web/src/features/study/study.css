@@ -146,8 +146,9 @@
   box-shadow: 0 -1px 0 var(--separator);
 }
 /* At 400% zoom a 1080p screen is 480 by 270 CSS pixels, and a pinned bar would cover most of the answer, so short
-   viewports let the bar scroll with the card. */
-@media (max-height: 480px) {
+   viewports with a mouse or trackpad let the bar scroll with the card. A phone held sideways is short too, but
+   there the pinned bar keeps Reveal answer under the thumb. */
+@media (max-height: 480px) and (pointer: fine) {
   .reveal-action,
   .rating-section {
     position: static;
