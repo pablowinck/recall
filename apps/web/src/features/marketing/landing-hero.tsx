@@ -6,7 +6,7 @@ export function LandingHero(): React.JSX.Element {
   return (
     <section className="landing-hero" aria-labelledby="hero-title">
       <div className="landing-hero-copy">
-        <p className="landing-eyebrow">Flashcards your AI fills through MCP</p>
+        <p className="landing-eyebrow">Spaced repetition flashcards</p>
         <h1 id="hero-title">
           <span className="landing-h1-line">Your AI writes the cards.</span>{' '}
           <span className="landing-h1-line">Recall makes them stick.</span>
@@ -26,7 +26,8 @@ export function LandingHero(): React.JSX.Element {
           </a>
         </div>
         <p className="landing-note">
-          Sign up with email. Connect an assistant when you’re ready, or write cards yourself.
+          Works with Claude Code, Codex, Cursor, VS Code, Claude Desktop and Gemini CLI, not yet
+          with ChatGPT or claude.ai. You can always write cards yourself.
         </p>
       </div>
       <ExampleCard />

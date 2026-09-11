@@ -10,7 +10,7 @@ export function LandingFooter(): React.JSX.Element {
         Open source (MIT) on GitHub<span className="visually-hidden"> (opens in a new tab)</span>
       </a>
       <a href={supportChatUrl()} target="_blank" rel="noopener noreferrer">
-        Questions? Message us on WhatsApp
+        Questions? Message the maintainer on WhatsApp
         <span className="visually-hidden"> (opens in a new tab)</span>
       </a>
     </footer>

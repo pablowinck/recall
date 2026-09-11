@@ -481,3 +481,11 @@ The agent-readiness scan gave two more checks only partial credit. A missing pag
 When a request asks for Markdown, unknown paths now answer with a Markdown 404 that links the home page, `llms.txt`, sign-in, the sitemap and the source code. Browsers still get the HTML page. `/.well-known/mcp` and `/.well-known/mcp/server-card.json` publish a server card in the shape of the MCP registry's `server.json`. The card gives the endpoint, the bearer header it needs and where to create a token. `llms.txt` links the card, and the change map lists where agent discovery lives.
 
 Validation: format, typecheck, 119 unit tests and build pass, including two new tests for the card's registry limits and media type. All 155 browser, API and MCP journeys pass on desktop, tablet and mobile, including new journeys for the Markdown 404 and the server card.
+
+## 2026-09-10 — UX loop 39: landing copy that sets expectations before sign-up
+
+A second copy review found that the hero named only coding assistants, so people who use ChatGPT or claude.ai learned only after signing up that they could not connect. The eyebrow leaned on "MCP" before the page explained it. Step 2 did not show what a request for cards sounds like or say what happens to a wrong card. The ChatGPT answer ended without a next step, and the page had no answer for Anki or for other languages. The privacy answer, "No other account.", did not say who can reach the cards.
+
+The hero note now lists the assistants that connect, says ChatGPT and claude.ai do not yet, and reminds visitors that they can always write cards themselves. The eyebrow reads "Spaced repetition flashcards". Step 2 quotes a real request and says any card can be edited or deleted. The ChatGPT answer points to the assistants that work today. Two new questions compare Recall with Anki and cover languages. The privacy answer says only the person and the assistants they connect can reach the cards, and the footer names the maintainer as the person on WhatsApp.
+
+Validation: format, typecheck, 119 unit tests and build pass. The 27 landing journeys pass on desktop, tablet and mobile, including the accessibility check, and captures at 1440 px and 390 px in both appearances show no horizontal overflow.

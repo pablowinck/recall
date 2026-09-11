@@ -12,6 +12,11 @@ const QUESTIONS = [
       'Nothing. Recall is free to use, and its source code is public on GitHub under the MIT license.',
   },
   {
+    question: 'How is Recall different from Anki?',
+    answer:
+      'Both can schedule reviews with FSRS. In Recall, AI assistants create and organize your cards through MCP, and you study in the browser. Recall doesn’t import Anki decks.',
+  },
+  {
     question: 'What is MCP, and how does Recall use it?',
     answer:
       'The Model Context Protocol, an open standard that lets AI assistants use tools such as Recall. Your assistant calls Recall to create, organize and find your cards.',
@@ -24,7 +29,7 @@ const QUESTIONS = [
   {
     question: 'Does Recall work with ChatGPT or claude.ai?',
     answer:
-      'Not yet. ChatGPT and claude.ai connect through OAuth sign-in, which Recall doesn’t offer yet. Codex and Claude Code already work.',
+      'Not yet. ChatGPT and claude.ai connect through OAuth sign-in, which Recall doesn’t offer yet. Until then, connect Claude Code, Codex, Cursor or Gemini CLI, or write cards yourself.',
   },
   {
     question: 'How do I connect an assistant to Recall?',
@@ -41,6 +46,10 @@ const QUESTIONS = [
     answer: 'No. You can write cards yourself in the editor, with bold, italic, code and lists.',
   },
   {
+    question: 'Can I study any language in Recall?',
+    answer: 'Yes. Cards can hold any language or subject, and the interface is in English.',
+  },
+  {
     question: 'How does Recall decide when a card comes back?',
     answer:
       "When you rate a card Again, Hard, Good or Easy, Recall's FSRS scheduler picks the next review date, aiming for a 90% chance that you still remember the card. Each rating shows its next interval before you choose.",
@@ -48,7 +57,7 @@ const QUESTIONS = [
   {
     question: 'Who else can reach my Recall cards?',
     answer:
-      'No other account. Row-level security scopes every query to yours, and connection tokens are stored hashed, expire after 90 days and can be revoked at any time.',
+      'Only you and the assistants you connect. Row-level security scopes every query to your account, and connection tokens are stored hashed, expire after 90 days and can be revoked at any time.',
   },
   {
     question: 'Can I delete my cards and decks in Recall?',

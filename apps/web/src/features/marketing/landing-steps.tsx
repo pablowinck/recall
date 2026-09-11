@@ -6,7 +6,7 @@ const STEPS = [
   },
   {
     title: 'Ask for cards',
-    body: 'Mid-conversation, ask for one card or a whole set. They land in the deck you name, with your tags.',
+    body: 'Ask mid-conversation: “Turn this chapter into 20 cards in my Biology deck.” They land in that deck with your tags, and you can edit or delete any card.',
   },
   {
     title: 'Review at the right moment',
