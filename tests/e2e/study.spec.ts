@@ -704,3 +704,38 @@ test('each rating keeps its own colour', async ({ page }) => {
     await account.cleanup();
   }
 });
+
+test('a reload keeps a review’s count and the cards coming back', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    const deck = (await account.api.workspace()).decks[0]!;
+    for (const front of ['Reload count one', 'Reload count two', 'Reload count three'])
+      await account.api.createCard({ deck_id: deck.id, front, back: 'Answer', tags: [] });
+    const rate = async (rating: RegExp): Promise<void> => {
+      await page.getByRole('button', { name: /Reveal answer/ }).click();
+      await page.getByRole('button', { name: rating }).click();
+    };
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.getByText('0 of 3 reviewed')).toBeVisible();
+    await rate(/Good/);
+    await expect(page.getByText('1 of 3 reviewed')).toBeVisible();
+    await page.reload();
+    await expect(page.getByText('1 of 3 reviewed')).toBeVisible();
+    // Leaving forgets the review, so the next one counts from zero.
+    await page.getByRole('button', { name: 'Leave session' }).click();
+    await page.getByRole('button', { name: 'Start reviewing' }).click();
+    await expect(page.getByText('0 of 2 reviewed')).toBeVisible();
+    await rate(/Again/);
+    await rate(/Good/);
+    const summary = page.getByText(
+      /^You reviewed 2 cards in this session\. 1 card comes back in about 1 min/,
+    );
+    await expect(summary).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Nicely done', exact: true })).toBeVisible();
+    await expect(summary).toBeVisible();
+  } finally {
+    await account.cleanup();
+  }
+});

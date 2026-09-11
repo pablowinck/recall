@@ -10,15 +10,17 @@ import { useStudyBarOverlap } from './use-study-bar-overlap';
 
 interface StudyViewProps {
   client: RecallClient;
+  /** The signed-in person, so a reload never continues another account's review. */
+  user: string;
   deck?: string;
   decks: Deck[];
   expectedTotal: number;
   exit: () => void;
 }
 
-/** Keep study content separate from session controls. Example: <StudyView client={client} decks={decks} expectedTotal={26} exit={exit} />. */
+/** Keep study content separate from session controls. Example: <StudyView client={client} user={userId} decks={decks} expectedTotal={26} exit={exit} />. */
 export function StudyView(props: StudyViewProps): React.JSX.Element {
-  const session = useStudySession(props.client, props.deck);
+  const session = useStudySession(props.client, { user: props.user, deck: props.deck });
   useStudyKeyboard(session);
   if (session.loading) return <LoadingState label="Loading your cards…" />;
   if (!session.queue.length && !session.error)

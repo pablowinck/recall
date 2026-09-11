@@ -27,6 +27,7 @@ export interface WorkspaceModel extends WorkspaceUiState {
   workspace: Workspace | null;
   error: string;
   client: RecallClient;
+  userId: string;
   email: string;
   actions: WorkspaceActions;
 }

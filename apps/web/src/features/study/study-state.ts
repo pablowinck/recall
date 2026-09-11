@@ -12,9 +12,16 @@ export interface RatingFailure {
   rating: RecallRating;
   reason: RatingFailureReason;
 }
+/** What a review has done so far, kept so a reload of the page can continue it. */
+export interface SessionProgress {
+  completed: number;
+  returning: ReturningCard[];
+}
 export interface StudySnapshot {
   queue: StudyCard[];
   completed: number;
+  /** Reviews counted before the page was reloaded, which the cards still due no longer include. */
+  completedBeforeReload: number;
   revealed: boolean;
   loading: boolean;
   saving: boolean;
@@ -50,18 +57,22 @@ export interface StudyActionContext {
   deck?: string;
 }
 
-/** Start without fabricated cards or review counts. Example: initialStudySnapshot(). */
-export function initialStudySnapshot(): StudySnapshot {
+/**
+ * Start without fabricated cards or counts; a reloaded review continues its own count and returning cards.
+ * Example: initialStudySnapshot(readSessionProgress(storage, scope)).
+ */
+export function initialStudySnapshot(progress: SessionProgress | null = null): StudySnapshot {
   return {
     queue: [],
-    completed: 0,
+    completed: progress?.completed ?? 0,
+    completedBeforeReload: progress?.completed ?? 0,
     revealed: false,
     loading: true,
     saving: false,
     savingRating: null,
     awaitingBatch: false,
     error: '',
-    returning: [],
+    returning: progress?.returning ?? [],
     ratingFailure: null,
   };
 }
@@ -71,4 +82,14 @@ export function revealStudyAnswer(update: StudyUpdate): void {
   update((current) =>
     current.loading || !current.queue.length ? current : { ...current, revealed: true },
   );
+}
+
+/**
+ * How many cards the review covers: the cards due when it started, plus reviews counted before a reload, or more once
+ * cards come back. Example: reviewTotal(snapshot, 26).
+ */
+export function reviewTotal(snapshot: StudySnapshot, expectedTotal: number): number {
+  // A last card waiting for the next batch was already counted, so it no longer adds to the total.
+  const onScreen = snapshot.awaitingBatch ? 0 : snapshot.queue.length;
+  return Math.max(snapshot.completedBeforeReload + expectedTotal, snapshot.completed + onScreen);
 }

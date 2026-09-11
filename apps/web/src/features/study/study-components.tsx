@@ -7,6 +7,7 @@ import { RatingControls } from './rating-controls';
 import { CardBody, CardInline } from '@/components/card-text';
 import { frontSizeClass } from './card-typography';
 import { revealScrollTop } from './reveal-scroll';
+import { reviewTotal } from './study-state';
 
 interface StudyProgressProps {
   session: StudySessionState;
@@ -21,9 +22,7 @@ export function StudyProgress({
   exit,
 }: StudyProgressProps): React.JSX.Element {
   // Cards load 20 at a time; Today's due count keeps "3 of 26" honest from the first card.
-  // A last card waiting for the next batch was already counted, so it no longer adds to the total.
-  const onScreen = session.awaitingBatch ? 0 : session.queue.length;
-  const total = Math.max(expectedTotal, session.completed + onScreen);
+  const total = reviewTotal(session, expectedTotal);
   const pct = total ? (session.completed / total) * 100 : 0;
   return (
     <>

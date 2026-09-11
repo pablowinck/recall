@@ -4,6 +4,7 @@ import type { RecallRating } from '@recall/contracts';
 import {
   initialStudySnapshot,
   revealStudyAnswer,
+  type SessionProgress,
   type StudyActionContext,
   type StudyRuntime,
   type StudySnapshot,
@@ -14,6 +15,14 @@ import {
   reloadStudyQueue,
   type RefillResult,
 } from './study-actions';
+import { pruneReturningCards } from './returning-cards';
+import {
+  forgetSessionProgress,
+  readSessionProgress,
+  saveSessionProgress,
+  sessionProgressStorage,
+  type ReviewScope,
+} from './session-progress';
 
 export interface StudySessionState extends StudySnapshot {
   reveal: () => void;
@@ -29,15 +38,20 @@ function readClock(): Date {
   return new Date();
 }
 
-/** Preserve retry identity, prevent duplicate clicks and continue into the next batch. Example: useStudySession(client). */
-export function useStudySession(client: RecallClient, deck?: string): StudySessionState {
-  const [snapshot, update] = useState(initialStudySnapshot);
+/**
+ * Preserve retry identity, prevent duplicate clicks, and continue into the next batch and through a reload.
+ * Example: useStudySession(client, { user, deck }).
+ */
+export function useStudySession(client: RecallClient, scope: ReviewScope): StudySessionState {
+  const { user, deck } = scope;
+  const [snapshot, update] = useState(() => initialStudySnapshot(restoreProgress(scope)));
   const runtime = useRef<StudyRuntime>({ pending: false, attempt: null, generation: 0 }).current;
   const reload = useCallback(
     () => reloadStudyQueue(client, runtime, update, deck),
     [client, runtime, deck],
   );
   useEffect(() => activateStudySession(reload, runtime), [reload, runtime]);
+  useProgressMemory(user, deck, snapshot);
   const context = {
     gateway: client,
     snapshot,
@@ -48,6 +62,22 @@ export function useStudySession(client: RecallClient, deck?: string): StudySessi
     deck,
   };
   return { ...snapshot, reload, ...bindStudyActions(context) };
+}
+
+// Cards due back more than a minute ago are no longer awaited, so a review reloaded much later promises none of them.
+function restoreProgress(scope: ReviewScope): SessionProgress | null {
+  const progress = readSessionProgress(sessionProgressStorage(), scope);
+  if (!progress) return null;
+  return { ...progress, returning: pruneReturningCards(progress.returning, [], new Date()) };
+}
+
+// A reload keeps the review's count and the cards coming back, since a reload runs no cleanup; leaving forgets them.
+function useProgressMemory(user: string, deck: string | undefined, snapshot: StudySnapshot): void {
+  const { completed, returning } = snapshot;
+  useEffect(() => {
+    saveSessionProgress(sessionProgressStorage(), { user, deck }, { completed, returning });
+  }, [user, deck, completed, returning]);
+  useEffect(() => () => forgetSessionProgress(sessionProgressStorage()), [user, deck]);
 }
 
 // Actions close over the snapshot of the render that made them, so a retry repeats the rating that failed.

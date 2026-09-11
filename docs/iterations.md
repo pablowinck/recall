@@ -1159,3 +1159,11 @@ The wave 4 Nielsen review searched and filtered the library, moved to another pa
 The library's address now holds its search, deck and page, as in `/app/library?q=capital&deck=…&page=2`, so a reload opens the same results. A new filter replaces the history entry instead of adding one, so Back still leaves the library, and the address follows a search once typing pauses, because Safari refuses more than 100 history changes in 30 seconds. An address naming a deck that no longer exists shows every deck, and the search field stops at the 200 characters the API accepts.
 
 Validation: format, typecheck, 156 unit tests and build pass, including tests that write library addresses and read back only what they can use. All 286 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reloads a searched, filtered second page, returns to it with Back, and opens an address for a deck that does not exist.
+
+## 2026-09-11 — UX loop 123: a reload keeps a review's count and the cards coming back
+
+The wave 4 Nielsen review reloaded the page in the middle of a long review. The review went on with the right cards, but its count started over, from "20 of 46 reviewed" to "0 of 26". A reload on the completion screen also forgot the cards rated Again, so the screen no longer said when they come back, or brought them back on its own.
+
+A review now keeps its count and its returning cards in the tab's session storage, so a reload continues it: the header still says "20 of 46", and the completion screen still says "1 card comes back in about 1 min" and resumes when it does. The saved progress names the person and the deck, so it never reaches another account's review or another deck's. Leaving the review, starting a new one or closing the tab forgets it.
+
+Validation: format, typecheck, 166 unit tests and build pass, including tests that restore progress only for the same person and deck, ignore stored progress that is malformed or refused, and add the reviews before a reload to the cards still due. All 289 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that reloads mid-review and on the completion screen, and checks that leaving starts the next review from zero.

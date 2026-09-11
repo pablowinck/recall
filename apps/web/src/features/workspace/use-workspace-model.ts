@@ -1,6 +1,7 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { signOutOnRequest } from '@/lib/use-recall-session';
 import { EMPTY_LIBRARY_QUERY } from '../cards/library-query';
+import { forgetSessionProgress, sessionProgressStorage } from '../study/session-progress';
 import { useWorkspace } from './use-workspace';
 import { useWorkspaceFreshness } from './use-workspace-freshness';
 import { useWorkspaceHistory } from './use-workspace-history';
@@ -43,6 +44,7 @@ export function useWorkspaceModel(
     workspace: remote.workspace,
     error: remote.error,
     client: account.client,
+    userId: account.session?.user.id ?? '',
     email: account.session?.user.email ?? '',
     actions,
   };
@@ -65,7 +67,11 @@ function createViewActions(
       update((current) => ({ ...current, view }));
       if (view === 'today') void refresh();
     },
-    startStudy: (studyDeck) => update((current) => ({ ...current, studyDeck, view: 'study' })),
+    // A review started here counts from zero; only a reload continues one.
+    startStudy: (studyDeck) => {
+      forgetSessionProgress(sessionProgressStorage());
+      update((current) => ({ ...current, studyDeck, view: 'study' }));
+    },
     browse: (deck) =>
       update((current) => ({
         ...current,
