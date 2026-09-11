@@ -349,3 +349,14 @@
 .text-limit.is-over {
   color: var(--red-11);
 }
+/* A field's label and hint share one row above the control, like the deck field's header. */
+.editor-field {
+  display: grid;
+  gap: 0.5rem;
+}
+.editor-field-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+}

@@ -55,3 +55,11 @@ it('keeps the editor’s text limits in step with the shared card schema', () =>
   expect(cardDraftSchema.safeParse({ ...card, front: `${front}x`, back: 'A' }).success).toBe(false);
   expect(cardDraftSchema.safeParse({ ...card, front: 'Q', back: `${back}x` }).success).toBe(false);
 });
+
+it('keeps one spelling of a tag typed again in another case', () => {
+  const fields = new FormData();
+  fields.set('front', 'Question');
+  fields.set('back', 'Answer');
+  fields.set('tags', 'Portuguese, portuguese, grammar, PORTUGUESE');
+  expect(buildCardDraft(fields, 'deck-id').tags).toEqual(['Portuguese', 'grammar']);
+});

@@ -1073,3 +1073,11 @@ The wave 4 Nielsen review pressed Next on page 1 of 3. The scroll stayed at 2,34
 The count now stays mounted through loading and errors, and names the page when there is more than one, as in "25 cards · Page 2 of 2", so a search or a page change is announced. Moving to another page scrolls the results back to their top, while focus stays on the pagination.
 
 Validation: format, typecheck, 152 unit tests and build pass. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, and the paging journey now checks the count's page and that it is in view after Next.
+
+## 2026-09-11 — UX loop 113: editor fields have short names, hints on the label's row, and tags ignore case repeats
+
+The wave 4 frontend review listened to the card editor: each hint sat inside its label, so the Back field was named "Back The answer · **bold**, *italic*, `code`, - lists", Markdown markers included. The design review measured the same fields as three rows, label, hint and control, with the editor's description at 14 px against 16 px in every other dialog. The Nielsen review saved "Portuguese" and "portuguese" as two tags on one card, and the Tags field capitalised its first letter on phones and ignored right-to-left text.
+
+Each field is now named by its label alone and described by its hint, which shares the label's row. The editor's description uses the size of the other dialogs. The Tags field reads its direction from its text and doesn't capitalise, and tags that differ only in case are kept once, in the first spelling.
+
+Validation: format, typecheck, 152 unit tests and build pass, including a tag test for case repeats. All 271 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that checks the Back field's name and description and the Tags field's attributes.

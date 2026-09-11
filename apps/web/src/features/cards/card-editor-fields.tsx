@@ -186,7 +186,9 @@ function submitOnlyWithModifier(event: KeyboardEvent<HTMLInputElement>): void {
 function FrontField({ value }: { value?: string }): React.JSX.Element {
   const length = useTextLength(value);
   const attributes: ComponentProps<typeof TextArea> = {
+    id: 'card-front',
     name: 'front',
+    'aria-describedby': 'card-front-hint',
     dir: 'auto',
     defaultValue: value,
     placeholder: 'What would you like to remember?',
@@ -197,18 +199,19 @@ function FrontField({ value }: { value?: string }): React.JSX.Element {
     onInput: length.track,
   };
   return (
-    <label>
-      Front <span className="field-hint">The question or prompt</span>
+    <EditorField id="card-front" label="Front" hint="The question or prompt">
       <TextArea {...attributes} />
       <TextLimit length={length.value} limit={TEXT_LIMITS.front} />
-    </label>
+    </EditorField>
   );
 }
 
 function BackField({ value }: { value?: string }): React.JSX.Element {
   const length = useTextLength(value);
   const attributes: ComponentProps<typeof TextArea> = {
+    id: 'card-back',
     name: 'back',
+    'aria-describedby': 'card-back-hint',
     dir: 'auto',
     defaultValue: value,
     placeholder: 'Write the answer, with an example if it helps.',
@@ -218,25 +221,31 @@ function BackField({ value }: { value?: string }): React.JSX.Element {
     onInput: length.track,
   };
   return (
-    <label>
-      Back <span className="field-hint">The answer · **bold**, *italic*, `code`, - lists</span>
+    <EditorField
+      id="card-back"
+      label="Back"
+      hint="The answer · **bold**, *italic*, `code`, - lists"
+    >
       <TextArea {...attributes} />
       <TextLimit length={length.value} limit={TEXT_LIMITS.back} />
-    </label>
+    </EditorField>
   );
 }
 
 function TagsField({ tags }: { tags: string[] }): React.JSX.Element {
   return (
-    <label>
-      Tags <span className="field-hint">Comma-separated, up to 12</span>
+    <EditorField id="card-tags" label="Tags" hint="Comma-separated, up to 12">
       <TextField.Root
+        id="card-tags"
+        aria-describedby="card-tags-hint"
         name="tags"
+        dir="auto"
+        autoCapitalize="none"
         defaultValue={tags.join(', ')}
         placeholder="learning, vocabulary"
         onKeyDown={submitOnlyWithModifier}
       />
-    </label>
+    </EditorField>
   );
 }
 
@@ -284,4 +293,30 @@ function useInlineDeckReturn(state: CardEditorState): InlineDeckReturn {
     (opened === state.deck ? newDeck : select).current?.focus();
   }, [state.creatingDeck, state.deck]);
   return { newDeck, select };
+}
+
+// The label names the field and the hint describes it, so a screen reader hears "Back" and then the hint instead of
+// one long name with Markdown in it. On screen the hint shares the label's row, like the deck field's header.
+function EditorField({
+  id,
+  label,
+  hint,
+  children,
+}: {
+  id: string;
+  label: string;
+  hint: string;
+  children: React.ReactNode;
+}): React.JSX.Element {
+  return (
+    <div className="editor-field">
+      <div className="editor-field-label">
+        <label htmlFor={id}>{label}</label>
+        <span id={`${id}-hint`} className="field-hint">
+          {hint}
+        </span>
+      </div>
+      {children}
+    </div>
+  );
 }

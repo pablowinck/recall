@@ -12,10 +12,12 @@ export function buildCardDraft(fields: FormData, deckId: string): CardDraft {
     deck_id: deckId,
     front: String(fields.get('front') ?? ''),
     back: String(fields.get('back') ?? ''),
-    tags: String(fields.get('tags') ?? '')
-      .split(',')
-      .map((tag) => tag.trim())
-      .filter(Boolean),
+    tags: withoutCaseRepeats(
+      String(fields.get('tags') ?? '')
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    ),
   };
 }
 
@@ -64,4 +66,16 @@ function sameText(edited: string, stored: string): boolean {
 function sameTags(edited: string[], stored: string[]): boolean {
   const clean = (tags: string[]): string => tags.map((tag) => tag.trim()).join('\n');
   return clean(edited) === clean(stored);
+}
+
+// Tags that differ only in case are one tag, so "Portuguese" and "portuguese" never split a card's topics; the first
+// spelling wins.
+function withoutCaseRepeats(tags: string[]): string[] {
+  const seen = new Set<string>();
+  return tags.filter((tag) => {
+    const key = tag.toLocaleLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

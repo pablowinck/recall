@@ -788,3 +788,20 @@ test('Keep editing returns to the field that was being typed in', async ({ page 
     await account.cleanup();
   }
 });
+
+test('editor fields are named by their labels and described by their hints', async ({ page }) => {
+  const account = await createTestAccount();
+  try {
+    await signInToRecall(page, account);
+    await page.getByRole('button', { name: 'New card', exact: true }).first().click();
+    const back = page.getByRole('textbox', { name: 'Back', exact: true });
+    await expect(back).toHaveAccessibleDescription(
+      'The answer · **bold**, *italic*, `code`, - lists',
+    );
+    const tags = page.getByRole('textbox', { name: 'Tags', exact: true });
+    await expect(tags).toHaveAttribute('dir', 'auto');
+    await expect(tags).toHaveAttribute('autocapitalize', 'none');
+  } finally {
+    await account.cleanup();
+  }
+});
