@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, type RefObject } from 'react';
 import type { BrowserAuth } from '@/lib/supabase-auth';
+import { useDocumentTitle } from '@/lib/use-document-title';
 import { useAuthForm } from './use-auth-form';
 import { AuthLayout } from './auth-layout';
 import { AuthFields } from './auth-fields';
@@ -19,6 +20,7 @@ export function AuthScreen({
 }): React.JSX.Element {
   const state = useAuthForm(auth, startSignedUp);
   const form = useFocusAfterFailure(state.error);
+  useDocumentTitle(state.signup ? 'Create account · Recall' : 'Sign in · Recall');
   return (
     <AuthLayout>
       <form ref={form} onSubmit={state.submit} className="auth-form">

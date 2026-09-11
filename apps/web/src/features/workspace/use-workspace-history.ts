@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef } from 'react';
 import { focusPageHeading } from '@/components/page-heading';
+import { useDocumentTitle } from '@/lib/use-document-title';
 import type { WorkspaceView } from './navigation-types';
 import { studyDeckFrom, viewFromPath, workspacePath, workspaceTitle } from './workspace-url';
 
@@ -20,12 +21,12 @@ export function useWorkspaceHistory(
       window.history.pushState({}, '', path);
       window.scrollTo({ top: 0 });
     }
-    // Set after pushState, so the title names the new history entry rather than the one being left.
-    document.title = workspaceTitle(view);
     // A new view replaces the one being read, so focus moves to its title; the first view keeps the page's start.
     if (shown.current !== null && shown.current !== view) focusPageHeading();
     shown.current = view;
   }, [view, studyDeck]);
+  // Called after the history effect, so the title names the new history entry rather than the one being left.
+  useDocumentTitle(workspaceTitle(view));
   useEffect(() => {
     const followHistory = (): void => open(viewFromPath(window.location.pathname), readStudyDeck());
     window.addEventListener('popstate', followHistory);

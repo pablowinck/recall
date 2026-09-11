@@ -889,3 +889,11 @@ The wave 3 frontend review zoomed the study screen to 400%, as people with low v
 Viewports 480 px tall or shorter now let the bar scroll with the card, below the answer. Taller screens keep the pinned bar.
 
 Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that studies at 480 by 270 and checks that neither bar is pinned.
+
+## 2026-09-11 — UX loop 90: every screen names its tab from the first load
+
+The wave 3 frontend review signed out from the library, and the sign-in screen kept the tab title "Library · Recall". Setting the title from the sign-in screen exposed a wider cause: Next commits the route's metadata title, "Recall", about 3 ms after a screen first renders, replacing a title set once in an effect. A probe found fresh loads of /app, /app/library and /app/connections all titled "Recall" until the person changed views.
+
+A shared useDocumentTitle hook sets the tab title and sets it again if the metadata replaces it. The sign-in screen names the tab "Sign in · Recall" or "Create account · Recall", and each workspace view names it from the first load. AGENTS.md records the gotcha.
+
+Validation: format, typecheck, 144 unit tests and build pass. All 221 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey for both sign-in titles; the view address journey now checks the titles after a reload and after opening /app/library directly. A first attempt set the title once and failed the new journey on all three layouts.

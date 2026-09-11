@@ -270,8 +270,10 @@ test('each view has its own address and Back stays inside the app', async ({ pag
     await expect(page).toHaveTitle('Today · Recall');
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible();
+    await expect(page).toHaveTitle('Today · Recall');
     await page.goto('/app/library');
     await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+    await expect(page).toHaveTitle('Library · Recall');
   } finally {
     await account.cleanup();
   }
@@ -298,4 +300,14 @@ test('signing in while Recall is unreachable says so and keeps focus on Sign in'
   } finally {
     await account.cleanup();
   }
+});
+
+test('the sign-in screen names its tab for signing in and for creating an account', async ({
+  page,
+}) => {
+  await page.goto('/app');
+  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  await expect(page).toHaveTitle('Sign in · Recall');
+  await page.getByRole('button', { name: 'Create a new account', exact: true }).click();
+  await expect(page).toHaveTitle('Create account · Recall');
 });
