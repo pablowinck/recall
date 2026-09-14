@@ -21,7 +21,7 @@ const NODES: Record<string, unknown>[] = JSON.parse(
     "name": "Recall",
     "url": "${SITE_URL}/",
     "description": "Recall is a free, open-source flashcard web app for people who study for hours. It schedules reviews with the FSRS spaced repetition algorithm, and AI assistants such as Claude Code, Codex and Cursor create and organize the cards through MCP.",
-    "disambiguatingDescription": "The open-source FSRS flashcard web app at recall-web-gilt.vercel.app, with source code at github.com/pablowinck/recall.",
+    "disambiguatingDescription": "The open-source FSRS flashcard web app at userecall.org, with source code at github.com/pablowinck/recall.",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "Web",
     "browserRequirements": "A current web browser on a phone, tablet or desktop.",

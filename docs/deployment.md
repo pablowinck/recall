@@ -15,6 +15,34 @@ For a fresh remote database, `DATABASE_URL=... pnpm db:migrate` applies migratio
 
 Enable access to workspace files outside each root directory.
 
+The hosted deployment uses these domains in the owner's personal Vercel scope, `pablo-winters-projects`:
+
+| Service | Production address              | Vercel project |
+| ------- | ------------------------------- | -------------- |
+| Web     | `https://userecall.org`         | `recall-web`   |
+| API     | `https://api.userecall.org`     | `recall-api`   |
+| MCP     | `https://mcp.userecall.org/mcp` | `recall-mcp`   |
+
+Vercel manages the domain's DNS and TLS. The apex is canonical; `www.userecall.org` redirects to it. Keep the platform-generated API and MCP aliases available for existing clients, but publish the custom domains in all setup instructions.
+
+Production URL variables are:
+
+```dotenv
+# recall-web
+NEXT_PUBLIC_SITE_URL=https://userecall.org
+NEXT_PUBLIC_API_URL=https://api.userecall.org
+NEXT_PUBLIC_MCP_URL=https://mcp.userecall.org/mcp
+
+# recall-api
+WEB_ORIGIN=https://userecall.org
+
+# recall-mcp
+API_URL=https://api.userecall.org
+MCP_PUBLIC_URL=https://mcp.userecall.org
+```
+
+In Supabase Auth, use `https://userecall.org` as Site URL and allow the application's exact redirects, including `https://userecall.org/app`. Supabase's project URL and issuer are independent of this domain; keep their existing values. If OAuth discovery is enabled, `AUTH_ISSUER_URL` remains the Supabase Auth issuer and `MCP_PUBLIC_URL` names the public MCP origin. Local `.env.example` URLs remain on localhost.
+
 | Project    | Root directory | Required environment                                                                                      |
 | ---------- | -------------- | --------------------------------------------------------------------------------------------------------- |
 | recall-web | `apps/web`     | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_MCP_URL` |

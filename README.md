@@ -4,7 +4,7 @@ Free, open-source flashcards with FSRS spaced repetition that your AI assistant 
 
 [![Verify Recall](https://github.com/pablowinck/recall/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pablowinck/recall/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/github/license/pablowinck/recall)](LICENSE) [![GitHub stars](https://img.shields.io/github/stars/pablowinck/recall?style=flat)](https://github.com/pablowinck/recall/stargazers)
 
-[Open Recall](https://recall-web-gilt.vercel.app) · [Connect an assistant](docs/mcp.md) · [Architecture](docs/architecture.md) · [API and MCP contracts](docs/api.md) · [Contributing](CONTRIBUTING.md)
+[Open Recall](https://userecall.org) · [Connect an assistant](docs/mcp.md) · [Architecture](docs/architecture.md) · [API and MCP contracts](docs/api.md) · [Contributing](CONTRIBUTING.md)
 
 ## What it is
 
@@ -29,7 +29,7 @@ The hosted app is free to use. Everything behind it, including the web app, the 
 
 ### In the browser
 
-Open [recall-web-gilt.vercel.app](https://recall-web-gilt.vercel.app) and create an account with your email. New accounts start with an empty deck named **My first deck**, and the workspace lives under `/app`.
+Open [userecall.org](https://userecall.org) and create an account with your email. New accounts start with an empty deck named **My first deck**, and the workspace lives under `/app`.
 
 ### With an AI assistant
 
@@ -37,7 +37,7 @@ Open [recall-web-gilt.vercel.app](https://recall-web-gilt.vercel.app) and create
 2. Paste the setup into your assistant. The token is shown once, is valid for 90 days and can be revoked from **Connections** at any time.
 3. Ask for something like "Create a flashcard explaining both meanings of I'd, with examples."
 
-The hosted MCP endpoint is `https://recall-mcp-five.vercel.app/mcp` (Streamable HTTP, `Authorization: Bearer <token>`). [docs/mcp.md](docs/mcp.md) has the setup for each client and for local development.
+The hosted MCP endpoint is `https://mcp.userecall.org/mcp` (Streamable HTTP, `Authorization: Bearer <token>`). [docs/mcp.md](docs/mcp.md) has the setup for each client and for local development.
 
 Assistants can list decks, search cards, get the cards due now, create decks, create or import up to 100 cards at a time, and edit, pause or delete cards. The review tool tells assistants to record only the rating you give.
 

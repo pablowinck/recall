@@ -2,12 +2,12 @@
 
 Recall exposes an MCP server over Streamable HTTP. Any assistant that sends a bearer token with MCP requests can use it. In the web app, **Connections** creates a personal token and shows ready-to-paste setup for the assistant you pick.
 
-Below, replace `https://your-recall-mcp/mcp` with your MCP endpoint (`http://localhost:3212/mcp` locally) and `RECALL_MCP_TOKEN` with a token from **Connections**. Keep tokens out of repositories.
+The examples use the hosted endpoint `https://mcp.userecall.org/mcp`. For local development, use `http://localhost:3212/mcp`; for self-hosting, use your own endpoint. Set `RECALL_MCP_TOKEN` to a token from **Connections**. Keep tokens out of repositories.
 
 ## Claude Code
 
 ```bash
-claude mcp add --transport http recall https://your-recall-mcp/mcp --header "Authorization: Bearer $RECALL_MCP_TOKEN"
+claude mcp add --transport http recall https://mcp.userecall.org/mcp --header "Authorization: Bearer $RECALL_MCP_TOKEN"
 ```
 
 ## Codex
@@ -16,7 +16,7 @@ claude mcp add --transport http recall https://your-recall-mcp/mcp --header "Aut
 
 ```toml
 [mcp_servers.recall]
-url = "https://your-recall-mcp/mcp"
+url = "https://mcp.userecall.org/mcp"
 bearer_token_env_var = "RECALL_MCP_TOKEN"
 ```
 
@@ -28,7 +28,7 @@ bearer_token_env_var = "RECALL_MCP_TOKEN"
 {
   "mcpServers": {
     "recall": {
-      "url": "https://your-recall-mcp/mcp",
+      "url": "https://mcp.userecall.org/mcp",
       "headers": { "Authorization": "Bearer <token>" }
     }
   }
@@ -52,7 +52,7 @@ bearer_token_env_var = "RECALL_MCP_TOKEN"
   "servers": {
     "recall": {
       "type": "http",
-      "url": "https://your-recall-mcp/mcp",
+      "url": "https://mcp.userecall.org/mcp",
       "headers": { "Authorization": "Bearer ${input:recall-token}" }
     }
   }
@@ -71,7 +71,7 @@ Desktop configs start local processes, so [`mcp-remote`](https://github.com/punk
       "args": [
         "-y",
         "mcp-remote",
-        "https://your-recall-mcp/mcp",
+        "https://mcp.userecall.org/mcp",
         "--header",
         "Authorization:${RECALL_AUTH_HEADER}"
       ],
@@ -89,7 +89,7 @@ ChatGPT developer-mode connectors and claude.ai custom connectors authenticate r
 
 Agents can find Recall without reading this page:
 
-- `https://recall-web-gilt.vercel.app/llms.txt` is the Markdown guide: when to use Recall, the endpoint, the tools and their rules. The home page returns the same guide to requests that send `Accept: text/markdown`, and `/index.md` serves it too.
+- `https://userecall.org/llms.txt` is the Markdown guide: when to use Recall, the endpoint, the tools and their rules. The home page returns the same guide to requests that send `Accept: text/markdown`, and `/index.md` serves it too.
 - `/.well-known/mcp` and `/.well-known/mcp/server-card.json` publish the server card: the endpoint, the `Authorization: Bearer` header it needs and every tool with its description. Tool names and descriptions come from `packages/contracts/src/mcp-tools.ts`, the catalog the MCP server registers.
 - `/pricing.md` states that Recall is free.
 - A missing page requested with `Accept: text/markdown` returns a Markdown 404 with links back.

@@ -1,10 +1,19 @@
 import { describe, expect, it } from 'vitest';
+import { LLMS_TEXT } from '../../apps/web/src/features/marketing/llms-text';
 import {
   MCP_SERVER_CARD,
   serverCardResponse,
 } from '../../apps/web/src/features/marketing/mcp-server-card';
 
 describe('the MCP server card on the site', () => {
+  it('directs assistants to the canonical hosted app and MCP endpoint', () => {
+    expect(MCP_SERVER_CARD.websiteUrl).toBe('https://userecall.org/');
+    expect(MCP_SERVER_CARD.remotes[0].url).toBe('https://mcp.userecall.org/mcp');
+    expect(LLMS_TEXT).toContain('https://userecall.org/app/connections');
+    expect(LLMS_TEXT).toContain(MCP_SERVER_CARD.remotes[0].url);
+    expect(LLMS_TEXT).not.toContain('.vercel.app');
+  });
+
   it('fits the limits the MCP registry sets for a server entry', () => {
     expect(MCP_SERVER_CARD.name).toMatch(/^[a-zA-Z0-9.-]+\/[a-zA-Z0-9._-]+$/);
     expect(MCP_SERVER_CARD.title.length).toBeLessThanOrEqual(100);

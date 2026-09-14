@@ -96,7 +96,7 @@ The task has a 30-minute heartbeat for continued improvement. Keep cycles bounde
 
 ## 2026-09-10 — production deployment and verified service integration
 
-The owner linked the repository to three personal Vercel projects and provisioned the personal Supabase project. Release `9fb172bdf4f6de35466098b41762014e641c9e68` reached Ready in all three projects. Public production domains are https://recall-web-gilt.vercel.app, https://recall-api-tau.vercel.app and https://recall-mcp-five.vercel.app/mcp. Team-qualified deployment aliases remain protected and are not used for application traffic.
+The owner linked the repository to three personal Vercel projects and provisioned the personal Supabase project. Release `9fb172bdf4f6de35466098b41762014e641c9e68` reached Ready in all three projects. The current production domains (migrated on 2026-09-14) are https://userecall.org, https://api.userecall.org and https://mcp.userecall.org/mcp. Team-qualified deployment aliases remain protected and are not used for application traffic.
 
 Fixed the Express entrypoint and packaging failures by deploying the compiled application through a small `server.mjs` entrypoint. Shared packages now export JavaScript; NodeNext checks explicit relative module extensions. Docker and Vercel use the same compiled Express application. Standalone Next.js output is limited to Docker to avoid upstream issue #96646. Added a native Node check that starts the actual emitted Vercel function and verifies health and anonymous denial.
 
@@ -1255,3 +1255,11 @@ The wave 5 reviews searched the library with characters the search's folding did
 Card text and search words now both fold ß to ss, and each word must appear in the folded card exactly as written, which the database checks with strpos() instead of a LIKE pattern.
 
 Validation: format, typecheck, 166 unit tests and build pass, including search word tests for ß, % and backslashes. All 308 browser, API and MCP journeys pass on desktop, tablet and mobile, including a new journey that searches for "strasse", "50%" and "c:\users" and finds exactly one card each time.
+
+## 2026-09-14 — migrate the hosted app, API and MCP to userecall.org
+
+The owner purchased `userecall.org` in the personal Vercel account and requested the domain migration. The canonical app is `https://userecall.org`, the API is `https://api.userecall.org`, and the MCP endpoint is `https://mcp.userecall.org/mcp`. Vercel owns DNS and TLS; explicit CNAME records connect `api` and `mcp` to their existing projects. The `www` and previous web aliases redirect to the apex, preserving the requested path. Existing API and MCP platform aliases remain available to previously configured clients.
+
+Updated production URL environment variables in all three projects, Supabase Auth Site URL and exact redirects, GitHub description and homepage, README and assistant tutorials, SEO metadata, sitemap defaults, structured data and the assistant discovery guide. The Supabase project URL, issuer and credentials remain unchanged. Production OAuth remains disabled as before; the canonical MCP origin is configured for its existing discovery implementation. Local development continues to use localhost. Active local operational scripts and the Gemini MCP configuration now use the new hosted addresses.
+
+Validation before release: `pnpm format` and `pnpm verify` passed on rebuilt Recall containers: 167 unit tests, 308 browser/API/MCP journeys, 19 device-specific skips, type checks and production builds. Regression coverage checks that the server card and assistant guide publish the canonical domain and MCP endpoint. Vercel reports all three domains correctly configured, HTTPS responds on every service, and the new Auth URLs persisted after reloading the dashboard. Post-deployment functional evidence is recorded separately after the release is live.
