@@ -129,6 +129,54 @@
   padding: 1.6rem;
   box-shadow: var(--elev-1);
 }
+/* A light mat around the demo frames it like the cards below; the video keeps its own hairline edge. */
+.landing-demo {
+  position: relative;
+  margin: 0 0 clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  padding: clamp(4px, 0.7vw, 10px);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  box-shadow: var(--elev-2);
+}
+.landing-demo video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-md);
+  outline: 1px solid var(--separator);
+  outline-offset: -1px;
+  /* The recording's own background, so the frame does not flash white before the poster loads. */
+  background: #f1f0ef;
+}
+/* The recording is light; dimming it keeps it from glaring on the dark page. */
+:root.dark .landing-demo video {
+  filter: brightness(0.9);
+}
+.landing-demo-toggle {
+  position: absolute;
+  inset-block-end: 14px;
+  inset-inline-end: 14px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--elev-1);
+  cursor: pointer;
+}
+@media (pointer: coarse) {
+  .landing-demo-toggle {
+    width: 44px;
+    height: 44px;
+  }
+}
 .landing-step-number {
   display: grid;
   place-items: center;
@@ -203,7 +251,8 @@
   }
 }
 /* The brand text colour keeps the ring above 5:1 in both appearances; the brand blue dropped to 3:1 in dark mode. */
-.landing a:focus-visible {
+.landing a:focus-visible,
+.landing-demo-toggle:focus-visible {
   outline: 2px solid var(--brand-text);
   outline-offset: 3px;
 }
@@ -408,6 +457,17 @@
   }
 }
 @media (max-width: 599px) {
+  .landing-demo {
+    border-radius: var(--r-lg);
+  }
+  .landing-demo video {
+    border-radius: var(--r-sm);
+  }
+  /* A phone-sized frame is about 200 px tall; a tighter corner keeps the control off the recorded rating buttons. */
+  .landing-demo-toggle {
+    inset-block-end: 8px;
+    inset-inline-end: 8px;
+  }
   .landing-footer {
     flex-direction: column;
     align-items: flex-start;
@@ -427,6 +487,8 @@
 @media (forced-colors: active) {
   .landing-cta,
   .landing-github,
+  .landing-demo,
+  .landing-demo-toggle,
   .landing-steps li,
   .landing-grid article,
   .landing-questions,

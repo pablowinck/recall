@@ -157,3 +157,44 @@ test('coming back to the app reuses one Supabase Auth client', async ({ page }) 
   }
   expect(warnings).toEqual([]);
 });
+
+test('the demo is a muted, captioned video that loads only when asked', async ({ page }) => {
+  await page.goto('/');
+  const demo = page.locator('figure.landing-demo video');
+  await expect(demo).toHaveJSProperty('muted', true);
+  await expect(demo).toHaveAttribute('playsinline', '');
+  await expect(demo).toHaveAttribute('preload', 'none');
+  await expect(demo).not.toHaveAttribute('autoplay');
+  await expect(demo).toHaveAccessibleDescription(/flashcard about the two meanings/);
+});
+
+test('the demo plays on screen and the visitor can pause it', async ({ page }) => {
+  await page.goto('/');
+  const demo = page.locator('figure.landing-demo video');
+  await demo.scrollIntoViewIfNeeded();
+  await expect(demo).toHaveJSProperty('paused', false);
+  await page.getByRole('button', { name: 'Pause demo' }).click();
+  await expect(demo).toHaveJSProperty('paused', true);
+  await expect(page.getByRole('button', { name: 'Play demo' })).toBeVisible();
+  await expectNoAccessibilityViolations(page);
+});
+
+test('with reduced motion the demo waits on its poster until asked', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const demo = page.locator('figure.landing-demo video');
+  await demo.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(500);
+  await expect(demo).toHaveJSProperty('paused', true);
+  await page.getByRole('button', { name: 'Play demo' }).click();
+  await expect(demo).toHaveJSProperty('paused', false);
+});
+
+test('the demo files are served as cacheable video', async ({ request }) => {
+  for (const file of ['recall-demo-v1.mp4', 'recall-demo-v1-1280.mp4']) {
+    const video = await request.get(`/video/${file}`);
+    expect(video.status()).toBe(200);
+    expect(video.headers()['content-type']).toContain('video/mp4');
+    expect(video.headers()['cache-control']).toContain('immutable');
+  }
+});

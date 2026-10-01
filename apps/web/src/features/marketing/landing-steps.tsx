@@ -1,3 +1,5 @@
+import { LandingDemo } from './landing-demo';
+
 // Only Claude Code is a single command; the other assistants take a short config, so the copy says so.
 const STEPS = [
   {
@@ -19,6 +21,7 @@ export function LandingSteps(): React.JSX.Element {
   return (
     <section className="landing-section" id="how-it-works" aria-labelledby="how-it-works-title">
       <h2 id="how-it-works-title">How it works</h2>
+      <LandingDemo />
       <ol className="landing-steps">
         {STEPS.map((step, index) => (
           <li key={step.title}>

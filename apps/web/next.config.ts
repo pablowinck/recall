@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         source: '/',
         headers: [{ key: 'Link', value: '</llms.txt>; rel="alternate"; type="text/markdown"' }],
       },
+      // Demo files carry a version in their names, so a new cut gets a new URL instead of a stale cache.
+      {
+        source: '/video/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
     ];
   },
   async rewrites() {
