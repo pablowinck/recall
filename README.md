@@ -6,6 +6,8 @@ Free, open-source flashcards with FSRS spaced repetition that your AI assistant 
 
 [Open Recall](https://userecall.org) · [Connect an assistant](docs/mcp.md) · [Architecture](docs/architecture.md) · [API and MCP contracts](docs/api.md) · [Contributing](CONTRIBUTING.md)
 
+![An assistant creates a flashcard through Recall's MCP server, the card is reviewed and rated Good, and FSRS spaces the next reviews from one day to two months.](docs/assets/recall-demo.gif)
+
 ## What it is
 
 Recall is a flashcard web app for people who study for hours. You write cards yourself, or ask an assistant such as Claude Code, Codex or Cursor to turn what you are learning into cards through Recall's MCP server. Recall then schedules every review so each card comes back before you are likely to forget it.
